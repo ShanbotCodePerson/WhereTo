@@ -15,6 +15,7 @@ struct UserStrings {
     static let emailKey = "email"
     static let nameKey = "name"
     static let friendsKey = "friends"
+    static let uuidKey = "uuid"
 }
 
 class User {
@@ -31,14 +32,16 @@ class User {
 //    var favoriteRestaurants:
 //    var blacklistedRestaurants:
 //    var previousRestaurants:
+    let uuid: String
     
     // MARK: - Initializers
     
-    init(email: String, name: String, friends: [String]? = nil, documentID: String? = nil) {
+    init(email: String, name: String, friends: [String]? = nil, documentID: String? = nil, uuid: String = UUID().uuidString) {
         self.email = email
         self.name = name
         self.friends = friends ?? []
         self.documentID = documentID
+        self.uuid = uuid
     }
     
     // MARK: - Init from Dictionary
@@ -46,10 +49,11 @@ class User {
     convenience init?(dictionary: [String: Any]) {
         guard let email = dictionary[UserStrings.emailKey] as? String,
             let name = dictionary[UserStrings.nameKey] as? String,
-            let friends = dictionary[UserStrings.friendsKey] as? [String]
+            let friends = dictionary[UserStrings.friendsKey] as? [String],
+            let uuid = dictionary[UserStrings.uuidKey] as? String
             else { return nil }
         
-        self.init(email: email, name: name, friends: friends)
+        self.init(email: email, name: name, friends: friends, uuid: uuid)
     }
     
     // MARK: - Convert to Dictionary
@@ -57,6 +61,7 @@ class User {
     func asDictionary() -> [String: Any] {
         [UserStrings.emailKey : email,
          UserStrings.nameKey : name,
-         UserStrings.friendsKey : friends]
+         UserStrings.friendsKey : friends,
+         UserStrings.uuidKey : uuid]
     }
 }

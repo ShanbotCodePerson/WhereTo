@@ -13,9 +13,14 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // Use this to suppress warnings about auto layout constraints and make debugging console easier to read
+        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
        
         FirebaseApp.configure()
-//        let db = Firestore.firestore()
+        
+        // TODO: - automatically log in, go to either login screen or main screen
+//        Auth.auth().currentUser
         
         return true
     }

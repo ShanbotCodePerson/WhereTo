@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseFirestoreSwift
@@ -43,6 +44,7 @@ class UserController {
                 return completion(.failure(.fsError(error)))
             }
         }
+        // FIXME: - threading issue here, but need reference outside
         user.documentID = reference.documentID
         
         // Save to the source of truth and return the success
@@ -52,7 +54,23 @@ class UserController {
     
     // Read (fetch) the current user
     func fetchCurrentUser(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
-//        db.collection(UserStrings.recordType).whereField(<#T##field: String##String#>, isEqualTo: <#T##Any#>)
+        guard let user = Auth.auth().currentUser, let email = user.email else { return }
+        
+        db.collection(UserStrings.recordType).whereField(UserStrings.emailKey, isEqualTo: email).getDocuments { [weak self] (results, error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            // Unwrap the data
+            guard let document = results?.documents.first else { return completion(.failure(.couldNotUnwrap)) }
+            let currentUser = User(dictionary: document.data())
+            
+            // Save to the source of truth and return the success
+            self?.currentUser = currentUser
+            return completion(.success(true))
+        }
     }
     
     // Read (search for) a specific user
@@ -61,7 +79,8 @@ class UserController {
     func fetchUsersFriends(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
-        db.collection(UserStrings.recordType).whereField(UserStrings.emailKey, in: currentUser.friends).getDocuments { [weak self] (results, error) in
+        // Fetch the data from the cloud
+        db.collection(UserStrings.recordType).whereField(UserStrings.uuidKey, in: currentUser.friends).getDocuments { [weak self] (results, error) in
             if let error = error {
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -85,14 +104,32 @@ class UserController {
         // Update the user's data
         user.name = name
         
+        // Update the data in the cloud
         db.collection(UserStrings.recordType).document(documentID).updateData(user.asDictionary()) { error in
             // Print and return the error
             if let error = error {
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
+                return completion(.failure(.fsError(error)))
             }
+            // Otherwise return the success
+            else { return completion(.success(true)) }
         }
     }
     
     // Delete a user
+    func deleteCurrentUser(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
+        guard let currentUser = currentUser, let documentID = currentUser.documentID
+            else { return completion(.failure(.noUserFound)) }
+        
+        // Delete the data from the cloud
+        db.collection(UserStrings.recordType).document(documentID).delete() { error in 
+            // Print and return the error
+            if let error = error {
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            // Otherwise return the success
+            else { return completion(.success(true)) }
+        }
+    }
 }

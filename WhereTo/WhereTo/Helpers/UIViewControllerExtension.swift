@@ -84,4 +84,15 @@ extension UIViewController {
         // Present the alert
         present(alertController, animated: true)
     }
+    
+    func presentErrorAlert(_ error: Error) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .actionSheet)
+        
+        // Add the dismiss button to the alert
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        
+        // Present the alert
+        present(alertController, animated: true)
+    }
 }
