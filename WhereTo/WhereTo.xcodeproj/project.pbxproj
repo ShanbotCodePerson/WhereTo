@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,20 @@
 		40B2583C24A115D30090495C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583A24A115D30090495C /* Main.storyboard */; };
 		40B2583E24A115D80090495C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583D24A115D80090495C /* Assets.xcassets */; };
 		40B2584124A115D80090495C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583F24A115D80090495C /* LaunchScreen.storyboard */; };
+		40B2587824A12C5B0090495C /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2587724A12C5B0090495C /* UIViewControllerExtension.swift */; };
+		40B2587A24A13D870090495C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2587924A13D870090495C /* User.swift */; };
+		40B2587C24A143910090495C /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2587B24A143910090495C /* UserController.swift */; };
+		40B2587E24A1528D0090495C /* WhereToError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2587D24A1528D0090495C /* WhereToError.swift */; };
+		40B2588024A154800090495C /* LoginSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2587F24A154800090495C /* LoginSignUpViewController.swift */; };
+		40B2588224A156460090495C /* WhereTo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2588124A156460090495C /* WhereTo.storyboard */; };
+		40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 40B2588324A15CA20090495C /* GoogleService-Info.plist */; };
+		40B2588624A16EDE0090495C /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2588524A16EDE0090495C /* FriendRequest.swift */; };
+		40B2588824A16EEC0090495C /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2588724A16EEC0090495C /* Restaurant.swift */; };
+		40B2588A24A16EF20090495C /* VotingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2588924A16EF20090495C /* VotingSession.swift */; };
+		40B2588C24A16EF70090495C /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2588B24A16EF70090495C /* Vote.swift */; };
+		40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2588E24A16F0A0090495C /* FriendRequestController.swift */; };
+		40B2589124A16F150090495C /* RestaurantController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589024A16F150090495C /* RestaurantController.swift */; };
+		40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589224A16F1F0090495C /* VotingSessionController.swift */; };
 		BC8B5353175386317AFE3306 /* Pods_WhereTo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +38,20 @@
 		40B2583D24A115D80090495C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		40B2584024A115D80090495C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40B2584224A115D80090495C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40B2587724A12C5B0090495C /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		40B2587924A13D870090495C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		40B2587B24A143910090495C /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
+		40B2587D24A1528D0090495C /* WhereToError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereToError.swift; sourceTree = "<group>"; };
+		40B2587F24A154800090495C /* LoginSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignUpViewController.swift; sourceTree = "<group>"; };
+		40B2588124A156460090495C /* WhereTo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WhereTo.storyboard; sourceTree = "<group>"; };
+		40B2588324A15CA20090495C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		40B2588524A16EDE0090495C /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		40B2588724A16EEC0090495C /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
+		40B2588924A16EF20090495C /* VotingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSession.swift; sourceTree = "<group>"; };
+		40B2588B24A16EF70090495C /* Vote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vote.swift; sourceTree = "<group>"; };
+		40B2588E24A16F0A0090495C /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
+		40B2589024A16F150090495C /* RestaurantController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantController.swift; sourceTree = "<group>"; };
+		40B2589224A16F1F0090495C /* VotingSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionController.swift; sourceTree = "<group>"; };
 		57C4430FA7DE0C832FCF4430 /* Pods-WhereTo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.debug.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.debug.xcconfig"; sourceTree = "<group>"; };
 		F4A020CE53683948133E3F08 /* Pods-WhereTo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.release.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -46,7 +74,6 @@
 				57C4430FA7DE0C832FCF4430 /* Pods-WhereTo.debug.xcconfig */,
 				F4A020CE53683948133E3F08 /* Pods-WhereTo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -88,6 +115,7 @@
 				40B2583D24A115D80090495C /* Assets.xcassets */,
 				40B2583F24A115D80090495C /* LaunchScreen.storyboard */,
 				40B2584224A115D80090495C /* Info.plist */,
+				40B2588324A15CA20090495C /* GoogleService-Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -95,6 +123,8 @@
 		40B2585124A119A80090495C /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				40B2587D24A1528D0090495C /* WhereToError.swift */,
+				40B2587724A12C5B0090495C /* UIViewControllerExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -112,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				40B2583A24A115D30090495C /* Main.storyboard */,
+				40B2588124A156460090495C /* WhereTo.storyboard */,
 				40B2585524A119B50090495C /* Custom Views */,
 			);
 			path = Views;
@@ -120,6 +151,11 @@
 		40B2585424A119B20090495C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				40B2587924A13D870090495C /* User.swift */,
+				40B2588524A16EDE0090495C /* FriendRequest.swift */,
+				40B2588724A16EEC0090495C /* Restaurant.swift */,
+				40B2588924A16EF20090495C /* VotingSession.swift */,
+				40B2588B24A16EF70090495C /* Vote.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -134,6 +170,7 @@
 		40B2585624A119BE0090495C /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				40B2587F24A154800090495C /* LoginSignUpViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -141,6 +178,10 @@
 		40B2585724A119C30090495C /* Model Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				40B2587B24A143910090495C /* UserController.swift */,
+				40B2588E24A16F0A0090495C /* FriendRequestController.swift */,
+				40B2589024A16F150090495C /* RestaurantController.swift */,
+				40B2589224A16F1F0090495C /* VotingSessionController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -215,7 +256,9 @@
 			files = (
 				40B2584124A115D80090495C /* LaunchScreen.storyboard in Resources */,
 				40B2583E24A115D80090495C /* Assets.xcassets in Resources */,
+				40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */,
 				40B2583C24A115D30090495C /* Main.storyboard in Resources */,
+				40B2588224A156460090495C /* WhereTo.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,8 +311,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40B2587A24A13D870090495C /* User.swift in Sources */,
 				40B2583524A115D30090495C /* AppDelegate.swift in Sources */,
+				40B2587C24A143910090495C /* UserController.swift in Sources */,
+				40B2588A24A16EF20090495C /* VotingSession.swift in Sources */,
+				40B2588024A154800090495C /* LoginSignUpViewController.swift in Sources */,
+				40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */,
+				40B2587E24A1528D0090495C /* WhereToError.swift in Sources */,
+				40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */,
 				40B2583724A115D30090495C /* SceneDelegate.swift in Sources */,
+				40B2589124A16F150090495C /* RestaurantController.swift in Sources */,
+				40B2587824A12C5B0090495C /* UIViewControllerExtension.swift in Sources */,
+				40B2588624A16EDE0090495C /* FriendRequest.swift in Sources */,
+				40B2588824A16EEC0090495C /* Restaurant.swift in Sources */,
+				40B2588C24A16EF70090495C /* Vote.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

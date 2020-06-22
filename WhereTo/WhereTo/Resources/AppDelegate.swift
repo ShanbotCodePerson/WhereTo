@@ -13,8 +13,26 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // Use this to suppress warnings about auto layout constraints and make debugging console easier to read
+        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
        
         FirebaseApp.configure()
+        
+        // TODO: - automatically log in, go to either login screen or main screen
+        if Auth.auth().currentUser != nil {
+            UserController.shared.fetchCurrentUser { (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        print("loaded user successfully")
+                        // TODO: - navigate to main view of app
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    }
+                }
+            }
+        }
         
         return true
     }
