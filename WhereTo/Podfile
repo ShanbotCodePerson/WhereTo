@@ -8,6 +8,8 @@ target 'WhereTo' do
   # Pods for WhereTo
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Functions'
 
 
 end
