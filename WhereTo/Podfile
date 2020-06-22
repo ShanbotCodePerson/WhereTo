@@ -10,6 +10,6 @@ target 'WhereTo' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'Firebase/Functions'
-
+  pod 'FirebaseFirestoreSwift'
 
 end
