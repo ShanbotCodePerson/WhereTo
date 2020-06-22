@@ -20,7 +20,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         // TODO: - automatically log in, go to either login screen or main screen
-//        Auth.auth().currentUser
+        if Auth.auth().currentUser != nil {
+            UserController.shared.fetchCurrentUser { (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        print("loaded user successfully")
+                        // TODO: - navigate to main view of app
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    }
+                }
+            }
+        }
         
         return true
     }
