@@ -24,6 +24,7 @@ class UserController {
     
     let db = Firestore.firestore()
     typealias resultCompletion = (Result<Bool, WhereToError>) -> Void
+    typealias resultCompletionWithObject = (Result<User, WhereToError>) -> Void
     
     // MARK: - CRUD Methods
     
@@ -73,10 +74,37 @@ class UserController {
     }
     
     // Read (search for) a specific user
+    func searchFor(name: String, completion: @escaping resultCompletionWithObject) {
+        // Fetch the data from the cloud
+        db.collection(UserStrings.recordType)
+            .whereField(UserStrings.nameKey, isEqualTo: name)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let document = results?.documents.first,
+                    let friend = User(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                
+                // Return the success
+                return completion(.success(friend))
+        }
+    }
     
     // Read (fetch) the user's friends
     func fetchUsersFriends(completion: @escaping resultCompletion) {
-        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
+        guard let currentUser = self.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Handle the edge case where the user has no friends
+        if currentUser.friends.count == 0 {
+            self.friends = []
+            return completion(.success(true))
+        }
         
         // Fetch the data from the cloud
         db.collection(UserStrings.recordType)

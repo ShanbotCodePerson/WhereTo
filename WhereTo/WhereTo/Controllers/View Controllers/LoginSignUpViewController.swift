@@ -20,6 +20,9 @@ class LoginSignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Try to log the user in automatically
+        autoLogin()
     }
     
     // MARK: - Actions
@@ -43,10 +46,10 @@ class LoginSignUpViewController: UIViewController {
                 if let nsError = error as NSError?, nsError.code == 17007 {
                     // TODO: - refactor this to separate method
                     Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
-                        guard authResult?.user != nil, error != nil else {
+                        if let error = error {
                             // Print and display the error
-                            print("Error in \(#function) : \(error!.localizedDescription) \n---\n \(error!)")
-                            DispatchQueue.main.async { self?.presentErrorAlert(error!) }
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            DispatchQueue.main.async { self?.presentErrorAlert(error) }
                             return
                         }
                         
@@ -57,7 +60,7 @@ class LoginSignUpViewController: UIViewController {
                                 case .success(_):
                                     // Navigate to the main screen of the app
                                     print("it worked")
-                                //                        self?.goToMainApp()
+                                    self?.goToMainApp()
                                 case .failure(let error):
                                     // Print and display the error
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -82,7 +85,7 @@ class LoginSignUpViewController: UIViewController {
                     case .success(_):
                         // Navigate to the main screen of the app
                         print("it worked")
-//                        self?.goToMainApp()
+                        self?.goToMainApp()
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -94,6 +97,22 @@ class LoginSignUpViewController: UIViewController {
     }
     
     // MARK: - Helper Methods
+    
+    // Try to log the user in automatically
+    func autoLogin() {
+        if Auth.auth().currentUser != nil {
+            UserController.shared.fetchCurrentUser { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        self?.goToMainApp()
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    }
+                }
+            }
+        }
+    }
     
     // Go to the main app screen
     func goToMainApp() {
