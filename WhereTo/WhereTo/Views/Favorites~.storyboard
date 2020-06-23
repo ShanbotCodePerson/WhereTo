@@ -1,11 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ckr-BU-2er">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NX6-6F-Duw">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Saved Restaurants Table View Controller-->
+        <scene sceneID="myo-Re-ByC">
+            <objects>
+                <tableViewController id="IfB-HV-Cbp" customClass="SavedRestaurantsTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AXg-zo-LBo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="hea-kj-jH9">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="86"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2i-BZ-Bro">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <items>
+                                        <navigationItem title="Saved Restaurants" id="9l6-d2-EhQ">
+                                            <barButtonItem key="rightBarButtonItem" systemItem="add" id="Msi-GO-zhV">
+                                                <connections>
+                                                    <action selector="addRestaurantButtonTapped:" destination="IfB-HV-Cbp" id="Tjb-7R-2DV"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </navigationItem>
+                                    </items>
+                                </navigationBar>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="17E-hW-8uu">
+                                    <rect key="frame" x="125" y="49" width="164" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <segments>
+                                        <segment title="Favorites"/>
+                                        <segment title="Blacklisted"/>
+                                    </segments>
+                                </segmentedControl>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="X2i-BZ-Bro" firstAttribute="top" secondItem="hea-kj-jH9" secondAttribute="top" id="3d2-A9-jrT"/>
+                                <constraint firstItem="X2i-BZ-Bro" firstAttribute="leading" secondItem="hea-kj-jH9" secondAttribute="leading" id="NB7-sG-7Xw"/>
+                                <constraint firstAttribute="trailing" secondItem="X2i-BZ-Bro" secondAttribute="trailing" id="RGD-Rg-5Vw"/>
+                            </constraints>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="12C-Xb-1E1" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="114" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="12C-Xb-1E1" id="oaE-cK-SpS">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="IfB-HV-Cbp" id="25s-He-ypV"/>
+                            <outlet property="delegate" destination="IfB-HV-Cbp" id="qXQ-2m-Y8A"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" systemItem="favorites" id="QYM-0z-HoW"/>
+                    <connections>
+                        <outlet property="segmentedControl" destination="17E-hW-8uu" id="P4X-Zx-78U"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IIQ-53-cbw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1079.7101449275362" y="928.79464285714278"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="n9x-M9-o22">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="NX6-6F-Duw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="qd3-VL-Ycg">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="N9b-x7-Ap4" kind="relationship" relationship="viewControllers" id="EyQ-x7-PW9"/>
+                        <segue destination="Ckr-BU-2er" kind="relationship" relationship="viewControllers" id="7c7-Iu-qH6"/>
+                        <segue destination="cy4-K0-dnc" kind="relationship" relationship="viewControllers" id="eSS-kD-NP6"/>
+                        <segue destination="IfB-HV-Cbp" kind="relationship" relationship="viewControllers" id="sM5-cn-TDM"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ci9-Fv-Z5e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-181" y="106"/>
+        </scene>
         <!--Where To?-->
         <scene sceneID="Lby-Ej-PQn">
             <objects>
@@ -152,29 +237,29 @@
             <point key="canvasLocation" x="-575.36231884057975" y="928.79464285714278"/>
         </scene>
         <!--Voting Session Table View Controller-->
-        <scene sceneID="kt5-1i-PD0">
+        <scene sceneID="H8T-Ed-zm6">
             <objects>
-                <tableViewController id="TtE-Ee-fPX" customClass="VotingSessionTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="DlA-pk-wjW">
+                <tableViewController id="2x5-yL-eKo" customClass="VotingSessionTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3Ec-CT-yVc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="jfB-9f-cwI">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="v0E-F3-fcv">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-ex-7DX">
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n0e-rw-YHi">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                     <items>
-                                        <navigationItem title="Vote on Your Top Picks!" id="bS1-Ap-bRe">
-                                            <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="j8T-pP-x2H">
+                                        <navigationItem title="Vote on Your Top Picks!" id="SVY-7c-p2K">
+                                            <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="at8-wr-Hvw">
                                                 <connections>
-                                                    <action selector="cancelButtonTapped:" destination="TtE-Ee-fPX" id="T1f-xt-aKT"/>
+                                                    <action selector="cancelButtonTapped:" destination="2x5-yL-eKo" id="2Vu-0L-ZhG"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="k85-eu-hgO">
+                                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="w1o-8w-JiL">
                                                 <connections>
-                                                    <action selector="doneButtonTapped:" destination="TtE-Ee-fPX" id="028-hm-3ed"/>
+                                                    <action selector="doneButtonTapped:" destination="2x5-yL-eKo" id="rf5-X6-fh9"/>
                                                 </connections>
                                             </barButtonItem>
                                         </navigationItem>
@@ -183,30 +268,50 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
-                                <constraint firstItem="NTP-ex-7DX" firstAttribute="top" secondItem="jfB-9f-cwI" secondAttribute="top" id="5Op-Dw-cgt"/>
-                                <constraint firstItem="NTP-ex-7DX" firstAttribute="leading" secondItem="jfB-9f-cwI" secondAttribute="leading" id="9EJ-0s-fwt"/>
-                                <constraint firstAttribute="trailing" secondItem="NTP-ex-7DX" secondAttribute="trailing" id="coO-O8-Zt8"/>
+                                <constraint firstItem="n0e-rw-YHi" firstAttribute="leading" secondItem="v0E-F3-fcv" secondAttribute="leading" id="Pmi-Uq-KcV"/>
+                                <constraint firstAttribute="trailing" secondItem="n0e-rw-YHi" secondAttribute="trailing" id="VMz-Ho-CPS"/>
+                                <constraint firstItem="n0e-rw-YHi" firstAttribute="top" secondItem="v0E-F3-fcv" secondAttribute="top" id="ZHg-iH-BRI"/>
                             </constraints>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="VdF-5H-kdw" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="PZh-yn-QCv" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VdF-5H-kdw" id="zrp-Gh-fiT">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PZh-yn-QCv" id="d3R-Dg-YfV">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="TtE-Ee-fPX" id="Jhu-Tj-qrL"/>
-                            <outlet property="delegate" destination="TtE-Ee-fPX" id="RR4-aJ-QbE"/>
+                            <outlet property="dataSource" destination="2x5-yL-eKo" id="HnN-q1-SZM"/>
+                            <outlet property="delegate" destination="2x5-yL-eKo" id="5wL-oG-O0n"/>
                         </connections>
                     </tableView>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2YX-TG-Y3x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GX0-9e-fx8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="235" y="929"/>
+            <point key="canvasLocation" x="-575.36231884057975" y="1633.2589285714284"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="ykt-Tw-r86">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Profile" id="N9b-x7-Ap4" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="g9c-1V-5vE"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VEj-Wp-v14" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1417.3913043478262" y="928.79464285714278"/>
+        </scene>
+        <!--History-->
+        <scene sceneID="DH1-wl-o0I">
+            <objects>
+                <viewControllerPlaceholder storyboardName="History" id="cy4-K0-dnc" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="t1J-Ez-YMK"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fu5-Un-Tix" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="246" y="929"/>
         </scene>
     </scenes>
     <resources>
