@@ -30,11 +30,10 @@ class ProfileViewController: UIViewController {
     
     
     // MARK: - Actions
-
-    @IBAction func editProfileImageButtonTapped(_ sender: UIButton) {
+    @IBAction func editImageButtonTapped(_ sender: Any) {
     }
     
-    @IBAction func editNameButtonTapped(_ sender: UIButton) {
+    @IBAction func editNameButtonTapped(_ sender: Any) {
     }
     
     @IBAction func showPasswordButtonTapped(_ sender: UIButton) {
