@@ -12,6 +12,7 @@ enum WhereToError: LocalizedError {
     
     case noUserFound
     case couldNotUnwrap
+    case noSuchUser
     case fsError(Error)
     
 }

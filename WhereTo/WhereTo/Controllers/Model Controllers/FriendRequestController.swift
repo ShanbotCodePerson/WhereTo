@@ -15,10 +15,6 @@ class FriendRequestController {
     
     static let shared = FriendRequestController()
     
-    // MARK: - Source of Truth
-    
-    var pendingFriendRequests: [FriendRequest]?
-    
     // MARK: - Properties
     
     let db = Firestore.firestore()
@@ -39,13 +35,13 @@ class FriendRequestController {
             .document("\(friendRequest.fromID)-\(friendRequest.toID)")
             .setData(friendRequest.asDictionary()) { error in
                 
-            if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(.fsError(error)))
-            }
-            // Return the success
-            return completion(.success(true))
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                // Return the success
+                return completion(.success(true))
         }
     }
     
@@ -61,21 +57,21 @@ class FriendRequestController {
         // Fetch the data from the cloud
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.uuid)
-            .getDocuments { [weak self] (results, error) in
+            .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.waiting.rawValue)
+            .getDocuments { (results, error) in
                 
-             if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(.fsError(error)))
-            }
-            
-            // Unwrap the data
-            guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-            let pendingFriendRequests = documents.compactMap { FriendRequest(dictionary: $0.data()) }
-            
-            // Save to the source of truth and return the success
-            self?.pendingFriendRequests = pendingFriendRequests
-            return completion(.success(pendingFriendRequests))
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                let pendingFriendRequests = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                
+                // Return the success
+                return completion(.success(pendingFriendRequests))
         }
     }
     
@@ -95,15 +91,15 @@ class FriendRequestController {
         // Save the changes to the friend request
         db.collection(FriendRequestStrings.recordType)
             .document("\(friendRequest.fromID)-\(friendRequest.toID)")
-            .updateData([FriendRequestStrings.statusKey : friendRequest.status]) { error in
+            .updateData([FriendRequestStrings.statusKey : friendRequest.status.rawValue]) { error in
                 
-            if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(.fsError(error)))
-            }
-                // Otherwise return the success
-            else { return completion(.success(true)) }
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                    // Otherwise return the success
+                else { return completion(.success(true)) }
         }
     }
     
@@ -114,13 +110,13 @@ class FriendRequestController {
             .document("\(friendRequest.fromID)-\(friendRequest.toID)")
             .delete() { error in
                 
-            if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(.fsError(error)))
-            }
-                // Otherwise return the success
-            else { return completion(.success(true)) }
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                    // Otherwise return the success
+                else { return completion(.success(true)) }
         }
     }
     
@@ -134,28 +130,23 @@ class FriendRequestController {
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.uuid)
             .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.waiting.rawValue)
-            .addSnapshotListener { [weak self] (snapshot, error) in
+            .addSnapshotListener { (snapshot, error) in
                 
-            if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return
-            }
-            
-            // Unwrap the data
-            guard let documents = snapshot?.documents else { return }
-            let newFriendRequests = documents.compactMap { FriendRequest(dictionary: $0.data()) }
-            
-            // Add the new request(s) to the source of truth
-            if var pendingFriendRequests = self?.pendingFriendRequests {
-                pendingFriendRequests.append(contentsOf: newFriendRequests)
-                self?.pendingFriendRequests = pendingFriendRequests
-            } else {
-                self?.pendingFriendRequests = newFriendRequests
-            }
-            
-            // Send a local notification to present an alert
-            // TODO: - need to present an alert to the user
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+                
+                // Unwrap the data
+                guard let documents = snapshot?.documents else { return }
+                let newFriendRequests = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                
+                for friendRequest in newFriendRequests {
+                    // Send a local notification to present an alert
+                    NotificationCenter.default.post(name: newFriendRequest, object: friendRequest)
+                    // FIXME: - need to figure out how this works when there are multiple friend requests
+                }
         }
     }
     
@@ -168,27 +159,30 @@ class FriendRequestController {
             .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.uuid)
             .addSnapshotListener { [weak self] (snapshot, error) in
                 
-            if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return
-            }
-            
-            // Unwrap the data
-            guard let documents = snapshot?.documents else { return }
-            let newResponses = documents.compactMap { FriendRequest(dictionary: $0.data()) }
-            
-            // If the request was accepted, add the friends to the user's list of friends
-            currentUser.friends.append(contentsOf: newResponses.filter({ $0.status == .accepted }).map({ $0.toID }))
-            
-            // Save the changes to the user
-            UserController.shared.saveChanges(to: currentUser) { (_) in }
-            
-            // Delete the requests from the cloud now that they're no longer necessary
-            newResponses.forEach({ self?.delete($0, completion: { (_) in }) })
-            
-            // Send a local notification to present an alert and update the tableview as necessary
-            // TODO: - need to present an alert to the user
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+                
+                // Unwrap the data
+                guard let documents = snapshot?.documents else { return }
+                let newResponses = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                
+                // If the request was accepted, add the friends to the user's list of friends
+                currentUser.friends.append(contentsOf: newResponses.filter({ $0.status == .accepted }).map({ $0.toID }))
+                
+                // Save the changes to the user
+                UserController.shared.saveChanges(to: currentUser) { (_) in }
+                
+                for response in newResponses {
+                    // Send a local notification to present an alert and update the tableview as necessary
+                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
+                    NotificationCenter.default.post(Notification(name: updateFriendsList))
+                    
+                    // Delete the requests from the cloud now that they're no longer necessary
+                    self?.delete(response, completion: { (_) in })
+                }
         }
     }
     
@@ -196,7 +190,7 @@ class FriendRequestController {
     func receiveFriendRemoving() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
-         // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
+        // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.uuid)
             .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.removingFriend.rawValue)

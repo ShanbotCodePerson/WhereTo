@@ -8,7 +8,15 @@
 
 import UIKit
 
+// TODO: - find a better place to put this
+// Names of local notifications
+let newFriendRequest = Notification.Name("newFriendRequest")
+let responseToFriendRequest = Notification.Name("responseToFriendRequest")
+let updateFriendsList = Notification.Name("updateFriendsList")
+
 extension UIViewController {
+    
+    // MARK: - Generic Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user
     func presentAlert(title: String, message: String) {
@@ -84,7 +92,6 @@ extension UIViewController {
         // Present the alert
         present(alertController, animated: true)
     }
-    
     func presentErrorAlert(_ error: Error) {
         // Create the alert controller
         let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .actionSheet)
@@ -94,5 +101,61 @@ extension UIViewController {
         
         // Present the alert
         present(alertController, animated: true)
+    }
+    
+    // MARK: - Friend Request Alerts
+    
+    func presentNewFriendRequestAlert(_ friendRequest: FriendRequest) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "New Friend Request", message: "\(friendRequest.fromName) has sent you a friend request!", preferredStyle: .alert)
+        
+        // Add the cancel button to the alert
+        let denyAction = UIAlertAction(title: "Deny", style: .cancel, handler: { (_) in
+            FriendRequestController.shared.respondToFriendRequest(friendRequest, accept: false) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Offer the user a chance to block that person
+                        self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friendRequest.fromName) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", completion: {
+                            // TODO: - implement this
+                        })
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        })
+        
+        // Add the confirm button to the alert
+        let acceptAction = UIAlertAction(title: "Accept", style: .default, handler: { (_) in
+            FriendRequestController.shared.respondToFriendRequest(friendRequest, accept: true) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Display the success
+                        self?.presentAlert(title: "Added Friend", message: "You have successfully added \(friendRequest.fromName) as a friend!")
+                        
+                        // Send a notification for the list of friends to be updated
+                        NotificationCenter.default.post(Notification(name: updateFriendsList))
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        })
+        
+        // Present the alert
+        alertController.addAction(denyAction)
+        alertController.addAction(acceptAction)
+        present(alertController, animated: true)
+    }
+    
+    func presentFriendRequestResponseAlert(_ friendRequest: FriendRequest) {
+        presentAlert(title: "Friend Request \(friendRequest.status == .accepted ? "Accepted" : "Denied")",
+            message: "\(friendRequest.toName) has \(friendRequest.status == .accepted ? "accepted" : "denied") your friend request")
     }
 }
