@@ -116,7 +116,7 @@ class LoginSignUpViewController: UIViewController {
     
     // Go to the main app screen
     func goToMainApp() {
-        let storyboard = UIStoryboard(name: "WhereTo", bundle: nil)
+        let storyboard = UIStoryboard(name: "TabViewHome", bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
         initialVC.modalPresentationStyle = .fullScreen
         
