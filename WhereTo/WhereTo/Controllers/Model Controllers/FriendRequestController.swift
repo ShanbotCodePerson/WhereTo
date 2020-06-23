@@ -57,6 +57,7 @@ class FriendRequestController {
         // Fetch the data from the cloud
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.uuid)
+            .whereField(FriendRequestStrings.statusKey, isEqualTo: FriendRequest.Status.waiting.rawValue)
             .getDocuments { (results, error) in
                 
                 if let error = error {
