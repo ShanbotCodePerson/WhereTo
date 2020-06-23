@@ -28,9 +28,6 @@ class UserController {
     
     // Create a new user
     func newUser(with email: String, completion: @escaping (Result<Bool, WhereToError>) -> Void) {
-        // TODO: - Create the user for auth?
-        
-        // TODO: - create a separate user object with more user data?
         let user = User(email: email, name: "")
         
         // Save the user object to the cloud and save the documentID for editing purposes
