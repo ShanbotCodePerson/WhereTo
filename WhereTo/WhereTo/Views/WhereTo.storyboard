@@ -3,6 +3,371 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <scenes/>
+    <scenes>
+        <!--History Table View Controller-->
+        <scene sceneID="b8W-Rj-EEI">
+            <objects>
+                <tableViewController id="2Cn-hZ-ffV" customClass="HistoryTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="ZfB-yg-myK">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="vQK-D1-qeb" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vQK-D1-qeb" id="Eo5-xM-mT9">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="2Cn-hZ-ffV" id="ZSp-vr-m1H"/>
+                            <outlet property="delegate" destination="2Cn-hZ-ffV" id="JnU-6B-xGP"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" systemItem="history" id="HUc-vQ-aPQ"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dQt-Ua-NyK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="246" y="929"/>
+        </scene>
+        <!--Saved Restaurants Table View Controller-->
+        <scene sceneID="myo-Re-ByC">
+            <objects>
+                <tableViewController id="IfB-HV-Cbp" customClass="SavedRestaurantsTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AXg-zo-LBo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="hea-kj-jH9">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="86"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2i-BZ-Bro">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <items>
+                                        <navigationItem title="Saved Restaurants" id="9l6-d2-EhQ">
+                                            <barButtonItem key="rightBarButtonItem" systemItem="add" id="Msi-GO-zhV">
+                                                <connections>
+                                                    <action selector="addRestaurantButtonTapped:" destination="IfB-HV-Cbp" id="Tjb-7R-2DV"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </navigationItem>
+                                    </items>
+                                </navigationBar>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="17E-hW-8uu">
+                                    <rect key="frame" x="125" y="49" width="164" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <segments>
+                                        <segment title="Favorites"/>
+                                        <segment title="Blacklisted"/>
+                                    </segments>
+                                </segmentedControl>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="X2i-BZ-Bro" firstAttribute="top" secondItem="hea-kj-jH9" secondAttribute="top" id="3d2-A9-jrT"/>
+                                <constraint firstItem="X2i-BZ-Bro" firstAttribute="leading" secondItem="hea-kj-jH9" secondAttribute="leading" id="NB7-sG-7Xw"/>
+                                <constraint firstAttribute="trailing" secondItem="X2i-BZ-Bro" secondAttribute="trailing" id="RGD-Rg-5Vw"/>
+                            </constraints>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="12C-Xb-1E1" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="114" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="12C-Xb-1E1" id="oaE-cK-SpS">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="IfB-HV-Cbp" id="25s-He-ypV"/>
+                            <outlet property="delegate" destination="IfB-HV-Cbp" id="qXQ-2m-Y8A"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" systemItem="favorites" id="QYM-0z-HoW"/>
+                    <connections>
+                        <outlet property="segmentedControl" destination="17E-hW-8uu" id="P4X-Zx-78U"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IIQ-53-cbw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1079.7101449275362" y="928.79464285714278"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="n9x-M9-o22">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="NX6-6F-Duw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="qd3-VL-Ycg">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="aUj-2G-47z" kind="relationship" relationship="viewControllers" id="EyQ-x7-PW9"/>
+                        <segue destination="Ckr-BU-2er" kind="relationship" relationship="viewControllers" id="7c7-Iu-qH6"/>
+                        <segue destination="2Cn-hZ-ffV" kind="relationship" relationship="viewControllers" id="eSS-kD-NP6"/>
+                        <segue destination="IfB-HV-Cbp" kind="relationship" relationship="viewControllers" id="sM5-cn-TDM"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ci9-Fv-Z5e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-181" y="106"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="4BI-Yq-EcJ">
+            <objects>
+                <viewController id="aUj-2G-47z" customClass="ProfileViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oOf-62-Jhc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JOj-An-PZS">
+                                <rect key="frame" x="87" y="110" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JBL-dB-wAG">
+                                <rect key="frame" x="186" y="267" width="43" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZj-3C-3CJ">
+                                <rect key="frame" x="68" y="318" width="41" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ene-Wg-qno">
+                                <rect key="frame" x="68" y="383" width="74" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="dietary restrictions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7z7-bn-iqO">
+                                <rect key="frame" x="68" y="447" width="144" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QCY-ZN-y5K">
+                                <rect key="frame" x="314" y="379" width="76" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="show/reset"/>
+                                <connections>
+                                    <action selector="showPasswordButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="6Uy-fs-uEa"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OWm-tv-Ce7">
+                                <rect key="frame" x="337" y="442" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Add"/>
+                                <connections>
+                                    <action selector="addDietaryRestrictionButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="UUP-Nc-tG7"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LLA-Oq-bUc">
+                                <rect key="frame" x="297" y="258" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="edit"/>
+                                <connections>
+                                    <action selector="editNameButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="711-T7-IpA"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6Wi-XS-Ah3">
+                                <rect key="frame" x="68" y="476" width="299" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="dietaryRestrictionCell" id="okp-QW-uUo" customClass="DietaryRestrictionTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="299" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="okp-QW-uUo" id="DtN-O4-ma5">
+                                            <rect key="frame" x="0.0" y="0.0" width="299" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RUF-7l-lNw">
+                                <rect key="frame" x="337" y="208" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="edit"/>
+                                <connections>
+                                    <action selector="editProfileImageButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="xTq-Ie-HfY"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="K02-n0-dkk"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Profile" selectedImage="person.fill" catalog="system" id="Za0-SD-zPk"/>
+                    <connections>
+                        <outlet property="dietaryRestrictionsTableView" destination="6Wi-XS-Ah3" id="XNY-Ml-tib"/>
+                        <outlet property="emailLabel" destination="JZj-3C-3CJ" id="rO6-YB-UjT"/>
+                        <outlet property="nameLabel" destination="JBL-dB-wAG" id="67i-vP-ffn"/>
+                        <outlet property="passwordLabel" destination="ene-Wg-qno" id="NEG-CT-32i"/>
+                        <outlet property="profileImageView" destination="JOj-An-PZS" id="Is3-Tl-Eqh"/>
+                        <outlet property="showPasswordButton" destination="QCY-ZN-y5K" id="a3Q-Yg-IFC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ycv-gD-i1l" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1417.3913043478262" y="928.79464285714278"/>
+        </scene>
+        <!--Where To?-->
+        <scene sceneID="Lby-Ej-PQn">
+            <objects>
+                <tableViewController id="Ckr-BU-2er" customClass="InviteFriendsTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="pWv-AX-Zb4">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="arM-LP-fRH">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="131"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aFk-ja-mqr">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <items>
+                                        <navigationItem title="Where to?" id="gfK-O5-S1i">
+                                            <barButtonItem key="rightBarButtonItem" systemItem="add" id="kOO-qy-3cc">
+                                                <connections>
+                                                    <action selector="addFriendButtonTapped:" destination="Ckr-BU-2er" id="GcL-vh-IkO"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </navigationItem>
+                                    </items>
+                                </navigationBar>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ip-y2-H0a">
+                                    <rect key="frame" x="121" y="50" width="172" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Pick a random restaurant"/>
+                                    <connections>
+                                        <action selector="pickRandomRestaurantButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="Jik-3c-MyR"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="or invite friends to vote..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sd-Ed-eIV">
+                                    <rect key="frame" x="112" y="95" width="190" height="21"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="aFk-ja-mqr" secondAttribute="trailing" id="hs3-tP-hbp"/>
+                                <constraint firstItem="aFk-ja-mqr" firstAttribute="leading" secondItem="arM-LP-fRH" secondAttribute="leading" id="rnN-iT-bmU"/>
+                                <constraint firstItem="aFk-ja-mqr" firstAttribute="top" secondItem="arM-LP-fRH" secondAttribute="top" id="ugY-Im-jua"/>
+                            </constraints>
+                        </view>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="xtO-sn-LRy">
+                            <rect key="frame" x="0.0" y="230.5" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zpe-fH-99n">
+                                    <rect key="frame" x="341" y="7" width="36" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Vote!"/>
+                                    <connections>
+                                        <action selector="voteButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="N1u-kG-xex"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="friendCell" id="Qot-1s-9Li" customClass="FriendTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="159" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Qot-1s-9Li" id="Bg3-Mg-Cqr">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Ckr-BU-2er" id="CXO-5y-yco"/>
+                            <outlet property="delegate" destination="Ckr-BU-2er" id="BE3-Ii-FET"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Where To?" selectedImage="house.fill" catalog="system" id="hN4-NP-z9y"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qrL-fw-Hax" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-575.36231884057975" y="928.79464285714278"/>
+        </scene>
+        <!--Voting Session Table View Controller-->
+        <scene sceneID="H8T-Ed-zm6">
+            <objects>
+                <tableViewController id="2x5-yL-eKo" customClass="VotingSessionTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3Ec-CT-yVc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="v0E-F3-fcv">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n0e-rw-YHi">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <items>
+                                        <navigationItem title="Vote on Your Top Picks!" id="SVY-7c-p2K">
+                                            <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="at8-wr-Hvw">
+                                                <connections>
+                                                    <action selector="cancelButtonTapped:" destination="2x5-yL-eKo" id="2Vu-0L-ZhG"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="w1o-8w-JiL">
+                                                <connections>
+                                                    <action selector="doneButtonTapped:" destination="2x5-yL-eKo" id="rf5-X6-fh9"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </navigationItem>
+                                    </items>
+                                </navigationBar>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="n0e-rw-YHi" firstAttribute="leading" secondItem="v0E-F3-fcv" secondAttribute="leading" id="Pmi-Uq-KcV"/>
+                                <constraint firstAttribute="trailing" secondItem="n0e-rw-YHi" secondAttribute="trailing" id="VMz-Ho-CPS"/>
+                                <constraint firstItem="n0e-rw-YHi" firstAttribute="top" secondItem="v0E-F3-fcv" secondAttribute="top" id="ZHg-iH-BRI"/>
+                            </constraints>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="PZh-yn-QCv" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PZh-yn-QCv" id="d3R-Dg-YfV">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="2x5-yL-eKo" id="HnN-q1-SZM"/>
+                            <outlet property="delegate" destination="2x5-yL-eKo" id="5wL-oG-O0n"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GX0-9e-fx8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-575.36231884057975" y="1633.2589285714284"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="house.fill" catalog="system" width="128" height="106"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
+    </resources>
 </document>
