@@ -66,4 +66,6 @@ class Restaurant {
                 RestaurantStrings.ratingKey : rating,
                 RestaurantStrings.hoursKey : hours]
     }
-}
+} // End of Class
+
+
