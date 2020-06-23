@@ -66,6 +66,7 @@ class UserController {
                 // Unwrap the data
                 guard let document = results?.documents.first else { return completion(.failure(.couldNotUnwrap)) }
                 let currentUser = User(dictionary: document.data())
+                currentUser?.documentID = document.documentID
                 
                 // Save to the source of truth and return the success
                 self?.currentUser = currentUser
@@ -74,10 +75,10 @@ class UserController {
     }
     
     // Read (search for) a specific user
-    func searchFor(name: String, completion: @escaping resultCompletionWithObject) {
+    func searchFor(email: String, completion: @escaping resultCompletionWithObject) {
         // Fetch the data from the cloud
         db.collection(UserStrings.recordType)
-            .whereField(UserStrings.nameKey, isEqualTo: name)
+            .whereField(UserStrings.emailKey, isEqualTo: email)
             .getDocuments { (results, error) in
                 
                 if let error = error {
@@ -87,8 +88,9 @@ class UserController {
                 }
                 
                 // Unwrap the data
-                guard let document = results?.documents.first,
-                    let friend = User(dictionary: document.data())
+                guard let document = results?.documents.first
+                    else { return completion(.failure(.noSuchUser))}
+                guard let friend = User(dictionary: document.data())
                     else { return completion(.failure(.couldNotUnwrap)) }
                 
                 // Return the success
@@ -130,7 +132,7 @@ class UserController {
     // Update a user
     func saveChanges(to user: User, completion: @escaping resultCompletion) {
         guard let documentID = user.documentID else { return completion(.failure(.noUserFound)) }
-        
+        print("got here to \(#function) and \(documentID)")
         // Update the data in the cloud
         db.collection(UserStrings.recordType)
             .document(documentID)
