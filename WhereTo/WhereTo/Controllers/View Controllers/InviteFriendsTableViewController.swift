@@ -17,6 +17,50 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // Load the data if it hasn't been loaded already
         loadAllData()
+        
+        // Set up the observers to listen for friend request notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: FriendRequest.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: newFriendRequest, object: FriendRequest.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        // Check for pending friend requests, and show alerts for each one if there are any
+        FriendRequestController.shared.fetchPendingRequests { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let friendRequests):
+                    for friendRequest in friendRequests {
+                        self?.presentNewFriendRequestAlert(friendRequest)
+                    }
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Receive Notifications
+    
+    @objc func refreshData() {
+        print("got here to \(#function)")
+        DispatchQueue.main.async { self.tableView.reloadData() }
+    }
+    
+    @objc func showNewFriendRequest(_ sender: NSNotification) {
+        print("got here to \(#function) and \(sender) and \(sender.object)")
+        guard let friendRequest = sender.object as? FriendRequest else { return }
+        DispatchQueue.main.async { self.presentNewFriendRequestAlert(friendRequest) }
+    }
+    
+    @objc func showFriendRequestResult(_ sender: NSNotification) {
+        print("got here to \(#function) and \(sender) and \(sender.object)")
+        guard let friendRequest = sender.object as? FriendRequest else { return }
+        DispatchQueue.main.async { self.presentFriendRequestResponseAlert(friendRequest) }
     }
     
     // MARK: - Set Up UI
@@ -46,7 +90,7 @@ class InviteFriendsTableViewController: UITableViewController {
         // TODO: - allow searching by email or username
         
         // Present the text field for the user to enter the desired email or to friend
-        presentTextFieldAlert(title: "Add Friend", message: "Send a friend request", textFieldPlaceholder: "Enter username here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
+        presentTextFieldAlert(title: "Add Friend", message: "Send a friend request", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
     }
     
     func sendRequest(to name: String) {
@@ -64,7 +108,7 @@ class InviteFriendsTableViewController: UITableViewController {
         // TODO: - search cloud for any outgoing or pending requests from that user
         
         // Make sure that the given username exists in the cloud
-        UserController.shared.searchFor(name: name) { [weak self] (result) in
+        UserController.shared.searchFor(email: name) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let friend):
@@ -90,11 +134,14 @@ class InviteFriendsTableViewController: UITableViewController {
                     }
                 case .failure(let error):
                     // Display an error if the username doesn't exist
-                    // TODO: -implement this
-                    
-                    // Print and display the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorAlert(error)
+                    if case WhereToError.noSuchUser = error {
+                        self?.presentAlert(title: "Invalid Email", message: "The email you have entered is not a user of WhereTo")
+                    }
+                    else {
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
                 }
             }
         }
