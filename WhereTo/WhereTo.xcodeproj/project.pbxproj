@@ -26,6 +26,16 @@
 		40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2588E24A16F0A0090495C /* FriendRequestController.swift */; };
 		40B2589124A16F150090495C /* RestaurantController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589024A16F150090495C /* RestaurantController.swift */; };
 		40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589224A16F1F0090495C /* VotingSessionController.swift */; };
+		40B2589724A251BE0090495C /* RestaurantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */; };
+		40B2589824A251BE0090495C /* RestaurantTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */; };
+		40B2589A24A251C90090495C /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589924A251C90090495C /* FriendTableViewCell.swift */; };
+		40B258A124A253280090495C /* DietaryRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */; };
+		40B258A224A253280090495C /* DietaryRestrictionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */; };
+		40B258A424A253440090495C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A324A253440090495C /* ProfileViewController.swift */; };
+		40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A524A253560090495C /* InviteFriendsTableViewController.swift */; };
+		40B258A824A253610090495C /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A724A253610090495C /* HistoryTableViewController.swift */; };
+		40B258AA24A253700090495C /* SavedRestaurantsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */; };
+		40B258AC24A2537E0090495C /* VotingSessionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */; };
 		BC8B5353175386317AFE3306 /* Pods_WhereTo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +62,16 @@
 		40B2588E24A16F0A0090495C /* FriendRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestController.swift; sourceTree = "<group>"; };
 		40B2589024A16F150090495C /* RestaurantController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantController.swift; sourceTree = "<group>"; };
 		40B2589224A16F1F0090495C /* VotingSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionController.swift; sourceTree = "<group>"; };
+		40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantTableViewCell.swift; sourceTree = "<group>"; };
+		40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestaurantTableViewCell.xib; sourceTree = "<group>"; };
+		40B2589924A251C90090495C /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
+		40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietaryRestrictionTableViewCell.swift; sourceTree = "<group>"; };
+		40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DietaryRestrictionTableViewCell.xib; sourceTree = "<group>"; };
+		40B258A324A253440090495C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		40B258A524A253560090495C /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
+		40B258A724A253610090495C /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+		40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRestaurantsTableViewController.swift; sourceTree = "<group>"; };
+		40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionTableViewController.swift; sourceTree = "<group>"; };
 		57C4430FA7DE0C832FCF4430 /* Pods-WhereTo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.debug.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.debug.xcconfig"; sourceTree = "<group>"; };
 		F4A020CE53683948133E3F08 /* Pods-WhereTo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.release.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -163,6 +183,7 @@
 		40B2585524A119B50090495C /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				40B2589424A2519B0090495C /* Custom TableView Cells */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -171,6 +192,11 @@
 			isa = PBXGroup;
 			children = (
 				40B2587F24A154800090495C /* LoginSignUpViewController.swift */,
+				40B258A324A253440090495C /* ProfileViewController.swift */,
+				40B258A524A253560090495C /* InviteFriendsTableViewController.swift */,
+				40B258A724A253610090495C /* HistoryTableViewController.swift */,
+				40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */,
+				40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -184,6 +210,18 @@
 				40B2589224A16F1F0090495C /* VotingSessionController.swift */,
 			);
 			path = "Model Controllers";
+			sourceTree = "<group>";
+		};
+		40B2589424A2519B0090495C /* Custom TableView Cells */ = {
+			isa = PBXGroup;
+			children = (
+				40B2589924A251C90090495C /* FriendTableViewCell.swift */,
+				40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */,
+				40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */,
+				40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */,
+				40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */,
+			);
+			path = "Custom TableView Cells";
 			sourceTree = "<group>";
 		};
 		92C12A3E68CD3CB10D3C3D9F /* Frameworks */ = {
@@ -258,7 +296,9 @@
 				40B2583E24A115D80090495C /* Assets.xcassets in Resources */,
 				40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */,
 				40B2583C24A115D30090495C /* Main.storyboard in Resources */,
+				40B2589824A251BE0090495C /* RestaurantTableViewCell.xib in Resources */,
 				40B2588224A156460090495C /* WhereTo.storyboard in Resources */,
+				40B258A224A253280090495C /* DietaryRestrictionTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,20 +351,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40B258A124A253280090495C /* DietaryRestrictionTableViewCell.swift in Sources */,
+				40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */,
 				40B2587A24A13D870090495C /* User.swift in Sources */,
 				40B2583524A115D30090495C /* AppDelegate.swift in Sources */,
+				40B258A824A253610090495C /* HistoryTableViewController.swift in Sources */,
 				40B2587C24A143910090495C /* UserController.swift in Sources */,
 				40B2588A24A16EF20090495C /* VotingSession.swift in Sources */,
 				40B2588024A154800090495C /* LoginSignUpViewController.swift in Sources */,
+				40B258A424A253440090495C /* ProfileViewController.swift in Sources */,
 				40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */,
 				40B2587E24A1528D0090495C /* WhereToError.swift in Sources */,
 				40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */,
 				40B2583724A115D30090495C /* SceneDelegate.swift in Sources */,
+				40B258AC24A2537E0090495C /* VotingSessionTableViewController.swift in Sources */,
 				40B2589124A16F150090495C /* RestaurantController.swift in Sources */,
+				40B2589724A251BE0090495C /* RestaurantTableViewCell.swift in Sources */,
 				40B2587824A12C5B0090495C /* UIViewControllerExtension.swift in Sources */,
 				40B2588624A16EDE0090495C /* FriendRequest.swift in Sources */,
 				40B2588824A16EEC0090495C /* Restaurant.swift in Sources */,
 				40B2588C24A16EF70090495C /* Vote.swift in Sources */,
+				40B2589A24A251C90090495C /* FriendTableViewCell.swift in Sources */,
+				40B258AA24A253700090495C /* SavedRestaurantsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
