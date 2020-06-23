@@ -170,9 +170,27 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            // TODO: - enable swipe to defriend
-//            tableView.deleteRows(at: [indexPath], with: .fade)
+            // Get the reference to the friend to remove
+            guard let friend = UserController.shared.friends?[indexPath.row] else { return }
+            
+            // Present an alert confirming that the user wants to remove the friend
+            presentChoiceAlert(title: "Are you sure?", message: "Are you sure you want to de-friend \(friend.name)") {
+                
+                // If the user clicks "confirm," remove the friend and update the tableview
+                FriendRequestController.shared.sendRequestToRemove(friend) { [weak self] (result) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(_):
+                            // FIXME: - fill this out later
+                            print("fill this out later")
+                        case .failure(let error):
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -16,6 +16,29 @@ let updateFriendsList = Notification.Name("updateFriendsList")
 
 extension UIViewController {
     
+    // MARK: - Navigation
+    
+    enum StoryboardNames: String {
+        case TabViewHome
+        case VotingSession
+    }
+    
+    func transitionToStoryboard(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft) {
+        let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
+        initialVC.modalPresentationStyle = .fullScreen
+        
+        // Make the transition look like navigating forward through a navigation controller
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = .push
+        transition.subtype = direction
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        view.window?.layer.add(transition, forKey: kCATransition)
+        
+        self.present(initialVC, animated: false)
+    }
+    
     // MARK: - Generic Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user

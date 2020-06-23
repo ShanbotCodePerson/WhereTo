@@ -19,6 +19,7 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
+        transitionToStoryboard(named: .TabViewHome)
     }
     
     @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {

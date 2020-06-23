@@ -47,7 +47,23 @@ class FriendRequestController {
     
     // Create a request to remove a friend
     func sendRequestToRemove(_ user: User, completion: @escaping resultCompletion) {
-        sendFriendRequest(to: user, addingFriend: false, completion: completion)
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Remove the friend from the user's list of friends
+        currentUser.friends.removeAll(where: { $0 == user.uuid })
+        
+        // Save the changes to the user
+        UserController.shared.saveChanges(to: user) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                // Send the notification to the unfriended user
+                self?.sendFriendRequest(to: user, addingFriend: false, completion: completion)
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
     }
     
     // Read (fetch) all pending friend requests
@@ -120,10 +136,9 @@ class FriendRequestController {
         }
     }
     
-    // MARK: - Receive Notifications
+    // MARK: - Set Up to Notifications
     
-    // Receive a friend request
-    func receiveFriendRequest() {
+    func subscribeToFriendRequestNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of any adding-type friend requests with the current user as the recipient
@@ -150,8 +165,7 @@ class FriendRequestController {
         }
     }
     
-    // Receive a response to a friend request
-    func receiveResponseToFriendRequest() {
+    func subscribeToFriendRequestResponseNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of changes to friend requests with the current user as the sender
@@ -186,8 +200,8 @@ class FriendRequestController {
         }
     }
     
-    // Someone has removed the current user as a friend
-    func receiveFriendRemoving() {
+    // When someone removes the current user as a friend
+    func subscribeToRemovingFriendNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
