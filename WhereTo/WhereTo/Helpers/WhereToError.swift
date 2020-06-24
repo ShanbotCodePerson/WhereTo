@@ -16,5 +16,6 @@ enum WhereToError: LocalizedError {
     case fsError(Error)
     case thrownError(Error)
     case noData
+    case invalidURL
     
 }
