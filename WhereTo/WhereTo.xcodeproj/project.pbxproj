@@ -29,8 +29,6 @@
 		40B2589724A251BE0090495C /* RestaurantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */; };
 		40B2589824A251BE0090495C /* RestaurantTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */; };
 		40B2589A24A251C90090495C /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589924A251C90090495C /* FriendTableViewCell.swift */; };
-		40B258A124A253280090495C /* DietaryRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */; };
-		40B258A224A253280090495C /* DietaryRestrictionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */; };
 		40B258A424A253440090495C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A324A253440090495C /* ProfileViewController.swift */; };
 		40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A524A253560090495C /* InviteFriendsTableViewController.swift */; };
 		40B258A824A253610090495C /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A724A253610090495C /* HistoryTableViewController.swift */; };
@@ -69,8 +67,6 @@
 		40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantTableViewCell.swift; sourceTree = "<group>"; };
 		40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestaurantTableViewCell.xib; sourceTree = "<group>"; };
 		40B2589924A251C90090495C /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
-		40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietaryRestrictionTableViewCell.swift; sourceTree = "<group>"; };
-		40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DietaryRestrictionTableViewCell.xib; sourceTree = "<group>"; };
 		40B258A324A253440090495C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		40B258A524A253560090495C /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
 		40B258A724A253610090495C /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
@@ -230,8 +226,6 @@
 				40B2589924A251C90090495C /* FriendTableViewCell.swift */,
 				40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */,
 				40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */,
-				40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */,
-				40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */,
 			);
 			path = "Custom TableView Cells";
 			sourceTree = "<group>";
@@ -313,7 +307,6 @@
 				40B2589824A251BE0090495C /* RestaurantTableViewCell.xib in Resources */,
 				78508DB824A2987900A525FF /* WhereTo.storyboard in Resources */,
 				40B2588224A156460090495C /* TabViewHome.storyboard in Resources */,
-				40B258A224A253280090495C /* DietaryRestrictionTableViewCell.xib in Resources */,
 				78508DB424A296DB00A525FF /* History.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -367,7 +360,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40B258A124A253280090495C /* DietaryRestrictionTableViewCell.swift in Sources */,
 				40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */,
 				40B2587A24A13D870090495C /* User.swift in Sources */,
 				40B2583524A115D30090495C /* AppDelegate.swift in Sources */,

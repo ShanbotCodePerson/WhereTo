@@ -30,7 +30,7 @@ class UserController {
     
     // Create a new user
     func newUser(with email: String, completion: @escaping resultCompletion) {
-        let user = User(email: email, name: "")
+        let user = User(email: email)
         
         // Save the user object to the cloud and save the documentID for editing purposes
         let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { error in
@@ -134,7 +134,7 @@ class UserController {
     // Update a user
     func saveChanges(to user: User, completion: @escaping resultCompletion) {
         guard let documentID = user.documentID else { return completion(.failure(.noUserFound)) }
-        print("got here to \(#function) and \(documentID)")
+        
         // Update the data in the cloud
         db.collection(UserStrings.recordType)
             .document(documentID)

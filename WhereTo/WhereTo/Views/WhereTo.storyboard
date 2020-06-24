@@ -145,7 +145,7 @@
                             <outlet property="delegate" destination="Ckr-BU-2er" id="BE3-Ii-FET"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Where To?" selectedImage="house.fill" catalog="system" id="hN4-NP-z9y"/>
+                    <tabBarItem key="tabBarItem" title="Where To?" image="house.fill" catalog="system" selectedImage="house.fill" id="hN4-NP-z9y"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qrL-fw-Hax" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
