@@ -46,6 +46,7 @@ class UserController {
         
         // Save to the source of truth and return the success
         currentUser = user
+        setUpUser()
         return completion(.success(true))
     }
     
@@ -70,6 +71,7 @@ class UserController {
                 
                 // Save to the source of truth and return the success
                 self?.currentUser = currentUser
+                self?.setUpUser()
                 return completion(.success(true))
         }
     }
@@ -171,5 +173,13 @@ class UserController {
                 // Return the success
                 return completion(.success(true))
         }
+    }
+    
+    // MARK: - Helper Methods
+    
+    func setUpUser() {
+        FriendRequestController.shared.subscribeToFriendRequestNotifications()
+        FriendRequestController.shared.subscribeToFriendRequestResponseNotifications()
+        FriendRequestController.shared.subscribeToRemovingFriendNotifications()
     }
 }

@@ -116,18 +116,6 @@ class LoginSignUpViewController: UIViewController {
     
     // Go to the main app screen
     func goToMainApp() {
-        let storyboard = UIStoryboard(name: "TabViewHome", bundle: nil)
-        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
-        initialVC.modalPresentationStyle = .fullScreen
-        
-        // Make the transition look like navigating forward through a navigation controller
-        let transition = CATransition()
-        transition.duration = 0.5
-        transition.type = .push
-        transition.subtype = .fromRight
-        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        view.window?.layer.add(transition, forKey: kCATransition)
-        
-        self.present(initialVC, animated: false)
+        transitionToStoryboard(named: .TabViewHome, direction: .fromRight)
     }
 }
