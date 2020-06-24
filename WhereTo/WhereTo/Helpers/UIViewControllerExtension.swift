@@ -140,7 +140,24 @@ extension UIViewController {
                     case .success(_):
                         // Offer the user a chance to block that person
                         self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friendRequest.fromName) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", completion: {
-                            // TODO: - implement this
+                            
+                            // Add the friend's ID to the user's list of blocked people
+                            currentUser.blockedUsers.append(friend.uuid)
+                            
+                            // Save the changes to the user
+                            UserController.shared.saveChanges(to: currentUser) { (result) in
+                                DispatchQueue.main.async {
+                                    switch result {
+                                    case .success(_):
+                                        // Display the success
+                                        self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(friend.name)")
+                                    case .failure(let error):
+                                        // Print and display the error
+                                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                        self?.presentErrorAlert(error)
+                                    }
+                                }
+                            }
                         })
                     case .failure(let error):
                         // Print and display the error

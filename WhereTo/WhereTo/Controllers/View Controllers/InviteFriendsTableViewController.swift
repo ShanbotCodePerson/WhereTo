@@ -170,8 +170,9 @@ class InviteFriendsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Get the reference to the friend to remove
-            guard let friend = UserController.shared.friends?[indexPath.row] else { return }
+            guard let currentUser = UserController.shared.currentUser,
+                let friend = UserController.shared.friends?[indexPath.row]
+                else { return }
             
             // Present an alert confirming that the user wants to remove the friend
             presentChoiceAlert(title: "Are you sure?", message: "Are you sure you want to de-friend \(friend.name)") {
@@ -181,8 +182,30 @@ class InviteFriendsTableViewController: UITableViewController {
                     DispatchQueue.main.async {
                         switch result {
                         case .success(_):
-                            // FIXME: - fill this out later
-                            print("fill this out later")
+                            // Give the user an opportunity to block the unwanted friend
+                            self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friend.name) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", completion: {
+                                
+                                // Add the friend's ID to the user's list of blocked people
+                                currentUser.blockedUsers.append(friend.uuid)
+                                
+                                // Save the changes to the user
+                                UserController.shared.saveChanges(to: currentUser) { (result) in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success(_):
+                                            // Display the success
+                                            self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(friend.name)")
+                                        case .failure(let error):
+                                            // Print and display the error
+                                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                            self?.presentErrorAlert(error)
+                                        }
+                                    }
+                                }
+                            })
+                            
+                            // Update the tableview
+                            self?.refreshData()
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
