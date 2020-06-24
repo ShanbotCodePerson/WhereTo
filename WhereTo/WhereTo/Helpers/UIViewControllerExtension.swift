@@ -19,6 +19,7 @@ extension UIViewController {
     // MARK: - Navigation
     
     enum StoryboardNames: String {
+        case Main
         case TabViewHome
         case VotingSession
     }
@@ -74,7 +75,7 @@ extension UIViewController {
     }
     
     // Present an alert with a text field to get some input from the user
-    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
+    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String?, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
@@ -129,6 +130,8 @@ extension UIViewController {
     // MARK: - Friend Request Alerts
     
     func presentNewFriendRequestAlert(_ friendRequest: FriendRequest) {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
         // Create the alert controller
         let alertController = UIAlertController(title: "New Friend Request", message: "\(friendRequest.fromName) has sent you a friend request!", preferredStyle: .alert)
         
@@ -142,7 +145,7 @@ extension UIViewController {
                         self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friendRequest.fromName) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", completion: {
                             
                             // Add the friend's ID to the user's list of blocked people
-                            currentUser.blockedUsers.append(friend.uuid)
+                            currentUser.blockedUsers.append(friendRequest.fromID)
                             
                             // Save the changes to the user
                             UserController.shared.saveChanges(to: currentUser) { (result) in
@@ -150,7 +153,7 @@ extension UIViewController {
                                     switch result {
                                     case .success(_):
                                         // Display the success
-                                        self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(friend.name)")
+                                        self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(friendRequest.fromName)")
                                     case .failure(let error):
                                         // Print and display the error
                                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

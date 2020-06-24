@@ -14,6 +14,8 @@ struct UserStrings {
     static let recordType = "user"
     static let emailKey = "email"
     static let nameKey = "name"
+    static let profilePhotoURLKey = "profilePhotoURL"
+    static let dietaryRestrictionsKey = "dietaryRestrictions"
     static let friendsKey = "friends"
     static let blockedUsersKey = "blockedUsers"
     static let favoriteRestaurantsKey = "favoriteRestaurants"
@@ -28,8 +30,8 @@ class User {
     
     let email: String
     var name: String
-//    var profilePhoto:
-//    var dietaryRestrictions: []
+    var profilePhotoURL: String?
+    var dietaryRestrictions: [DietaryRestriction]
     var friends: [String]
     var blockedUsers: [String]
     var favoriteRestaurants: [String]
@@ -38,10 +40,29 @@ class User {
     var documentID: String?
     let uuid: String
     
+    enum DietaryRestriction: String, CaseIterable {
+        case glutenFree = "gluten_free"
+        case vegetarian
+        case vegan
+        
+        var formatted: String {
+            switch self {
+            case .glutenFree:
+                return "Gluten-Free"
+            case .vegetarian:
+                return "Vegetarian"
+            case .vegan:
+                return "Vegan"
+            }
+        }
+    }
+    
     // MARK: - Initializers
     
     init(email: String,
-         name: String,
+         name: String? = nil,
+         profilePhotoURL: String? = nil,
+         dietaryRestrictions: [DietaryRestriction]? = nil,
          friends: [String]? = nil,
          blockedUsers: [String]? = nil,
          favoriteRestaurants: [String]? = nil,
@@ -51,7 +72,9 @@ class User {
          uuid: String = UUID().uuidString) {
         
         self.email = email
-        self.name = name
+        self.name = (name ?? email.components(separatedBy: "@").first) ?? email
+        self.profilePhotoURL = profilePhotoURL
+        self.dietaryRestrictions = dietaryRestrictions ?? []
         self.friends = friends ?? []
         self.blockedUsers = blockedUsers ?? []
         self.favoriteRestaurants = favoriteRestaurants ?? []
@@ -64,6 +87,7 @@ class User {
     convenience init?(dictionary: [String: Any]) {
         guard let email = dictionary[UserStrings.emailKey] as? String,
             let name = dictionary[UserStrings.nameKey] as? String,
+            let dietaryRestrictionsRawValues = dictionary[UserStrings.dietaryRestrictionsKey] as? [String],
             let friends = dictionary[UserStrings.friendsKey] as? [String],
             let blockedUsers = dictionary[UserStrings.blockedUsersKey] as? [String],
             let favoriteRestaurants = dictionary[UserStrings.favoriteRestaurantsKey] as? [String],
@@ -71,9 +95,13 @@ class User {
             let previousRestaurants = dictionary[UserStrings.previousRestaurantsKey] as? [String],
             let uuid = dictionary[UserStrings.uuidKey] as? String
             else { return nil }
+        let profilePhotoURL = dictionary[UserStrings.profilePhotoURLKey] as? String
+        let dietaryRestrictions = dietaryRestrictionsRawValues.compactMap { DietaryRestriction(rawValue: $0) }
         
         self.init(email: email,
                   name: name,
+                  profilePhotoURL: profilePhotoURL,
+                  dietaryRestrictions: dietaryRestrictions,
                   friends: friends,
                   blockedUsers: blockedUsers,
                   favoriteRestaurants: favoriteRestaurants,
@@ -87,6 +115,8 @@ class User {
     func asDictionary() -> [String: Any] {
         [UserStrings.emailKey : email,
          UserStrings.nameKey : name,
+         UserStrings.profilePhotoURLKey: profilePhotoURL as Any,
+         UserStrings.dietaryRestrictionsKey : dietaryRestrictions.map({ $0.rawValue }),
          UserStrings.friendsKey : friends,
          UserStrings.blockedUsersKey : blockedUsers,
          UserStrings.favoriteRestaurantsKey : favoriteRestaurants,

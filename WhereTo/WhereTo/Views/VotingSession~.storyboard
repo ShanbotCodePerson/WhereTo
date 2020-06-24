@@ -43,9 +43,8 @@
                                         <action selector="pickRandomRestaurantButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="Jik-3c-MyR"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="or invite friends to vote..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sd-Ed-eIV">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="or invite friends to vote..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sd-Ed-eIV">
                                     <rect key="frame" x="112" y="110.5" width="190" height="20.5"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -53,9 +52,13 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
-                                <constraint firstItem="aFk-ja-mqr" firstAttribute="leading" secondItem="arM-LP-fRH" secondAttribute="leading" id="KtA-sA-1RM"/>
-                                <constraint firstAttribute="trailing" secondItem="aFk-ja-mqr" secondAttribute="trailing" id="VsD-Ff-GqK"/>
-                                <constraint firstItem="aFk-ja-mqr" firstAttribute="top" secondItem="arM-LP-fRH" secondAttribute="top" id="d1b-uK-iPI"/>
+                                <constraint firstItem="aFk-ja-mqr" firstAttribute="leading" secondItem="arM-LP-fRH" secondAttribute="leading" id="1xa-IJ-imW"/>
+                                <constraint firstItem="4ip-y2-H0a" firstAttribute="top" secondItem="aFk-ja-mqr" secondAttribute="bottom" constant="20" id="NbV-2B-mZU"/>
+                                <constraint firstAttribute="bottom" secondItem="3sd-Ed-eIV" secondAttribute="bottom" id="T5r-Zw-lRW"/>
+                                <constraint firstAttribute="trailing" secondItem="aFk-ja-mqr" secondAttribute="trailing" id="XIB-Bp-SIY"/>
+                                <constraint firstItem="aFk-ja-mqr" firstAttribute="top" secondItem="arM-LP-fRH" secondAttribute="top" id="aIP-As-83Z"/>
+                                <constraint firstItem="4ip-y2-H0a" firstAttribute="centerX" secondItem="arM-LP-fRH" secondAttribute="centerX" id="adx-cC-gIZ"/>
+                                <constraint firstItem="3sd-Ed-eIV" firstAttribute="top" secondItem="4ip-y2-H0a" secondAttribute="bottom" constant="20" id="zEg-Al-Bbj"/>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="xtO-sn-LRy">
@@ -68,14 +71,6 @@
                                     <state key="normal" title="Vote!"/>
                                     <connections>
                                         <action selector="voteButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="N1u-kG-xex"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JqS-fU-8xa">
-                                    <rect key="frame" x="8" y="7" width="193" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="View Active Voting Sessions"/>
-                                    <connections>
-                                        <segue destination="rWr-rK-Y5U" kind="show" id="f7s-uv-yno"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -156,50 +151,62 @@
             </objects>
             <point key="canvasLocation" x="-575.36231884057975" y="928.79464285714278"/>
         </scene>
-        <!--Active Sessions Table View Controller-->
-        <scene sceneID="6Jd-DV-7e4">
+        <!--Voting Session Table View Controller-->
+        <scene sceneID="kt5-1i-PD0">
             <objects>
-                <tableViewController id="rWr-rK-Y5U" customClass="ActiveSessionsTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vn8-qH-AXo">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                <tableViewController id="TtE-Ee-fPX" customClass="VotingSessionTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="DlA-pk-wjW">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="jfB-9f-cwI">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-ex-7DX">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <items>
+                                        <navigationItem title="Vote on Your Top Picks!" id="bS1-Ap-bRe">
+                                            <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="j8T-pP-x2H">
+                                                <connections>
+                                                    <action selector="cancelButtonTapped:" destination="TtE-Ee-fPX" id="T1f-xt-aKT"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="k85-eu-hgO">
+                                                <connections>
+                                                    <action selector="doneButtonTapped:" destination="TtE-Ee-fPX" id="028-hm-3ed"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </navigationItem>
+                                    </items>
+                                </navigationBar>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstItem="NTP-ex-7DX" firstAttribute="top" secondItem="jfB-9f-cwI" secondAttribute="top" id="5Op-Dw-cgt"/>
+                                <constraint firstItem="NTP-ex-7DX" firstAttribute="leading" secondItem="jfB-9f-cwI" secondAttribute="leading" id="9EJ-0s-fwt"/>
+                                <constraint firstAttribute="trailing" secondItem="NTP-ex-7DX" secondAttribute="trailing" id="coO-O8-Zt8"/>
+                            </constraints>
+                        </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="votingSessionCell" textLabel="Awg-9M-xbW" detailTextLabel="vXF-fA-Xgx" style="IBUITableViewCellStyleSubtitle" id="dWU-AD-viI">
-                                <rect key="frame" x="0.0" y="28" width="414" height="55.5"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="VdF-5H-kdw" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dWU-AD-viI" id="4fd-T2-6qB">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="55.5"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VdF-5H-kdw" id="zrp-Gh-fiT">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Awg-9M-xbW">
-                                            <rect key="frame" x="20" y="10" width="33.5" height="20.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vXF-fA-Xgx">
-                                            <rect key="frame" x="20" y="31.5" width="44" height="14.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="rWr-rK-Y5U" id="RJn-98-DaT"/>
-                            <outlet property="delegate" destination="rWr-rK-Y5U" id="gT5-pr-3SH"/>
+                            <outlet property="dataSource" destination="TtE-Ee-fPX" id="Jhu-Tj-qrL"/>
+                            <outlet property="delegate" destination="TtE-Ee-fPX" id="RR4-aJ-QbE"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="qLj-o6-Ek9"/>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Uab-DC-CCl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2YX-TG-Y3x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="325" y="929"/>
+            <point key="canvasLocation" x="235" y="929"/>
         </scene>
     </scenes>
     <resources>
