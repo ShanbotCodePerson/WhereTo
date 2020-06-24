@@ -52,13 +52,11 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     @objc func showNewFriendRequest(_ sender: NSNotification) {
-        print("got here to \(#function) and \(sender) and \(sender.object)")
         guard let friendRequest = sender.object as? FriendRequest else { return }
         DispatchQueue.main.async { self.presentNewFriendRequestAlert(friendRequest) }
     }
     
     @objc func showFriendRequestResult(_ sender: NSNotification) {
-        print("got here to \(#function) and \(sender) and \(sender.object)")
         guard let friendRequest = sender.object as? FriendRequest else { return }
         DispatchQueue.main.async { self.presentFriendRequestResponseAlert(friendRequest) }
     }
@@ -89,29 +87,30 @@ class InviteFriendsTableViewController: UITableViewController {
     @IBAction func addFriendButtonTapped(_ sender: UIBarButtonItem) {
         // TODO: - allow searching by email or username
         
-        // Present the text field for the user to enter the desired email or to friend
+        // Present the text field for the user to enter the desired email
         presentTextFieldAlert(title: "Add Friend", message: "Send a friend request", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
     }
     
-    func sendRequest(to name: String) {
+    func sendRequest(to email: String) {
         guard let currentUser = UserController.shared.currentUser,
-            name != currentUser.name else {
+            email != currentUser.email else {
                 presentAlert(title: "Invalid Username", message: "You can't send a friend request to yourself!")
                 return
         }
         
-        // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
-        if currentUser.blockedUsers.contains(name) {
-            presentAlert(title: "Blocked", message: "You have blocked \(name)")
-            return
-        }
         // TODO: - search cloud for any outgoing or pending requests from that user
         
         // Make sure that the given username exists in the cloud
-        UserController.shared.searchFor(email: name) { [weak self] (result) in
+        UserController.shared.searchFor(email: email) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let friend):
+                    // Make sure the user hasn't already blocked, sent, received, or accepted a request from that username
+                    if currentUser.blockedUsers.contains(friend.uuid) {
+                        self?.presentAlert(title: "Blocked", message: "You have blocked \(friend.name)")
+                        return
+                    }
+                    
                     // Make sure the friend hasn't blocked the current user
                     guard !friend.blockedUsers.contains(currentUser.name) else {
                         self?.presentAlert(title: "Blocked", message: "You have been blocked by \(friend.name)")

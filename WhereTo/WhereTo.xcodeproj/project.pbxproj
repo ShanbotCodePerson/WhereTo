@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */; };
+		401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 401715B224A3E977002D86E0 /* VotingSession.storyboard */; };
 		40B2583524A115D30090495C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583424A115D30090495C /* AppDelegate.swift */; };
 		40B2583724A115D30090495C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583624A115D30090495C /* SceneDelegate.swift */; };
 		40B2583C24A115D30090495C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583A24A115D30090495C /* Main.storyboard */; };
@@ -29,8 +31,6 @@
 		40B2589724A251BE0090495C /* RestaurantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */; };
 		40B2589824A251BE0090495C /* RestaurantTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */; };
 		40B2589A24A251C90090495C /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589924A251C90090495C /* FriendTableViewCell.swift */; };
-		40B258A124A253280090495C /* DietaryRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */; };
-		40B258A224A253280090495C /* DietaryRestrictionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */; };
 		40B258A424A253440090495C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A324A253440090495C /* ProfileViewController.swift */; };
 		40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A524A253560090495C /* InviteFriendsTableViewController.swift */; };
 		40B258A824A253610090495C /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A724A253610090495C /* HistoryTableViewController.swift */; };
@@ -45,6 +45,8 @@
 
 /* Begin PBXFileReference section */
 		0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhereTo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionsTableViewController.swift; sourceTree = "<group>"; };
+		401715B224A3E977002D86E0 /* VotingSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VotingSession.storyboard; sourceTree = "<group>"; };
 		40B2583124A115D30090495C /* WhereTo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereTo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B2583424A115D30090495C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40B2583624A115D30090495C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -69,8 +71,6 @@
 		40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantTableViewCell.swift; sourceTree = "<group>"; };
 		40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestaurantTableViewCell.xib; sourceTree = "<group>"; };
 		40B2589924A251C90090495C /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
-		40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietaryRestrictionTableViewCell.swift; sourceTree = "<group>"; };
-		40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DietaryRestrictionTableViewCell.xib; sourceTree = "<group>"; };
 		40B258A324A253440090495C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		40B258A524A253560090495C /* InviteFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsTableViewController.swift; sourceTree = "<group>"; };
 		40B258A724A253610090495C /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +172,7 @@
 				40B2583A24A115D30090495C /* Main.storyboard */,
 				40B2588124A156460090495C /* TabViewHome.storyboard */,
 				78508DB724A2987900A525FF /* WhereTo.storyboard */,
+				401715B224A3E977002D86E0 /* VotingSession.storyboard */,
 				78508DB524A296FA00A525FF /* Favorites.storyboard */,
 				78508DB324A296DB00A525FF /* History.storyboard */,
 				78508DB124A296BD00A525FF /* Profile.storyboard */,
@@ -208,6 +209,7 @@
 				40B258A524A253560090495C /* InviteFriendsTableViewController.swift */,
 				40B258A724A253610090495C /* HistoryTableViewController.swift */,
 				40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */,
+				401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */,
 				40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */,
 			);
 			path = "View Controllers";
@@ -230,8 +232,6 @@
 				40B2589924A251C90090495C /* FriendTableViewCell.swift */,
 				40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */,
 				40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */,
-				40B2589F24A253280090495C /* DietaryRestrictionTableViewCell.swift */,
-				40B258A024A253280090495C /* DietaryRestrictionTableViewCell.xib */,
 			);
 			path = "Custom TableView Cells";
 			sourceTree = "<group>";
@@ -305,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40B2584124A115D80090495C /* LaunchScreen.storyboard in Resources */,
+				401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */,
 				40B2583E24A115D80090495C /* Assets.xcassets in Resources */,
 				78508DB224A296BD00A525FF /* Profile.storyboard in Resources */,
 				40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */,
@@ -313,7 +314,6 @@
 				40B2589824A251BE0090495C /* RestaurantTableViewCell.xib in Resources */,
 				78508DB824A2987900A525FF /* WhereTo.storyboard in Resources */,
 				40B2588224A156460090495C /* TabViewHome.storyboard in Resources */,
-				40B258A224A253280090495C /* DietaryRestrictionTableViewCell.xib in Resources */,
 				78508DB424A296DB00A525FF /* History.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -367,7 +367,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40B258A124A253280090495C /* DietaryRestrictionTableViewCell.swift in Sources */,
 				40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */,
 				40B2587A24A13D870090495C /* User.swift in Sources */,
 				40B2583524A115D30090495C /* AppDelegate.swift in Sources */,
@@ -376,6 +375,7 @@
 				40B2588A24A16EF20090495C /* VotingSession.swift in Sources */,
 				40B2588024A154800090495C /* LoginSignUpViewController.swift in Sources */,
 				40B258A424A253440090495C /* ProfileViewController.swift in Sources */,
+				401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */,
 				40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */,
 				40B2587E24A1528D0090495C /* WhereToError.swift in Sources */,
 				40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */,
