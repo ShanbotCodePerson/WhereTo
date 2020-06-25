@@ -18,5 +18,6 @@ enum WhereToError: LocalizedError {
     case noData
     case invalidURL
     case documentNotFound
+    case noRestaurantsMatch
     
 }
