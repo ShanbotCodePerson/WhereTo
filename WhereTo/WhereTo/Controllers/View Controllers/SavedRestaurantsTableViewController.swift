@@ -83,8 +83,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
         } else {
             restaurant = RestaurantController.shared.blacklistedRestaurants?[indexPath.row]
         }
-        guard let restaurantToDisplay = restaurant else { return cell }
-        cell.restaurant = restaurantToDisplay
+        cell.restaurant = restaurant
         
         return cell
     }

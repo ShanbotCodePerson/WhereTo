@@ -29,49 +29,95 @@ class VotingSessionController {
     // MARK: - CRUD Methods
     
     // Create a new voting session and send invites to all participants
-    func newVotingSession(with friends: [User], at coordinates: [String : Float], radius: Float, completion: @escaping resultCompletionWith<VotingSession>) {
+    func newVotingSession(with friends: [User], at coordinates: [String : Float], radius: Float, usingDietaryRestrictions: Bool = true, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
-        // TODO: - Fetch the restaurants within the radius of the coordinates, filter by users diets and blacklistings
-        
-        // Create the voting session
-        // FIXME: - might not need to save coordinates and radius in voting session object if not refreshing search
-        // FIXME: - use actual restaurants here not empty array
-        let votingSession = VotingSession(coordinates: coordinates, radius: radius, restaurantIDs: [])
-        
-        // Save the voting session to the cloud
-        let reference: DocumentReference = db.collection(VotingSessionStrings.recordType).addDocument(data: votingSession.asDictionary()) { (error) in
-            
-            if let error = error {
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(.fsError(error)))
-            }
-        }
-        votingSession.documentID = reference.documentID
-        
-        // Add the reference to the voting session to the user's list of active voting sessions
-        currentUser.activeVotingSessions.append(votingSession.uuid)
-        
-        // Save the changes to the user
-        UserController.shared.saveChanges(to: currentUser) { (result) in
+        // Fetch the restaurants within the radius of the coordinates
+        // TODO: - need to be able to end a location
+        RestaurantController.shared.fetchRestaurantsByLocation { [weak self] (result) in
             switch result {
-            case .success(_):
-                // TODO: - figure this out
-                print("not sure what to do here")
+            case .success(let restaurants):
+                guard var restaurants = restaurants else { return completion(.failure(.noData)) }
+                
+                // Filter out restaurants that have been blacklisted by the selected users
+                var allBlacklisted = currentUser.blacklistedRestaurants
+                allBlacklisted.append(contentsOf: friends.map({ $0.blacklistedRestaurants }).joined())
+                let blacklisted = Set(allBlacklisted)
+                restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
+                
+                // Filter the restaurants by the dietary restrictions
+                if usingDietaryRestrictions {
+                    
+                }
+                
+                // Filter the restaurants by which ones are currently open
+                restaurants = restaurants.filter { $0.hours.openNow }
+                
+                // Check to see if there are any restaurants remaining
+                guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
+                
+                // Calculate how many votes each user should get
+                let votesEach = min(restaurants.count, max(friends.count + 1, 5))
+                
+                // Create the voting session
+                let votingSession = VotingSession(votesEach: votesEach, restaurantIDs: restaurants.map({ $0.restaurantID }))
+                var users = friends
+                users.append(currentUser)
+                votingSession.users = users
+                votingSession.restaurants = restaurants
+                
+                // Save the voting session to the cloud
+                let reference: DocumentReference? = self?.db.collection(VotingSessionStrings.recordType).addDocument(data: votingSession.asDictionary()) { (error) in
+                    
+                    if let error = error {
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(.fsError(error)))
+                    }
+                }
+                votingSession.documentID = reference?.documentID
+                
+                // Add the reference to the voting session to the user's list of active voting sessions
+                currentUser.activeVotingSessions.append(votingSession.uuid)
+                
+                // Save the changes to the user
+                UserController.shared.saveChanges(to: currentUser) { (result) in
+                    switch result {
+                    case .success(_):
+                        // TODO: - figure this out
+                        print("not sure what to do here")
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
+                
+                // FIXME: - issue with threading here, figure out how to handle the multiple completions
+                
+                // Create the invitations to the voting session and save them to the cloud
+                for friend in friends {
+                    let votingSessionInvite = VotingSessionInvite(fromName: currentUser.name, toID: friend.uuid, votingSessionID: votingSession.uuid)
+                    self?.db.collection(VotingSessionInviteStrings.recordType)
+                        .addDocument(data: votingSessionInvite.asDictionary()) { (error) in
+                            
+                            // TODO: - do I need to keep track of errors / completions here?
+                            if let error = error {
+                                // Print and return the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                return completion(.failure(.fsError(error)))
+                            }
+                    }
+                }
+                
+                // Return the success
+                return completion(.success(votingSession))
             case .failure(let error):
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(error))
             }
         }
-        
-        // FIXME: - issue with threading here, figure out how to handle the multiple completions
-        
-        // Create and save the invitations to the voting session
-        
-        // Return the success
-        return completion(.success(votingSession))
     }
     // TODO: - make sure to get and save docID
     
@@ -131,10 +177,35 @@ class VotingSessionController {
                 
                 // Unwrap the data
                 guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                let users = documents.compactMap({ User(dictionary: $0.data()) })
+                let users = documents.compactMap { User(dictionary: $0.data()) }
                 
                 // Return the success
                 return completion(.success(users))
+        }
+    }
+    
+    // Read (fetch) all the votes made by the user in a given voting session
+    func fetchVotes(in votingSession: VotingSession, completion: @escaping resultCompletionWith<[Vote]>) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Fetch the data from the cloud
+        db.collection(VoteStrings.recordType)
+            .whereField(VoteStrings.votingSessionIDKey, isEqualTo: votingSession.uuid)
+            .whereField(VoteStrings.userIDKey, isEqualTo: currentUser.uuid)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                let votes = documents.compactMap { Vote(dictionary: $0.data()) }
+                
+                // Return the success
+                return completion(.success(votes))
         }
     }
     
@@ -269,20 +340,94 @@ class VotingSessionController {
                 // Send a local notification to present an alert for each invitation
                 for invitation in newInvitations {
                     NotificationCenter.default.post(name: newVotingSessionInvitation, object: invitation)
-                     // FIXME: - need to figure out how this works when there are multiple friend requests
+                    // FIXME: - need to figure out how this works when there are multiple invitations
                 }
         }
     }
     
     // A user has responded to a invitation to a session
     func subscribeToInvitationResponseNotifications() {
-        // TODO: - when an invitation referencing a voting session that the current user is in is deleted, update the user's own reference of that voting session
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Set up a listener to be alerted whenever someone responds to an invitation for a voting session the user is in
+        db.collection(VotingSessionInviteStrings.recordType)
+            .whereField(VotingSessionInviteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
+            .addSnapshotListener { [weak self] (snapshot, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+                
+                // Unwrap the data
+                guard let snapshot = snapshot else { return }
+                
+                // Only pay attention to when the invitation is deleted
+                snapshot.documentChanges.forEach({ (change) in
+                    if change.type == .removed {
+                        // Update the list of users referenced in the relevant voting session
+                        let votingSessionInvite = VotingSessionInvite(dictionary: change.document.data())
+                        guard let votingSession = self?.votingSessions?.first(where: { $0.uuid == votingSessionInvite?.votingSessionID }) else { return }
+                        self?.fetchUsersInVotingSession(with: votingSession.uuid, completion: { (result) in
+                            switch result {
+                            case .success(let users):
+                                votingSession.users = users
+                            case .failure(let error):
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            }
+                        })
+                    }
+                })
+        }
     }
     
     // The voting session is over and has been deleted
     func subscribeToSessionOverNotifications() {
-        // TODO: - make sure to delete from user's list of active sessions and from source of truth
-        // TODO: - if a conclusion was reached, add that restaurant to the history, present thing allowing user to open address in a map app
-        // TODO: - need a separate method for when a conclusion has been reached? figure out about cloud functions
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Set up a listener on all voting sessions the user is currently involved in
+        db.collection(VotingSessionStrings.recordType)
+            .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
+            .addSnapshotListener { [weak self] (snapshot, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+                
+                // Only pay attention to when the invitation is deleted
+                snapshot?.documentChanges.forEach({ (change) in
+                    if change.type == .removed {
+                        // If there was an outcome, add that restaurant the user's list of previous restaurants
+                        let votingSession = VotingSession(dictionary: change.document.data())
+                        if let outcome = votingSession?.outcomeID {
+                            currentUser.previousRestaurants.append(outcome)
+                            
+                            // TODO: - send a notification to update the previous restaurants table view, present alert with results and allowing user to open in map app
+                        }
+                        
+                        // Remove the voting session from the source of truth
+                        self?.votingSessions?.removeAll(where: { $0.uuid == votingSession?.uuid })
+                        
+                        // Remove the voting session from the user's list of active sessions
+                        currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession?.uuid })
+                        
+                        // Save the changes to the user
+                        UserController.shared.saveChanges(to: currentUser) { (result) in
+                            switch result {
+                            case .success(_):
+                                // TODO: - fill this out better
+                                print("Saved")
+                            case .failure(let error):
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            }
+                        }
+                    }
+                })
+                
+                
+        }
     }
 }
