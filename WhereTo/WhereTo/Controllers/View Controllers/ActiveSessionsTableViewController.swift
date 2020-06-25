@@ -12,18 +12,21 @@ class ActiveSessionsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.tableFooterView = UIView()
     }
 
     // MARK: - TableView Methods
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return VotingSessionController.shared.votingSessions?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "votingSessionCell", for: indexPath)
 
-        // Configure the cell...
+        guard let votingSession = VotingSessionController.shared.votingSessions?[indexPath.row] else { return cell }
+        cell.textLabel?.text = "Choose a place to eat with \(votingSession.users) at \(votingSession.coordinates)" // TODO: - format better, just names of users, better location name
+        cell.detailTextLabel?.text = "Currently waiting for ..." // TODO: - fill this part out better
 
         return cell
     }

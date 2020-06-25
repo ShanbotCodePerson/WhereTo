@@ -33,7 +33,7 @@ class FriendRequestController {
         // Save it to the cloud
         db.collection(FriendRequestStrings.recordType)
             .document("\(friendRequest.fromID)-\(friendRequest.toID)")
-            .setData(friendRequest.asDictionary()) { error in
+            .setData(friendRequest.asDictionary()) { (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -107,7 +107,7 @@ class FriendRequestController {
         // Save the changes to the friend request
         db.collection(FriendRequestStrings.recordType)
             .document("\(friendRequest.fromID)-\(friendRequest.toID)")
-            .updateData([FriendRequestStrings.statusKey : friendRequest.status.rawValue]) { error in
+            .updateData([FriendRequestStrings.statusKey : friendRequest.status.rawValue]) { (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -124,7 +124,7 @@ class FriendRequestController {
         // Delete the friend request from the cloud
         db.collection(FriendRequestStrings.recordType)
             .document("\(friendRequest.fromID)-\(friendRequest.toID)")
-            .delete() { error in
+            .delete() { (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -136,7 +136,7 @@ class FriendRequestController {
         }
     }
     
-    // MARK: - Set Up to Notifications
+    // MARK: - Set Up Notifications
     
     func subscribeToFriendRequestNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }

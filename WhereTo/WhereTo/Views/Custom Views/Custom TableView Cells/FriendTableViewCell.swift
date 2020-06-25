@@ -10,15 +10,20 @@ import UIKit
 
 class FriendTableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    // MARK: - Outlets
+    
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    
+    // MARK: - Properties
+    
+    var friend: User? { didSet { setUpViews() } }
+    
+    // MARK: - Set Up UI
+
+    func setUpViews() {
+        guard let friend = friend else { return }
+        
+        nameLabel.text = friend.name
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

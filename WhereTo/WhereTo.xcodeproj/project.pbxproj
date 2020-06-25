@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */; };
 		401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 401715B224A3E977002D86E0 /* VotingSession.storyboard */; };
+		401715B524A41A57002D86E0 /* VotingSessionInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B424A41A56002D86E0 /* VotingSessionInvite.swift */; };
 		40B2583524A115D30090495C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583424A115D30090495C /* AppDelegate.swift */; };
 		40B2583724A115D30090495C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583624A115D30090495C /* SceneDelegate.swift */; };
 		40B2583C24A115D30090495C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583A24A115D30090495C /* Main.storyboard */; };
@@ -47,6 +48,7 @@
 		0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WhereTo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionsTableViewController.swift; sourceTree = "<group>"; };
 		401715B224A3E977002D86E0 /* VotingSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VotingSession.storyboard; sourceTree = "<group>"; };
+		401715B424A41A56002D86E0 /* VotingSessionInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionInvite.swift; sourceTree = "<group>"; };
 		40B2583124A115D30090495C /* WhereTo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereTo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B2583424A115D30090495C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40B2583624A115D30090495C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				40B2588724A16EEC0090495C /* Restaurant.swift */,
 				40B2588924A16EF20090495C /* VotingSession.swift */,
 				40B2588B24A16EF70090495C /* Vote.swift */,
+				401715B424A41A56002D86E0 /* VotingSessionInvite.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				40B2587824A12C5B0090495C /* UIViewControllerExtension.swift in Sources */,
 				40B2588624A16EDE0090495C /* FriendRequest.swift in Sources */,
 				40B2588824A16EEC0090495C /* Restaurant.swift in Sources */,
+				401715B524A41A57002D86E0 /* VotingSessionInvite.swift in Sources */,
 				40B2588C24A16EF70090495C /* Vote.swift in Sources */,
 				40B2589A24A251C90090495C /* FriendTableViewCell.swift in Sources */,
 				40B258AA24A253700090495C /* SavedRestaurantsTableViewController.swift in Sources */,

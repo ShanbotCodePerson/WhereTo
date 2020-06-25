@@ -21,6 +21,7 @@ struct UserStrings {
     static let favoriteRestaurantsKey = "favoriteRestaurants"
     static let blacklistedRestaurantsKey = "blacklistedRestaurants"
     static let previousRestaurantsKey = "previousRestaurants"
+    static let activeVotingSessionsKey = "activeVotingSessions"
     static let uuidKey = "uuid"
 }
 
@@ -32,12 +33,13 @@ class User {
     var name: String
     var profilePhotoURL: String?
     var dietaryRestrictions: [DietaryRestriction]
-    var friends: [String]
-    var blockedUsers: [String]
-    var favoriteRestaurants: [String]
-    var blacklistedRestaurants: [String]
-    var previousRestaurants: [String]
-    var documentID: String?
+    var friends: [String]                       // uuid's of other users
+    var blockedUsers: [String]                  // uuid's of other users
+    var favoriteRestaurants: [String]           // restaurant id's
+    var blacklistedRestaurants: [String]        // restaurant id's
+    var previousRestaurants: [String]           // restaurant id's
+    var activeVotingSessions: [String]          // uuid's of voting sessions
+    var documentID: String?                     // document id in Firebase, for editing purposes
     let uuid: String
     
     enum DietaryRestriction: String, CaseIterable {
@@ -68,6 +70,7 @@ class User {
          favoriteRestaurants: [String]? = nil,
          blacklistedRestaurants: [String]? = nil,
          previousRestaurants: [String]? = nil,
+         activeVotingSessions: [String]? = nil,
          documentID: String? = nil,
          uuid: String = UUID().uuidString) {
         
@@ -80,6 +83,7 @@ class User {
         self.favoriteRestaurants = favoriteRestaurants ?? []
         self.blacklistedRestaurants = blacklistedRestaurants ?? []
         self.previousRestaurants = previousRestaurants ?? []
+        self.activeVotingSessions = activeVotingSessions ?? []
         self.documentID = documentID
         self.uuid = uuid
     }
@@ -93,6 +97,7 @@ class User {
             let favoriteRestaurants = dictionary[UserStrings.favoriteRestaurantsKey] as? [String],
             let blacklistedRestaurants = dictionary[UserStrings.blacklistedRestaurantsKey] as? [String],
             let previousRestaurants = dictionary[UserStrings.previousRestaurantsKey] as? [String],
+            let activeVotingSessions = dictionary[UserStrings.activeVotingSessionsKey] as? [String],
             let uuid = dictionary[UserStrings.uuidKey] as? String
             else { return nil }
         let profilePhotoURL = dictionary[UserStrings.profilePhotoURLKey] as? String
@@ -107,6 +112,7 @@ class User {
                   favoriteRestaurants: favoriteRestaurants,
                   blacklistedRestaurants: blacklistedRestaurants,
                   previousRestaurants: previousRestaurants,
+                  activeVotingSessions: activeVotingSessions,
                   uuid: uuid)
     }
     
@@ -122,6 +128,7 @@ class User {
          UserStrings.favoriteRestaurantsKey : favoriteRestaurants,
          UserStrings.blacklistedRestaurantsKey : blacklistedRestaurants,
          UserStrings.previousRestaurantsKey : previousRestaurants,
+         UserStrings.activeVotingSessionsKey : activeVotingSessions,
          UserStrings.uuidKey : uuid]
     }
 }

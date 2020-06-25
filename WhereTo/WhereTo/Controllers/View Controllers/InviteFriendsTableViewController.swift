@@ -10,6 +10,10 @@ import UIKit
 
 class InviteFriendsTableViewController: UITableViewController {
     
+    // MARK: - Outlets
+    
+    @IBOutlet weak var viewActiveVotingSessionsButton: UIButton!
+    
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
@@ -27,7 +31,7 @@ class InviteFriendsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        // Check for pending friend requests, and show alerts for each one if there are any
+        // Check for pending friend requests, then show alerts for each one if there are any
         FriendRequestController.shared.fetchPendingRequests { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
@@ -42,6 +46,8 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
+        
+        // TODO: - Check for pending invitations to voting sessions, then show alerts for each one if there are any
     }
     
     // MARK: - Receive Notifications
@@ -66,6 +72,7 @@ class InviteFriendsTableViewController: UITableViewController {
     func loadAllData() {
         guard UserController.shared.friends == nil else { return }
         
+        // Load the user's friends
         UserController.shared.fetchUsersFriends { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
@@ -79,8 +86,25 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
+        
+        // Load the user's current voting sessions
+        VotingSessionController.shared.fetchCurrentVotingSessions { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let votingSessions):
+                    if votingSessions.count == 0 {
+                        // Don't allow the user to go to the page displaying all the voting sessions if there aren't any
+                        self?.viewActiveVotingSessionsButton.isHidden = true
+                        // TODO: - make sure to enable this button as appropriate later
+                    }
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
-    
     
     // MARK: - Actions
     
@@ -150,6 +174,27 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
+        // TODO: - first display an alert asking about location
+        
+//        guard let currentUser = UserController.shared.currentUser,
+//            let indexPaths = tableView.indexPathsForSelectedRows
+//            else { return }
+//
+//        // TODO: - disable vote button until at least one other person is selected
+//
+//        // Get the selected friends
+//        let friends = indexPaths.map { currentUser.friends[$0.row] }
+        
+//        // Create the voting session
+//        VotingSessionController.shared.newVotingSession(with: friends, at: coordinates, radius: radius) { (result) in
+//            switch result {
+//            case .success(_):
+//            case .failure(let error):
+//            }
+//        }
+//        
+//        // Transition to the voting page
+//        transitionToVotingSessionPage(with: votingSession)
     }
     
     // MARK: - Table view data source
@@ -159,11 +204,11 @@ class InviteFriendsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendTableViewCell else { return UITableViewCell() }
 
         guard let friend = UserController.shared.friends?[indexPath.row] else { return cell }
-        cell.textLabel?.text = friend.name
-
+        cell.friend = friend
+        
         return cell
     }
     

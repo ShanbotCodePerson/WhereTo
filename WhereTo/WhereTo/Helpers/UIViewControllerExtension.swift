@@ -13,6 +13,7 @@ import UIKit
 let newFriendRequest = Notification.Name("newFriendRequest")
 let responseToFriendRequest = Notification.Name("responseToFriendRequest")
 let updateFriendsList = Notification.Name("updateFriendsList")
+let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
 
 extension UIViewController {
     
@@ -34,6 +35,23 @@ extension UIViewController {
         transition.duration = 0.5
         transition.type = .push
         transition.subtype = direction
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        view.window?.layer.add(transition, forKey: kCATransition)
+        
+        self.present(initialVC, animated: false)
+    }
+    
+    func transitionToVotingSessionPage(with votingSession: VotingSession) {
+        let storyboard = UIStoryboard(name: StoryboardNames.VotingSession.rawValue, bundle: nil)
+        guard let initialVC = storyboard.instantiateInitialViewController() as? VotingSessionTableViewController else { return }
+        initialVC.votingSession = votingSession
+        initialVC.modalPresentationStyle = .fullScreen
+        
+        // Make the transition look like navigating forward through a navigation controller
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = .push
+        transition.subtype = .fromRight
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
