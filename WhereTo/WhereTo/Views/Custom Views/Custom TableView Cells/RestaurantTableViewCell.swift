@@ -9,16 +9,22 @@
 import UIKit
 
 class RestaurantTableViewCell: UITableViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
+    // MARK: - Outlets
+    
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var ratingLabel: UILabel!
+    
+    // MARK: - Properties
+    
+    var restaurant: Restaurant? { didSet { setUpViews() } }
+    
+    // MARK: - Set Up UI
+    
+    func setUpViews() {
+        guard let restaurant = restaurant else { return }
+        
+        nameLabel.text = restaurant.name
+        ratingLabel.text = "Rating: \(restaurant.rating)"
+    }
 }
