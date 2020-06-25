@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 class InviteFriendsTableViewController: UITableViewController {
+    
+    // MARK: - Properties
+    
+    var locationManager = CLLocationManager()
+    var currentLocation = CLLocation()
     
     // MARK: - Outlets
     
@@ -18,6 +24,10 @@ class InviteFriendsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // set IviteFriendsTableViewController as delegate of CLLocationManager
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
         // Load the data if it hasn't been loaded already
         loadAllData()
@@ -175,6 +185,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
         // TODO: - first display an alert asking about location
+        retriveCurrentLocation()
         
 //        guard let currentUser = UserController.shared.currentUser,
 //            let indexPaths = tableView.indexPathsForSelectedRows
@@ -196,6 +207,26 @@ class InviteFriendsTableViewController: UITableViewController {
 //        // Transition to the voting page
 //        transitionToVotingSessionPage(with: votingSession)
     }
+    
+    // MARK: - Helper Funtions
+    func retriveCurrentLocation() {
+        // retrive authorization status
+        let status = CLLocationManager.authorizationStatus()
+        
+        if(status == .denied || status == .restricted || !CLLocationManager.locationServicesEnabled()) {
+            // show alert telling user they need to allow location data to use features of the app
+            return
+        }
+        
+        if(status == .notDetermined) {
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        // Can now request location since status is Authorized
+        locationManager.requestLocation()
+    }
+    
     
     // MARK: - Table view data source
 
@@ -259,5 +290,42 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
+    }
+} // End Of Class
+
+// MARK: Extension: LocationManagerDelegate
+extension InviteFriendsTableViewController: CLLocationManagerDelegate {
+    
+    // methods for locationManagerDelegate
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+        switch status {
+        case .notDetermined:
+            print("Location permissions haven't been shown to the user yet.")
+        case .restricted:
+            print("Parental control setting disallows loacation data.")
+        case .denied:
+            print("User has disallowed permission, unable to get location data.")
+        case .authorizedAlways:
+            print("User has allowed app to get location data when app is active or in background.")
+        case .authorizedWhenInUse:
+            print("User has allowed app to get location data when app is active.")
+        @unknown default:
+            print("Unknown failure.")
+            fatalError()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        if let location = locations.first {
+            currentLocation = location
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        // TODO: show alert that getting current location failed
+        
     }
 }
