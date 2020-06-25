@@ -11,7 +11,7 @@ import Foundation
 // MARK: - String Constants
 
 struct FriendRequestStrings {
-    static let recordType = "FriendRequest"
+    static let recordType = "friendRequest"
     static let fromIDKey = "fromID"
     static let fromNameKey = "fromName"
     static let toIDKey = "toID"
