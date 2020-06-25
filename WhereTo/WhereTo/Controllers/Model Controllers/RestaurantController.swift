@@ -44,16 +44,8 @@ class RestaurantController {
     
     // MARK: - CRUD Methods
     
-    func fetchCurrentLocation() -> [String: Float] {
-        // TODO: fetch current location using MapKit
-        // return Longitude & latitude
-        return [yelpStrings.latitudeKey : 43.486608, yelpStrings.longitudeKey : -112.034846]
-    }
-    
     // Read (fetch) a list of restaurants from the API based on location
-    func fetchRestaurantsByLocation(completion: @escaping resultCompletionWith<[Restaurant]?>) {
-        
-        let coordinates = fetchCurrentLocation()
+    func fetchRestaurantsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
         
         // 1 - URL setup
         guard let baseURL = URLComponents(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL))}
@@ -62,8 +54,8 @@ class RestaurantController {
         
         urlComps.path = yelpStrings.searchPath
         urlComps.queryItems = [
-            URLQueryItem(name: yelpStrings.latitudeKey, value: "\(coordinates[yelpStrings.latitudeKey] ?? 43.486608)"),
-            URLQueryItem(name: yelpStrings.longitudeKey, value: "\(coordinates[yelpStrings.longitudeKey] ?? -112.034846)"),
+            URLQueryItem(name: yelpStrings.latitudeKey, value: "\(location.coordinate.latitude)"),
+            URLQueryItem(name: yelpStrings.longitudeKey, value: "\(location.coordinate.longitude)"),
             URLQueryItem(name: yelpStrings.termKey, value: yelpStrings.termValue)
         ]
             

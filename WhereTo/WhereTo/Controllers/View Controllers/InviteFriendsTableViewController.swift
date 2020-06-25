@@ -185,7 +185,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
         // TODO: - first display an alert asking about location
-        retriveCurrentLocation()
+        fetchCurrentLocation()
         
 //        guard let currentUser = UserController.shared.currentUser,
 //            let indexPaths = tableView.indexPathsForSelectedRows
@@ -209,7 +209,7 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     // MARK: - Helper Funtions
-    func retriveCurrentLocation() {
+    func fetchCurrentLocation() {
         // retrive authorization status
         let status = CLLocationManager.authorizationStatus()
         
@@ -227,6 +227,21 @@ class InviteFriendsTableViewController: UITableViewController {
         locationManager.requestLocation()
     }
     
+    func getLocationFromString(addressString: String, completion: @escaping(CLLocation?, NSError?) -> Void) {
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(addressString) { (placemarks, error) in
+            if error == nil {
+                if let placemark = placemarks?[0] {
+                    let location = placemark.location!
+                
+                    completion(location, nil)
+                    return
+                }
+            }
+            completion(nil, error as NSError?)
+        }
+    }
     
     // MARK: - Table view data source
 
