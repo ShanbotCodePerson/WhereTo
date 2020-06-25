@@ -25,9 +25,19 @@ class ActiveSessionsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "votingSessionCell", for: indexPath)
 
         guard let votingSession = VotingSessionController.shared.votingSessions?[indexPath.row] else { return cell }
-        cell.textLabel?.text = "Choose a place to eat with \(votingSession.users) at \(votingSession.coordinates)" // TODO: - format better, just names of users, better location name
+        cell.textLabel?.text = "Choose a place to eat with \(votingSession.users)" // TODO: - format better, just names of users, better location name
         cell.detailTextLabel?.text = "Currently waiting for ..." // TODO: - fill this part out better
 
         return cell
+    }
+    
+    // MARK: - Navigation
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Get the selected voting session
+        guard let votingSession = VotingSessionController.shared.votingSessions?[indexPath.row] else { return}
+        
+        // Transition to the voting session view
+        transitionToVotingSessionPage(with: votingSession)
     }
 }

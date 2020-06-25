@@ -8,16 +8,25 @@
 
 import UIKit
 
+protocol RestaurantTableViewCellSavedButtonDelegate: class {
+    func saveRestaurantButton(for cell: RestaurantTableViewCell)
+}
+
 class RestaurantTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
+    @IBOutlet weak var isSavedButton: UIButton!
+    @IBOutlet weak var voteStatusImage: UIImageView!
     
     // MARK: - Properties
     
     var restaurant: Restaurant? { didSet { setUpViews() } }
+    var vote: Int? { didSet { formatWithVote() } }
+    
+    weak var delegate: RestaurantTableViewCellSavedButtonDelegate?
     
     // MARK: - Set Up UI
     
@@ -26,5 +35,20 @@ class RestaurantTableViewCell: UITableViewCell {
         
         nameLabel.text = restaurant.name
         ratingLabel.text = "Rating: \(restaurant.rating)"
+        voteStatusImage.isHidden = true
+    }
+    
+    func formatWithVote() {
+        guard let vote = vote else { return }
+        
+        voteStatusImage.isHidden = false
+        voteStatusImage.image = UIImage(systemName: "\(vote).circle.fill")
+        // TODO: - change color of image, or of entire cell, based on ranking?
+    }
+    
+    // MARK: - Actions
+    
+    @IBAction func saveButtonTapped(_ sender: UIButton) {
+        delegate?.saveRestaurantButton(for: self)
     }
 }
