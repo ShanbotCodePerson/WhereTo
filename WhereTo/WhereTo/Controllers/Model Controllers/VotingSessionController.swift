@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import CoreLocation
 
 class VotingSessionController {
     
@@ -29,12 +30,12 @@ class VotingSessionController {
     // MARK: - CRUD Methods
     
     // Create a new voting session and send invites to all participants
-    func newVotingSession(with friends: [User], at coordinates: [String : Float], radius: Float, usingDietaryRestrictions: Bool = true, completion: @escaping resultCompletionWith<VotingSession>) {
+    func newVotingSession(with friends: [User], at location: CLLocation, usingDietaryRestrictions: Bool = true, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Fetch the restaurants within the radius of the coordinates
         // TODO: - need to be able to end a location
-        RestaurantController.shared.fetchRestaurantsByLocation { [weak self] (result) in
+        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard var restaurants = restaurants else { return completion(.failure(.noData)) }
