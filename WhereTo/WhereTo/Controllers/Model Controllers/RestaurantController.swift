@@ -8,7 +8,7 @@
 
 import Foundation
 import Firebase
-import MapKit
+import CoreLocation
 
 struct yelpStrings {
     static let baseURL = "https://api.yelp.com/v3/businesses"
@@ -21,7 +21,6 @@ struct yelpStrings {
     static let categoriesKey = "categories"
     static let longitudeKey = "longitude"
     static let latitudeKey = "latitude"
-    
 }
 
 class RestaurantController {
