@@ -84,8 +84,9 @@ class VotingSessionController {
                 UserController.shared.saveChanges(to: currentUser) { (result) in
                     switch result {
                     case .success(_):
-                        // TODO: - figure this out
-                        print("not sure what to do here")
+                        // Make sure the user is subscribed to notifications related to sessions
+                        self?.subscribeToInvitationResponseNotifications()
+                        self?.subscribeToSessionOverNotifications()
                     case .failure(let error):
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -214,6 +215,10 @@ class VotingSessionController {
         // TODO: - remove from source of truth
         // TODO: - delete invitation from cloud
         // TODO: - if accepted, add voting session to source of truth and to user's list, and then save user
+        
+        // Make sure the user is subscribed to notifications related to sessions
+        subscribeToInvitationResponseNotifications()
+        subscribeToSessionOverNotifications()
     }
     
     // Update a voting session with votes
@@ -347,7 +352,9 @@ class VotingSessionController {
     
     // A user has responded to a invitation to a session
     func subscribeToInvitationResponseNotifications() {
-        guard let currentUser = UserController.shared.currentUser else { return }
+        guard let currentUser = UserController.shared.currentUser,
+            currentUser.activeVotingSessions.count > 0
+            else { return }
         
         // Set up a listener to be alerted whenever someone responds to an invitation for a voting session the user is in
         db.collection(VotingSessionInviteStrings.recordType)
@@ -384,7 +391,9 @@ class VotingSessionController {
     
     // The voting session is over and has been deleted
     func subscribeToSessionOverNotifications() {
-        guard let currentUser = UserController.shared.currentUser else { return }
+        guard let currentUser = UserController.shared.currentUser,
+            currentUser.activeVotingSessions.count > 0
+            else { return }
         
         // Set up a listener on all voting sessions the user is currently involved in
         db.collection(VotingSessionStrings.recordType)
