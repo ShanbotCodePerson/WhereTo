@@ -11,10 +11,11 @@ import Firebase
 import MapKit
 
 struct yelpStrings {
-    static let baseURL = "https://api.yelp.com/v3/businesses/search"
+    static let baseURL = "https://api.yelp.com/v3/businesses"
     static let authHeader = "Authorization"
     static let apiKeyValue = "Bearer R_hx8BUmF2jCHNXqEU8T2_9JubC4CP5ZW2jNxXN0NqFKNd9De8vcX_YAlAKRa3At1OwwSnQYd8VoOg4WGKqli0eJDSF8mA4BdNLktpDMoxDUWJhrTF99eRuJ-yjyXnYx"
     static let methodValue = "GET"
+    static let searchPath = "search"
     static let termKey = "term"
     static let termValue = "restaurants"
     static let categoriesKey = "categories"
@@ -59,7 +60,8 @@ class RestaurantController {
         guard let baseURL = URLComponents(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL))}
         
         var urlComps = baseURL
-            
+        
+        urlComps.path = yelpStrings.searchPath
         urlComps.queryItems = [
             URLQueryItem(name: yelpStrings.latitudeKey, value: "\(coordinates[yelpStrings.latitudeKey] ?? 43.486608)"),
             URLQueryItem(name: yelpStrings.longitudeKey, value: "\(coordinates[yelpStrings.longitudeKey] ?? -112.034846)"),
@@ -107,7 +109,46 @@ class RestaurantController {
     }
     
     // Read (fetch) a list of restaurants from the API (ie, recent, favorites, blacklisted)
-    func fetchRestaurantsWithIDs(restaurantIDs: [String]) {
+    func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping(Result<[Restaurant]?, WhereToError>) -> Void) {
         
+        var restaurants: [Restaurant] = []
+        
+        for id in restaurantIDs {
+            
+            // 1 - URL setup
+            guard let baseURL = URLComponents(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL))}
+            
+            var urlComps = baseURL
+            
+            urlComps.path = id
+            
+            let finalURL = urlComps.url
+            
+            var request = URLRequest(url: finalURL! , timeoutInterval: Double.infinity)
+            request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
+            request.httpMethod = yelpStrings.methodValue
+            
+            // 2 - Data task
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                
+                // 3 - Error Handling
+                if let error = error {
+                    return completion(.failure(.thrownError(error)))
+                }
+                
+                // 4 - check for data
+                guard let data = data else { return completion(.failure(.noData))}
+                
+                // 5 - Decode data
+                do {
+                    let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
+                    restaurants.append(restaurant)
+                } catch {
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.thrownError(error)))
+                }
+            }.resume()
+        }
+        return completion(.success(restaurants))
     }
 }
