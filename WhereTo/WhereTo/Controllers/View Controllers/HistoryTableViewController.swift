@@ -14,18 +14,42 @@ class HistoryTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Load the data if it hasn't been loaded already
+        loadData()
+    }
+    
+    // MARK: - Helper Methods
+    
+    func loadData() {
+        if RestaurantController.shared.previousRestaurants == nil {
+            RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Reload the tableview
+                        self?.tableView.reloadData()
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
     }
 
-    // MARK: - Table view data source
+    // MARK: - TableView Methods
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return RestaurantController.shared.previousRestaurants?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
 
-        // Configure the cell...
+        guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return cell }
+        cell.restaurant = restaurant
 
         return cell
     }
