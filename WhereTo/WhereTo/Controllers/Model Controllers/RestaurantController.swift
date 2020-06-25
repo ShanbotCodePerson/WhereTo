@@ -48,20 +48,22 @@ class RestaurantController {
     func fetchRestaurantsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
         
         // 1 - URL setup
-        guard let baseURL = URLComponents(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL))}
+        guard var baseURL = URL(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL)) }
+        baseURL = baseURL.appendingPathComponent(yelpStrings.searchPath)
+        var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
+//
+//        var urlComps = baseURL
         
-        var urlComps = baseURL
-        
-        urlComps.path = yelpStrings.searchPath
-        urlComps.queryItems = [
+//        urlComps.path = yelpStrings.searchPath
+        urlComponents?.queryItems = [
             URLQueryItem(name: yelpStrings.latitudeKey, value: "\(location.coordinate.latitude)"),
             URLQueryItem(name: yelpStrings.longitudeKey, value: "\(location.coordinate.longitude)"),
             URLQueryItem(name: yelpStrings.termKey, value: yelpStrings.termValue)
         ]
             
-        let finalURL = urlComps.url
+        guard let finalURL = urlComponents?.url else { return completion(.failure(.invalidURL)) }
         
-        var request = URLRequest(url: finalURL! , timeoutInterval: Double.infinity)
+        var request = URLRequest(url: finalURL , timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
          
