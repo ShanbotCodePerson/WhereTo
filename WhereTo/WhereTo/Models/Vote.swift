@@ -23,11 +23,11 @@ class Vote {
     // MARK: - Properties
     
     let voteValue: Int
-    let userID: String
-    let restaurantID: String
-    let votingSessionID: String
+    let userID: String              // The uuid of the user who cast the vote
+    let restaurantID: String        // The restaurant ID voted for
+    let votingSessionID: String     // The voting session in which the vote took place
     
-    // MARK: - Initializer
+    // MARK: - Initializers
     
     init(voteValue: Int, userID: String, restaurantID: String, votingSessionID: String) {
         self.voteValue = voteValue

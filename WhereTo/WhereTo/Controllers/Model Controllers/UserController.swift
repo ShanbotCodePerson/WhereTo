@@ -33,7 +33,7 @@ class UserController {
         let user = User(email: email)
         
         // Save the user object to the cloud and save the documentID for editing purposes
-        let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { error in
+        let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { (error) in
             
             if let error = error {
                 // Print and return the error
@@ -106,7 +106,7 @@ class UserController {
         
         // Handle the edge case where the user has no friends
         if currentUser.friends.count == 0 {
-            self.friends = []
+            friends = []
             return completion(.success(true))
         }
         
@@ -138,7 +138,7 @@ class UserController {
         // Update the data in the cloud
         db.collection(UserStrings.recordType)
             .document(documentID)
-            .updateData(user.asDictionary()) { [weak self] error in
+            .updateData(user.asDictionary()) { [weak self] (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -162,7 +162,7 @@ class UserController {
         // Delete the data from the cloud
         db.collection(UserStrings.recordType)
             .document(documentID)
-            .delete() { error in
+            .delete() { (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -181,5 +181,9 @@ class UserController {
         FriendRequestController.shared.subscribeToFriendRequestNotifications()
         FriendRequestController.shared.subscribeToFriendRequestResponseNotifications()
         FriendRequestController.shared.subscribeToRemovingFriendNotifications()
+        
+        VotingSessionController.shared.subscribeToInvitationNotifications()
+        VotingSessionController.shared.subscribeToInvitationResponseNotifications()
+        VotingSessionController.shared.subscribeToSessionOverNotifications()
     }
 }

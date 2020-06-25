@@ -17,5 +17,6 @@ enum WhereToError: LocalizedError {
     case thrownError(Error)
     case noData
     case invalidURL
+    case documentNotFound
     
 }
