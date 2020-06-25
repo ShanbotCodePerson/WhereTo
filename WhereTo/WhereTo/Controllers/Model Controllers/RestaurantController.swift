@@ -8,7 +8,7 @@
 
 import Foundation
 import Firebase
-import MapKit
+import CoreLocation
 
 struct yelpStrings {
     static let baseURL = "https://api.yelp.com/v3/businesses"
@@ -21,7 +21,6 @@ struct yelpStrings {
     static let categoriesKey = "categories"
     static let longitudeKey = "longitude"
     static let latitudeKey = "latitude"
-    
 }
 
 class RestaurantController {
@@ -33,7 +32,7 @@ class RestaurantController {
     // MARK: - Source of Truth
     
     var closeRestaurants: [Restaurant]?
-    var recentRestaurants: [Restaurant]?
+    var previousRestaurants: [Restaurant]?
     var favoriteRestaurants: [Restaurant]?
     var blacklistedRestaurants: [Restaurant]?
     
@@ -41,9 +40,9 @@ class RestaurantController {
     
     let db = Firestore.firestore()
     typealias resultCompletion = (Result<Bool, WhereToError>) -> Void
+    typealias resultCompletionWith<T> = (Result<T, WhereToError>) -> Void
     
     // MARK: - CRUD Methods
-    
     
     func fetchCurrentLocation() -> [String: Float] {
         // TODO: fetch current location using MapKit
@@ -52,7 +51,7 @@ class RestaurantController {
     }
     
     // Read (fetch) a list of restaurants from the API based on location
-    func fetchRestraurantsByLocation(completion: @escaping(Result<[Restaurant]?, WhereToError>) -> Void) {
+    func fetchRestaurantsByLocation(completion: @escaping resultCompletionWith<[Restaurant]?>) {
         
         let coordinates = fetchCurrentLocation()
         
@@ -108,8 +107,8 @@ class RestaurantController {
         }.resume()
     }
     
-    // Read (fetch) a list of restaurants from the API (ie, recent, favorites, blacklisted)
-    func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping(Result<[Restaurant]?, WhereToError>) -> Void) {
+    // Read (fetch) a list of restaurants from the API from a list of restaurant ID's
+    func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]?>) {
         
         var restaurants: [Restaurant] = []
         
@@ -150,5 +149,62 @@ class RestaurantController {
             }.resume()
         }
         return completion(.success(restaurants))
+    }
+    
+    // Read (fetch) all the user's previous restaurants
+    func fetchPreviousRestaurants(completion: @escaping resultCompletion) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Fetch the data from the cloud
+        fetchRestaurantsWithIDs(restaurantIDs: currentUser.previousRestaurants) { [weak self] (result) in
+            switch result {
+            case .success(let restaurants):
+                // Save to the source of truth and return the success
+                self?.previousRestaurants = restaurants ?? []
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Read (fetch) all the user's favorite restaurants
+    func fetchFavoriteRestaurants(completion: @escaping resultCompletion) {
+         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Fetch the data from the cloud
+        fetchRestaurantsWithIDs(restaurantIDs: currentUser.favoriteRestaurants) { [weak self] (result) in
+            switch result {
+            case .success(let restaurants):
+                // Save to the source of truth and return the success
+                self?.favoriteRestaurants = restaurants ?? []
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
+    // Read (fetch) all the user's blacklisted restaurants
+    func fetchBlacklistedRestaurants(completion: @escaping resultCompletion) {
+         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Fetch the data from the cloud
+        fetchRestaurantsWithIDs(restaurantIDs: currentUser.blacklistedRestaurants) { [weak self] (result) in
+            switch result {
+            case .success(let restaurants):
+                // Save to the source of truth and return the success
+                self?.blacklistedRestaurants = restaurants ?? []
+                return completion(.success(true))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
     }
 }
