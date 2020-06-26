@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import CoreLocation
 
 class VotingSessionController {
     
@@ -29,12 +30,12 @@ class VotingSessionController {
     // MARK: - CRUD Methods
     
     // Create a new voting session and send invites to all participants
-    func newVotingSession(with friends: [User], at coordinates: [String : Float], radius: Float, usingDietaryRestrictions: Bool = true, completion: @escaping resultCompletionWith<VotingSession>) {
+    func newVotingSession(with friends: [User], at location: CLLocation, usingDietaryRestrictions: Bool = true, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Fetch the restaurants within the radius of the coordinates
         // TODO: - need to be able to end a location
-        RestaurantController.shared.fetchRestaurantsByLocation { [weak self] (result) in
+        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard var restaurants = restaurants else { return completion(.failure(.noData)) }
@@ -51,7 +52,7 @@ class VotingSessionController {
                 }
                 
                 // Filter the restaurants by which ones are currently open
-                restaurants = restaurants.filter { $0.hours.openNow }
+//                restaurants = restaurants.filter { $0.hours.openNow }
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
@@ -100,15 +101,25 @@ class VotingSessionController {
                 for friend in friends {
                     let votingSessionInvite = VotingSessionInvite(fromName: currentUser.name, toID: friend.uuid, votingSessionID: votingSession.uuid)
                     self?.db.collection(VotingSessionInviteStrings.recordType)
-                        .addDocument(data: votingSessionInvite.asDictionary()) { (error) in
+                        .document("\(votingSessionInvite.toID)-\(votingSessionInvite.votingSessionID)")
+                        .setData(votingSessionInvite.asDictionary()) { (error) in
                             
-                            // TODO: - do I need to keep track of errors / completions here?
                             if let error = error {
                                 // Print and return the error
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 return completion(.failure(.fsError(error)))
                             }
                     }
+//                    self?.db.collection(VotingSessionInviteStrings.recordType)
+//                        .addDocument(data: votingSessionInvite.asDictionary()) { (error) in
+//
+//                            // TODO: - do I need to keep track of errors / completions here?
+//                            if let error = error {
+//                                // Print and return the error
+//                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+//                                return completion(.failure(.fsError(error)))
+//                            }
+//                    }
                 }
                 
                 // Return the success
@@ -163,6 +174,30 @@ class VotingSessionController {
         }
     }
     
+    // Read (fetch) a specific voting session
+    func fetchVotingSession(with id: String, completion: @escaping resultCompletionWith<VotingSession>) {
+        // Fetch the data from the cloud
+        db.collection(VotingSessionStrings.recordType)
+            .whereField(VotingSessionStrings.uuidKey, isEqualTo: id)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let document = results?.documents.first,
+                let votingSession = VotingSession(dictionary: document.data())
+                    else { return completion(.failure(.couldNotUnwrap)) }
+                votingSession.documentID = document.documentID
+                
+                // Return the success
+                return completion(.success(votingSession))
+        }
+    }
+    
     // Read (fetch) the list of all users involved in a voting session
     func fetchUsersInVotingSession(with id: String, completion: @escaping resultCompletionWith<[User]>) {
         // Fetch the data from the cloud based on what users have the voting session's id in their list of active voting sessions
@@ -211,14 +246,61 @@ class VotingSessionController {
     }
     
     // Respond to an invitation to a voting session
-    func respond(to votingSessionInvite: VotingSessionInvite, completion: @escaping resultCompletion) {
-        // TODO: - remove from source of truth
-        // TODO: - delete invitation from cloud
-        // TODO: - if accepted, add voting session to source of truth and to user's list, and then save user
+    func respond(to votingSessionInvite: VotingSessionInvite, accept: Bool, completion: @escaping resultCompletionWith<VotingSession>) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        // FIXME: - nested completions, need to figure out threading, when to return, when to post notification
+        if accept {
+            // Make sure the user is subscribed to notifications related to sessions
+            subscribeToInvitationResponseNotifications()
+            subscribeToSessionOverNotifications()
+            
+            // Add the voting session to the user's list of active voting sessions
+            currentUser.activeVotingSessions.append(votingSessionInvite.votingSessionID)
+            
+            // Save the changes to the user
+            UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
+                switch result {
+                case .success(_):
+                    // Fetch the voting session object
+                    self?.fetchVotingSession(with: votingSessionInvite.votingSessionID) { (result) in
+                        switch result {
+                        case .success(let votingSession):
+                            // Save the voting session to the source of truth
+                            if var votingSessions = self?.votingSessions {
+                                votingSessions.append(votingSession)
+                                self?.votingSessions = votingSessions
+                            } else {
+                                self?.votingSessions = [votingSession]
+                            }
+                            // Return the success
+                            return completion(.success(votingSession))
+                        case .failure(let error):
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(error))
+                        }
+                    }
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        }
         
-        // Make sure the user is subscribed to notifications related to sessions
-        subscribeToInvitationResponseNotifications()
-        subscribeToSessionOverNotifications()
+        // FIXME: - need to make sure this is getting called somewhere
+        
+        // Delete the invitation from the cloud now that it's no longer necessary
+        db.collection(VotingSessionInviteStrings.recordType)
+            .document("\(votingSessionInvite.toID)-\(votingSessionInvite.votingSessionID)")
+            .delete() { (error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+        }
     }
     
     // Update a voting session with votes

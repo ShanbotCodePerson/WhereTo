@@ -58,6 +58,25 @@ class InviteFriendsTableViewController: UITableViewController {
         }
         
         // TODO: - Check for pending invitations to voting sessions, then show alerts for each one if there are any
+        VotingSessionController.shared.fetchPendingInvitations { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let invitations):
+                    for invitation in invitations {
+                        self?.presentVotingSessionInvitationAlert(invitation, completion: { (newVotingSession) in
+                            // If the user accepted the invitation, transition them to the voting session page
+                            if let newVotingSession = newVotingSession {
+                                self?.transitionToVotingSessionPage(with: newVotingSession)
+                            }
+                        })
+                    }
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
     
     // MARK: - Receive Notifications
@@ -187,30 +206,33 @@ class InviteFriendsTableViewController: UITableViewController {
         // TODO: - first display an alert asking about location
         fetchCurrentLocation()
         
-//        guard let currentUser = UserController.shared.currentUser,
-//            let indexPaths = tableView.indexPathsForSelectedRows
-//            else { return }
-//
-//        // TODO: - disable vote button until at least one other person is selected
-//
-//        // Get the selected friends
-//        let friends = indexPaths.map { currentUser.friends[$0.row] }
+        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+
+        // TODO: - disable vote button until at least one other person is selected
+
+        // Get the selected friends
+        let friends = indexPaths.compactMap { UserController.shared.friends?[$0.row] }
         
-//        // Create the voting session
-//        VotingSessionController.shared.newVotingSession(with: friends, at: coordinates, radius: radius) { (result) in
-//            switch result {
-//            case .success(_):
-//            case .failure(let error):
-//            }
-//        }
-//        
-//        // Transition to the voting page
-//        transitionToVotingSessionPage(with: votingSession)
+        // Create the voting session
+        VotingSessionController.shared.newVotingSession(with: friends, at: currentLocation) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let votingSession):
+                    // Transition to the voting page
+                    self?.transitionToVotingSessionPage(with: votingSession)
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
     
-    // MARK: - Helper Funtions
+    // MARK: - Helper Functions
+    
     func fetchCurrentLocation() {
-        // retrive authorization status
+        // retrieve authorization status
         let status = CLLocationManager.authorizationStatus()
         
         if(status == .denied || status == .restricted || !CLLocationManager.locationServicesEnabled()) {
