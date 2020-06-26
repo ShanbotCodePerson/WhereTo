@@ -31,6 +31,8 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        
 //        guard let votingSession = votingSession else { return }
         
         // TODO: - fill out description at top of page?
@@ -62,7 +64,7 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
-        // TODO: - leave the voting session early
+        // TODO: - leave the voting session early?
         
         // Return to the main view of the app
         transitionToStoryboard(named: .TabViewHome)
@@ -75,6 +77,7 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("got here to \(#function) and \(votingSession?.restaurants?.count ?? 0) and ids are \(votingSession?.restaurantIDs.count ?? 0)")
         return votingSession?.restaurants?.count ?? 0
     }
 
