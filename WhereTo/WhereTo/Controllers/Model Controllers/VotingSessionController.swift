@@ -44,7 +44,7 @@ class VotingSessionController {
                 var allBlacklisted = currentUser.blacklistedRestaurants
                 allBlacklisted.append(contentsOf: friends.map({ $0.blacklistedRestaurants }).joined())
                 let blacklisted = Set(allBlacklisted)
-                restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID!) }
+                restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
                 
                 // Filter the restaurants by the dietary restrictions
                 if usingDietaryRestrictions {
@@ -60,12 +60,12 @@ class VotingSessionController {
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
                 
                 // Calculate how many votes each user should get
-                let votesEach = min(restaurants.count, max(friends.count + 1, 5))
-                
-                // Create the voting session
-                let votingSession = VotingSession(votesEach: votesEach, restaurantIDs: restaurants.map({ $0.restaurantID! }))
                 var users = friends
                 users.append(currentUser)
+                let votesEach = min(restaurants.count, users.count + 1, 5)
+                
+                // Create the voting session
+                let votingSession = VotingSession(votesEach: votesEach, location: location, restaurantIDs: restaurants.map({ $0.restaurantID }))
                 votingSession.users = users
                 votingSession.restaurants = restaurants
                 
@@ -133,11 +133,29 @@ class VotingSessionController {
             }
         }
     }
-    // TODO: - make sure to get and save docID
     
     // Read (fetch) all pending invitations to voting sessions
     func fetchPendingInvitations(completion: @escaping resultCompletionWith<[VotingSessionInvite]>) {
-        // TODO: - fill this out, similar to friend requests
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Fetch the data from the cloud
+        db.collection(VotingSessionInviteStrings.recordType)
+            .whereField(VotingSessionInviteStrings.toIDKey, isEqualTo: currentUser.uuid)
+            .getDocuments { (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.fsError(error)))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
+                let pendingInvitations = documents.compactMap { VotingSessionInvite(dictionary: $0.data()) }
+                
+                // Return the success
+                return completion(.success(pendingInvitations))
+        }
     }
     
     // Read (fetch) all current voting sessions
@@ -191,7 +209,7 @@ class VotingSessionController {
                 
                 // Unwrap the data
                 guard let document = results?.documents.first,
-                let votingSession = VotingSession(dictionary: document.data())
+                    let votingSession = VotingSession(dictionary: document.data())
                     else { return completion(.failure(.couldNotUnwrap)) }
                 votingSession.documentID = document.documentID
                 
@@ -306,11 +324,11 @@ class VotingSessionController {
     }
     
     // Update a voting session with votes
-    func vote(number: Int, for restaurant: Restaurant, in votingSession: VotingSession, completion: @escaping resultCompletion) {
+    func vote(value: Int, for restaurant: Restaurant, in votingSession: VotingSession, completion: @escaping resultCompletionWith<Vote>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Create the vote
-        let vote = Vote(voteValue: number, userID: currentUser.uuid, restaurantID: restaurant.restaurantID!, votingSessionID: votingSession.uuid)
+        let vote = Vote(voteValue: value, userID: currentUser.uuid, restaurantID: restaurant.restaurantID, votingSessionID: votingSession.uuid)
         
         // Save the vote to the cloud
         db.collection(VoteStrings.recordType)
@@ -323,7 +341,7 @@ class VotingSessionController {
                 }
                 
                 // Return the success
-                return completion(.success(true))
+                return completion(.success(vote))
         }
     }
     

@@ -83,18 +83,15 @@ class VotingSession {
         }
         
         // Fetch the restaurant objects
-        
-        
-//        RestaurantController.shared.fetchRestaurantsWithIDs(restaurantIDs: restaurantIDs) { [weak self] (result) in
-//            switch result {
-//            case .success(let restaurants):
-//                print("got here to \(#function) and there are \(restaurants?.count) restaurants")
-//                self?.restaurants = restaurants
-//            case .failure(let error):
-//                print("got here to \(#function) and \(error.localizedDescription)")
-////                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//            }
-//        }
+        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
+            switch result {
+            case .success(let restaurants):
+                guard let restaurantIDs = self?.restaurantIDs else { return }
+                self?.restaurants = restaurants?.filter { restaurantIDs.contains($0.restaurantID) }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
     }
     
     // MARK: - Convert to Dictionary
