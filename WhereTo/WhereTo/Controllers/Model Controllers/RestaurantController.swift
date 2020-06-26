@@ -90,7 +90,10 @@ class RestaurantController {
         
         var restaurants: [Restaurant] = []
         
+        let group = DispatchGroup()
+        
         for id in restaurantIDs {
+            group.enter()
             
             // 1 - URL setup
             var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(id)")!, timeoutInterval: Double.infinity)
@@ -114,12 +117,18 @@ class RestaurantController {
                     let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
                     restaurants.append(restaurant)
                 } catch {
+                    // TODO: - if error is that too many queries per second, if so, retry fetching later?
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.thrownError(error)))
                 }
+                group.leave()
             }.resume()
         }
-        return completion(.success(restaurants))
+        
+        group.notify(queue: .main) {
+            print("groups finished")
+            return completion(.success(restaurants))
+        }
     }
     
     // Read (fetch) all the user's previous restaurants
