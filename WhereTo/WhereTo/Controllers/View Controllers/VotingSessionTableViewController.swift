@@ -31,6 +31,8 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        
 //        guard let votingSession = votingSession else { return }
         
         // TODO: - fill out description at top of page?
