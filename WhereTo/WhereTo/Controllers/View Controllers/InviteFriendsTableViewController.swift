@@ -11,10 +11,6 @@ import CoreLocation
 
 class InviteFriendsTableViewController: UITableViewController {
     
-    // MARK: - Singleton
-    
-    static let shared = InviteFriendsTableViewController()
-    
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
@@ -28,7 +24,7 @@ class InviteFriendsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // set IviteFriendsTableViewController as delegate of CLLocationManager
+        // set InviteFriendsTableViewController as delegate of CLLocationManager
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
@@ -39,6 +35,9 @@ class InviteFriendsTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: FriendRequest.self)
         NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: newFriendRequest, object: FriendRequest.self)
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
+        
+        // Set up the observer to listen for voting session invitation notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: VotingSessionInvite.self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,6 +96,18 @@ class InviteFriendsTableViewController: UITableViewController {
     @objc func showFriendRequestResult(_ sender: NSNotification) {
         guard let friendRequest = sender.object as? FriendRequest else { return }
         DispatchQueue.main.async { self.presentFriendRequestResponseAlert(friendRequest) }
+    }
+    
+    @objc func showVotingSessionInvitation(_ sender: NSNotification) {
+        guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
+        DispatchQueue.main.async {
+            self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
+                // If the user accepted the invitation, transition them to the voting session page
+                if let newVotingSession = newVotingSession {
+                    self?.transitionToVotingSessionPage(with: newVotingSession)
+                }
+            }
+        }
     }
     
     // MARK: - Set Up UI
@@ -206,33 +217,38 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
-        // TODO: - first display an alert asking about location
+        // Get the selected friends
+        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+        let friends = indexPaths.compactMap { UserController.shared.friends?[$0.row] }
+        
+        // Get the current location or allow the user to choose a location
         fetchCurrentLocation()
         guard let currentLocation = locationManager.location else { return }
         
-        DispatchQueue.main.async {
-            self.presentLocationSelectionAlert(currentLocation: currentLocation) { (result) in
-                }
-            }
-        
-        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
-
         // TODO: - disable vote button until at least one other person is selected
-
-        // Get the selected friends
-        let friends = indexPaths.compactMap { UserController.shared.friends?[$0.row] }
         
-        // Create the voting session
-        VotingSessionController.shared.newVotingSession(with: friends, at: currentLocation) { [weak self] (result) in
+        self.presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let votingSession):
-                    // Transition to the voting page
-                    self?.transitionToVotingSessionPage(with: votingSession)
+                case .success(let location):
+                    // Create the voting session
+                    VotingSessionController.shared.newVotingSession(with: friends, at: location) { (result) in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let votingSession):
+                                // Transition to the voting page
+                                self?.transitionToVotingSessionPage(with: votingSession)
+                            case .failure(let error):
+                                // Print and display the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                            }
+                        }
+                    }
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.presentErrorAlert(error)
+                    self?.presentAlert(title: "Location Not Found", message: "The location you entered was not found - please try again")
                 }
             }
         }
@@ -336,7 +352,7 @@ class InviteFriendsTableViewController: UITableViewController {
             }
         }
     }
-} // End Of Class
+}
 
 // MARK: Extension: LocationManagerDelegate
 extension InviteFriendsTableViewController: CLLocationManagerDelegate {
@@ -374,6 +390,7 @@ extension InviteFriendsTableViewController: CLLocationManagerDelegate {
 
 // MARK: - Extension:InviteFriendsTableViewController: Location selection alerts
 extension InviteFriendsTableViewController {
+    
     // Present an alert with a text field to get some input from the user
     func presentLocationSelectionAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
         // Create the alert controller
@@ -389,18 +406,18 @@ extension InviteFriendsTableViewController {
         
         // Create the Current Location button
         let currentLocation = UIAlertAction(title: "Current Location", style: .default) { (_) in
-            completion(.success(currentLocation))
+            return completion(.success(currentLocation))
         }
         
-        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { (_) in
+        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { [weak self] (_) in
             // Get the text from the text field
             guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
             
             // Create CLLocation using GeoCoding
-            InviteFriendsTableViewController.shared.getLocationFromString(addressString: address) { (result) in
+            self?.getLocationFromString(addressString: address) { (result) in
                 switch result {
                 case .success(let location):
-                    completion(.success(location))
+                    return completion(.success(location))
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.noLocationForAddress))

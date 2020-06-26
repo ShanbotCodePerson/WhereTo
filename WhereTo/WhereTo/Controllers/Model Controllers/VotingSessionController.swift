@@ -446,6 +446,7 @@ class VotingSessionController {
                 
                 // Send a local notification to present an alert for each invitation
                 for invitation in newInvitations {
+                    print("got here to \(#function) and \(invitation) and now sending notification")
                     NotificationCenter.default.post(name: newVotingSessionInvitation, object: invitation)
                     // FIXME: - need to figure out how this works when there are multiple invitations
                 }
