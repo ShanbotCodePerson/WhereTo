@@ -16,21 +16,10 @@ struct Restaurant: Codable {
     let name: String
     let coordinates: [String : Float]
     let categories: [[String : String]]
-    let rating: Float
-    let hours: Hours?
-    
-    // Hours is type [[String : Any]] so need to use struct instead
-    struct Hours: Codable {
-        let openNow: Bool
-        let open: [[String : Int]]
-        
-        enum CodingKeys: String, CodingKey {
-            case open, openNow = "is_open_now"
-        }
-    }
-    
+    let rating: Float?
+   
     enum CodingKeys: String, CodingKey {
-        case name, coordinates, categories, rating, hours, restaurantID = "id"
+        case name, coordinates, categories, rating, restaurantID = "id"
     }
 }
 

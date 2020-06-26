@@ -44,7 +44,7 @@ class VotingSessionController {
                 var allBlacklisted = currentUser.blacklistedRestaurants
                 allBlacklisted.append(contentsOf: friends.map({ $0.blacklistedRestaurants }).joined())
                 let blacklisted = Set(allBlacklisted)
-                restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
+                restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID!) }
                 
                 // Filter the restaurants by the dietary restrictions
                 if usingDietaryRestrictions {
@@ -63,7 +63,7 @@ class VotingSessionController {
                 let votesEach = min(restaurants.count, max(friends.count + 1, 5))
                 
                 // Create the voting session
-                let votingSession = VotingSession(votesEach: votesEach, restaurantIDs: restaurants.map({ $0.restaurantID }))
+                let votingSession = VotingSession(votesEach: votesEach, restaurantIDs: restaurants.map({ $0.restaurantID! }))
                 var users = friends
                 users.append(currentUser)
                 votingSession.users = users
@@ -310,7 +310,7 @@ class VotingSessionController {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Create the vote
-        let vote = Vote(voteValue: number, userID: currentUser.uuid, restaurantID: restaurant.restaurantID, votingSessionID: votingSession.uuid)
+        let vote = Vote(voteValue: number, userID: currentUser.uuid, restaurantID: restaurant.restaurantID!, votingSessionID: votingSession.uuid)
         
         // Save the vote to the cloud
         db.collection(VoteStrings.recordType)
