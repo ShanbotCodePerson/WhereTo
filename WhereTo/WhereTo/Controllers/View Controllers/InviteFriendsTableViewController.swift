@@ -60,7 +60,7 @@ class InviteFriendsTableViewController: UITableViewController {
             }
         }
         
-        // TODO: - Check for pending invitations to voting sessions, then show alerts for each one if there are any
+        // Check for pending invitations to voting sessions, then show alerts for each one if there are any
         VotingSessionController.shared.fetchPendingInvitations { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {

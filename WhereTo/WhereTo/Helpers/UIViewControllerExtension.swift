@@ -61,12 +61,14 @@ extension UIViewController {
     // MARK: - Generic Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user
-    func presentAlert(title: String, message: String) {
+    func presentAlert(title: String, message: String, completion: @escaping () -> Void = { () in }) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in
+            completion()
+        }))
         
         // Present the alert
         present(alertController, animated: true)
@@ -74,7 +76,7 @@ extension UIViewController {
     
     // Present an alert that the internet connection isn't working
     func presentInternetAlert() {
-        presentAlert(title: "No Internet Connection", message: "You must be connected to the internet in order to use WhereTto. Please check your internet connection and try again")
+        presentAlert(title: "No Internet Connection", message: "You must be connected to the internet in order to use WhereTo. Please check your internet connection and try again")
     }
     
     // Present an alert with simple confirm or cancel buttons
