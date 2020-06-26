@@ -17,6 +17,8 @@ class HistoryTableViewController: UITableViewController {
         
         // Load the data if it hasn't been loaded already
         loadData()
+        
+        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
     // MARK: - Helper Methods

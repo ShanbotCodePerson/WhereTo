@@ -209,7 +209,7 @@ extension UIViewController {
             }
         })
         
-        // Present the alert
+        // And the buttons and present the alert
         alertController.addAction(denyAction)
         alertController.addAction(acceptAction)
         present(alertController, animated: true)
@@ -218,5 +218,52 @@ extension UIViewController {
     func presentFriendRequestResponseAlert(_ friendRequest: FriendRequest) {
         presentAlert(title: "Friend Request \(friendRequest.status == .accepted ? "Accepted" : "Denied")",
             message: "\(friendRequest.toName) has \(friendRequest.status == .accepted ? "accepted" : "denied") your friend request")
+    }
+    
+    // MARK: - Voting Session Invitation Alert
+    
+    func presentVotingSessionInvitationAlert(_ votingSessionInvite: VotingSessionInvite, completion: @escaping (VotingSession?) -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Vote!", message: "\(votingSessionInvite.fromName) has invited you to vote on a place to eat!", preferredStyle: .alert)
+        
+        // Create the deny button
+        let denyAction = UIAlertAction(title: "No Thanks", style: .cancel) { (_) in
+            VotingSessionController.shared.respond(to: votingSessionInvite, accept: false) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        print("Successfully refused invitation")
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                    return completion(nil)
+                }
+            }
+        }
+        
+        // Create the accept button
+        let acceptAction = UIAlertAction(title: "Vote!", style: .default) { (_) in
+            VotingSessionController.shared.respond(to: votingSessionInvite, accept: true) { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let votingSession):
+                        print("Successfully accepted invitation")
+                        return completion(votingSession) // FIXME: - get respond function to return voting session
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        return completion(nil)
+                    }
+                }
+            }
+        }
+        
+        // Add the buttons and present the alert
+        alertController.addAction(denyAction)
+        alertController.addAction(acceptAction)
+        present(alertController, animated: true)
     }
 }

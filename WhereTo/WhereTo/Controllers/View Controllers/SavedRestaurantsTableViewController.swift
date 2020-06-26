@@ -23,6 +23,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
         loadAllData()
         
         // TODO: - may need to register tableview cell and nib
+        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
     // MARK: - Helper Methods

@@ -61,6 +61,25 @@ class InviteFriendsTableViewController: UITableViewController {
         }
         
         // TODO: - Check for pending invitations to voting sessions, then show alerts for each one if there are any
+        VotingSessionController.shared.fetchPendingInvitations { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let invitations):
+                    for invitation in invitations {
+                        self?.presentVotingSessionInvitationAlert(invitation, completion: { (newVotingSession) in
+                            // If the user accepted the invitation, transition them to the voting session page
+                            if let newVotingSession = newVotingSession {
+                                self?.transitionToVotingSessionPage(with: newVotingSession)
+                            }
+                        })
+                    }
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
     }
     
     // MARK: - Receive Notifications

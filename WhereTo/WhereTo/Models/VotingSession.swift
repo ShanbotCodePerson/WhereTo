@@ -82,10 +82,11 @@ class VotingSession {
         }
         
         // Fetch the restaurant objects
-        RestaurantController.shared.fetchRestaurantsWithIDs(restaurantIDs: restaurantIDs) { [weak self] (result) in
+        RestaurantController.shared.fetchIDs(ids: restaurantIDs) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
-                self?.restaurants = restaurants ?? []
+                self?.restaurants = restaurants
+                print("got here to \(#function) and there are \(restaurants.count) restaurants")
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
