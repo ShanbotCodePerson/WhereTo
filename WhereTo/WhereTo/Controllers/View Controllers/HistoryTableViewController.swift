@@ -54,6 +54,12 @@ class HistoryTableViewController: UITableViewController {
         guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return cell }
         cell.restaurant = restaurant
         cell.delegate = self
+        
+        if let currentUser = UserController.shared.currentUser {
+            if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
+                cell.isSavedButton.isSelected = true
+            }
+        }
 
         return cell
     }
