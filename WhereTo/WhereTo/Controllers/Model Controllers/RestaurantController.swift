@@ -126,7 +126,6 @@ class RestaurantController {
         }
         
         group.notify(queue: .main) {
-            print("groups finished")
             return completion(.success(restaurants))
         }
     }

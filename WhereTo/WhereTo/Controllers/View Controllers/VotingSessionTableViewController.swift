@@ -49,6 +49,7 @@ class VotingSessionTableViewController: UITableViewController {
                 switch result {
                 case .success(let votes):
                     // Save the data
+                    print("got here to \(#function) and there are \(votes.count) votes")
                     self?.votes = votes
                     
                     // Update the tableview
@@ -98,8 +99,6 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Vote
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("got here to \(#function) and selected cell is \(indexPath.row)")
-        
         // Make sure the cell isn't already selected and not all the votes have been cast already
         guard let cell = tableView.cellForRow(at: indexPath) as? RestaurantTableViewCell,
             let votingSession = votingSession,
