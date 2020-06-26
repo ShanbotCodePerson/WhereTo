@@ -35,7 +35,7 @@ class VotingSessionController {
         
         // Fetch the restaurants within the radius of the coordinates
         // TODO: - need to be able to end a location
-        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
+       RestaurantController.shared.fetchCloseRestaurants(location: location) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard var restaurants = restaurants else { return completion(.failure(.noData)) }
@@ -52,7 +52,9 @@ class VotingSessionController {
                 }
                 
                 // Filter the restaurants by which ones are currently open
+              
 //                restaurants = restaurants.filter { $0.hours.openNow }
+
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
