@@ -11,11 +11,14 @@ import CoreLocation
 
 class InviteFriendsTableViewController: UITableViewController {
     
+    // MARK: - Singleton
+    
+    static let shared = InviteFriendsTableViewController()
+    
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
-    //var currentLocation = CLLocation()
-    
+        
     // MARK: - Outlets
     
     @IBOutlet weak var viewActiveVotingSessionsButton: UIButton!
@@ -207,6 +210,11 @@ class InviteFriendsTableViewController: UITableViewController {
         fetchCurrentLocation()
         guard let currentLocation = locationManager.location else { return }
         
+        DispatchQueue.main.async {
+            self.presentLocationSelectionAlert(currentLocation: currentLocation) { (result) in
+                }
+            }
+        
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
 
         // TODO: - disable vote button until at least one other person is selected
@@ -250,7 +258,7 @@ class InviteFriendsTableViewController: UITableViewController {
         locationManager.requestLocation()
     }
     
-    func getLocationFromString(addressString: String, completion: @escaping(CLLocation?, NSError?) -> Void) {
+    func getLocationFromString(addressString: String, completion: @escaping(Result<CLLocation, WhereToError>) -> Void) {
         
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(addressString) { (placemarks, error) in
@@ -258,11 +266,10 @@ class InviteFriendsTableViewController: UITableViewController {
                 if let placemark = placemarks?[0] {
                     let location = placemark.location!
                 
-                    completion(location, nil)
-                    return
+                    return completion(.success(location))
                 }
             }
-            completion(nil, error as NSError?)
+            return completion(.failure(.noLocationForAddress))
         }
     }
     
@@ -362,5 +369,48 @@ extension InviteFriendsTableViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // TODO: show alert that getting current location failed
         
+    }
+}
+
+// MARK: - Extension:InviteFriendsTableViewController: Location selection alerts
+extension InviteFriendsTableViewController {
+    // Present an alert with a text field to get some input from the user
+    func presentLocationSelectionAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Where To?", message: "Use Current location or enter an address to get available restaurant options", preferredStyle: .alert)
+        
+        // Add the text field
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter address or city here..."
+        }
+        
+        // Create the cancel button
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        // Create the Current Location button
+        let currentLocation = UIAlertAction(title: "Current Location", style: .default) { (_) in
+            completion(.success(currentLocation))
+        }
+        
+        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { (_) in
+            // Get the text from the text field
+            guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
+            
+            // Create CLLocation using GeoCoding
+            InviteFriendsTableViewController.shared.getLocationFromString(addressString: address) { (result) in
+                switch result {
+                case .success(let location):
+                    completion(.success(location))
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.noLocationForAddress))
+                }
+            }
+        }
+        // Add the buttons to the alert and present it
+        alertController.addAction(cancelAction)
+        alertController.addAction(currentLocation)
+        alertController.addAction(enteredLocation)
+        present(alertController, animated: true)
     }
 }
