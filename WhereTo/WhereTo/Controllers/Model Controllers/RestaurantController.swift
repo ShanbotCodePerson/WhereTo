@@ -21,6 +21,8 @@ struct yelpStrings {
     static let categoriesKey = "categories"
     static let longitudeKey = "longitude"
     static let latitudeKey = "latitude"
+    static let openNowKey = "open_now"
+    static let openNowValue = "true"
 }
 
 class RestaurantController {
@@ -46,10 +48,10 @@ class RestaurantController {
     // MARK: - CRUD Methods
     
     // Read (fetch) a list of restaurants from the API based on location
-    func fetchRestaurantIDsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[String]?>) {
+    func fetchRestaurantsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
         
         // 1 - URL setup
-        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)")!, timeoutInterval: Double.infinity)
+        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)&\(yelpStrings.openNowKey)=\(yelpStrings.openNowValue)")!, timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
          
@@ -69,12 +71,12 @@ class RestaurantController {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
                 
-                var restaurantIDs: [String] = []
+                var restaurants: [Restaurant] = []
                 
                 for restaurant in businesses {
-                    restaurantIDs.append(restaurant.restaurantID)
+                    restaurants.append(restaurant)
                 }
-                return completion(.success(restaurantIDs))
+                return completion(.success(restaurants))
                 
             } catch {
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -137,37 +139,6 @@ class RestaurantController {
                 return completion(.failure(error))
             }
         }
-    }
-    
-    // Read (fetch) all restaurants near user's location
-    func fetchCloseRestaurants(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
-        
-        // Fetch a list of Restaurant IDs from a location
-        fetchRestaurantIDsByLocation(location: location) { [weak self] (result) in
-            switch result {
-            case .success(let IDs):
-                self?.restaurantIDs = IDs ?? []
-            case .failure(let error):
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
-        }
-        
-        guard let IDs = restaurantIDs else { return }
-        // Fetch the data from the cloud
-        fetchRestaurantsWithIDs(restaurantIDs: IDs) { [weak self] (result) in
-            switch result {
-            case .success(let restaurants):
-                // Save to the source of truth and return the success
-                self?.closeRestaurants = restaurants ?? []
-                
-            case .failure(let error):
-                // Print and return the error
-                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(error))
-            }
-        }
-        return completion(.success(closeRestaurants))
     }
     
     // Read (fetch) all the user's favorite restaurants
