@@ -19,5 +19,6 @@ enum WhereToError: LocalizedError {
     case invalidURL
     case documentNotFound
     case noRestaurantsMatch
+    case noLocationForAddress
     
 }
