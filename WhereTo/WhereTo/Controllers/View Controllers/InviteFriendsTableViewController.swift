@@ -14,7 +14,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
-    var currentLocation = CLLocation()
+    //var currentLocation = CLLocation()
     
     // MARK: - Outlets
     
@@ -186,6 +186,7 @@ class InviteFriendsTableViewController: UITableViewController {
     @IBAction func voteButtonTapped(_ sender: UIButton) {
         // TODO: - first display an alert asking about location
         fetchCurrentLocation()
+        guard let currentLocation = locationManager.location else { return }
         
         guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
 
@@ -336,10 +337,7 @@ extension InviteFriendsTableViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        if let location = locations.first {
-            currentLocation = location
-        }
+    
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

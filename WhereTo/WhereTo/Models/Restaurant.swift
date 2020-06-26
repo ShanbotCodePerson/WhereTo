@@ -17,7 +17,7 @@ struct Restaurant: Codable {
     let coordinates: [String : Float]
     let categories: [[String : String]]
     let rating: Float
-    let hours: Hours
+    let hours: Hours?
     
     // Hours is type [[String : Any]] so need to use struct instead
     struct Hours: Codable {

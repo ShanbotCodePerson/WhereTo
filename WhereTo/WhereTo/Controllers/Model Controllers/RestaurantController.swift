@@ -11,7 +11,7 @@ import Firebase
 import CoreLocation
 
 struct yelpStrings {
-    static let baseURL = "https://api.yelp.com/v3/businesses"
+    static let baseURLString = "https://api.yelp.com/v3/businesses"
     static let authHeader = "Authorization"
     static let apiKeyValue = "Bearer R_hx8BUmF2jCHNXqEU8T2_9JubC4CP5ZW2jNxXN0NqFKNd9De8vcX_YAlAKRa3At1OwwSnQYd8VoOg4WGKqli0eJDSF8mA4BdNLktpDMoxDUWJhrTF99eRuJ-yjyXnYx"
     static let methodValue = "GET"
@@ -31,6 +31,7 @@ class RestaurantController {
     
     // MARK: - Source of Truth
     
+    var restaurantIDs: [String]?
     var closeRestaurants: [Restaurant]?
     var previousRestaurants: [Restaurant]?
     var favoriteRestaurants: [Restaurant]?
@@ -45,25 +46,10 @@ class RestaurantController {
     // MARK: - CRUD Methods
     
     // Read (fetch) a list of restaurants from the API based on location
-    func fetchRestaurantsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
+    func fetchRestaurantIDsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[String]?>) {
         
         // 1 - URL setup
-        guard var baseURL = URL(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL)) }
-        baseURL = baseURL.appendingPathComponent(yelpStrings.searchPath)
-        var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
-//
-//        var urlComps = baseURL
-        
-//        urlComps.path = yelpStrings.searchPath
-        urlComponents?.queryItems = [
-            URLQueryItem(name: yelpStrings.latitudeKey, value: "\(location.coordinate.latitude)"),
-            URLQueryItem(name: yelpStrings.longitudeKey, value: "\(location.coordinate.longitude)"),
-            URLQueryItem(name: yelpStrings.termKey, value: yelpStrings.termValue)
-        ]
-            
-        guard let finalURL = urlComponents?.url else { return completion(.failure(.invalidURL)) }
-        
-        var request = URLRequest(url: finalURL , timeoutInterval: Double.infinity)
+        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)")!, timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
          
@@ -83,16 +69,12 @@ class RestaurantController {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
                 
-                var restaurants: [Restaurant] = []
+                var restaurantIDs: [String] = []
                 
-                for business in businesses {
-                    let restaurant = business
-                    // if open append to available restaurants
-                    if restaurant.hours.openNow {
-                        restaurants.append(restaurant)
-                    }
+                for restaurant in businesses {
+                    restaurantIDs.append(restaurant.restaurantID)
                 }
-                return completion(.success(restaurants))
+                return completion(.success(restaurantIDs))
                 
             } catch {
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -109,16 +91,9 @@ class RestaurantController {
         for id in restaurantIDs {
             
             // 1 - URL setup
-            guard let baseURL = URLComponents(string: yelpStrings.baseURL) else { return completion(.failure(.invalidURL))}
-            
-            var urlComps = baseURL
-            
-            urlComps.path = id
-            
-            let finalURL = urlComps.url
-            
-            var request = URLRequest(url: finalURL! , timeoutInterval: Double.infinity)
+            var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(id)")!, timeoutInterval: Double.infinity)
             request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
+
             request.httpMethod = yelpStrings.methodValue
             
             // 2 - Data task
@@ -162,6 +137,37 @@ class RestaurantController {
                 return completion(.failure(error))
             }
         }
+    }
+    
+    // Read (fetch) all restaurants near user's location
+    func fetchCloseRestaurants(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
+        
+        // Fetch a list of Restaurant IDs from a location
+        fetchRestaurantIDsByLocation(location: location) { [weak self] (result) in
+            switch result {
+            case .success(let IDs):
+                self?.restaurantIDs = IDs ?? []
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+        
+        guard let IDs = restaurantIDs else { return }
+        // Fetch the data from the cloud
+        fetchRestaurantsWithIDs(restaurantIDs: IDs) { [weak self] (result) in
+            switch result {
+            case .success(let restaurants):
+                // Save to the source of truth and return the success
+                self?.closeRestaurants = restaurants ?? []
+                
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+        return completion(.success(closeRestaurants))
     }
     
     // Read (fetch) all the user's favorite restaurants
