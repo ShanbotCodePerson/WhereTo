@@ -66,6 +66,9 @@ class SavedRestaurantsTableViewController: UITableViewController {
     @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
     }
     
+    @IBAction func segmentedControlTapped(_ sender: Any) {
+    }
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,7 +87,10 @@ class SavedRestaurantsTableViewController: UITableViewController {
         } else {
             restaurant = RestaurantController.shared.blacklistedRestaurants?[indexPath.row]
         }
+        
         cell.restaurant = restaurant
+        cell.delegate = self
+        cell.isSavedButton.isSelected = true
         
         return cell
     }

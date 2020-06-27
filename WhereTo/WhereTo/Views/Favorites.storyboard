@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="IfB-HV-Cbp">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -10,7 +11,7 @@
             <objects>
                 <tableViewController id="IfB-HV-Cbp" customClass="SavedRestaurantsTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AXg-zo-LBo">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="hea-kj-jH9">
@@ -36,6 +37,9 @@
                                         <segment title="Favorites"/>
                                         <segment title="Blacklisted"/>
                                     </segments>
+                                    <connections>
+                                        <action selector="segmentedControlTapped:" destination="IfB-HV-Cbp" eventType="valueChanged" id="zY5-ky-tUf"/>
+                                    </connections>
                                 </segmentedControl>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
