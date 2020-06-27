@@ -54,7 +54,7 @@ class VotingSession {
         self.uuid = uuid
     }
     
-    convenience init?(dictionary: [String : Any]) {
+    convenience init?(dictionary: [String : Any], completion: @escaping (VotingSession?) -> Void = { _ in }) {
         guard let votesEach = dictionary[VotingSessionStrings.votesEachKey] as? Int,
 //            let useDietaryRestrictions = dictionary[VotingSessionStrings.useDietaryRestrictionsKey] as? Bool,
             let latitude = dictionary[VotingSessionStrings.latitudeKey] as? Double,
@@ -72,25 +72,37 @@ class VotingSession {
                   outcomeID: outcomeID,
                   uuid: uuid)
         
+        let group = DispatchGroup()
+        
         // Fetch the user objects
+        group.enter()
         VotingSessionController.shared.fetchUsersInVotingSession(with: uuid) { [weak self] (result) in
             switch result {
             case .success(let users):
                 self?.users = users
+                group.leave()
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(nil)
             }
         }
         
         // Fetch the restaurant objects
+        group.enter()
         RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard let restaurantIDs = self?.restaurantIDs else { return }
                 self?.restaurants = restaurants?.filter { restaurantIDs.contains($0.restaurantID) }
+                group.leave()
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(nil)
             }
+        }
+        
+        group.notify(queue: .main) {
+            return completion(self)
         }
     }
     

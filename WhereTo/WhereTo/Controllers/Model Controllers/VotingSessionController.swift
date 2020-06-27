@@ -35,7 +35,7 @@ class VotingSessionController {
         
         // Fetch the restaurants within the radius of the coordinates
         // TODO: - need to be able to end a location
-       RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
+        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard var restaurants = restaurants else { return completion(.failure(.noData)) }
@@ -52,9 +52,9 @@ class VotingSessionController {
                 }
                 
                 // Filter the restaurants by which ones are currently open
-              
-//                restaurants = restaurants.filter { $0.hours.openNow }
-
+                
+                //                restaurants = restaurants.filter { $0.hours.openNow }
+                
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
@@ -90,6 +90,7 @@ class VotingSessionController {
                         // Make sure the user is subscribed to notifications related to sessions
                         self?.subscribeToInvitationResponseNotifications()
                         self?.subscribeToSessionOverNotifications()
+                        self?.subscribeToVoteNotifications()
                     case .failure(let error):
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -112,16 +113,16 @@ class VotingSessionController {
                                 return completion(.failure(.fsError(error)))
                             }
                     }
-//                    self?.db.collection(VotingSessionInviteStrings.recordType)
-//                        .addDocument(data: votingSessionInvite.asDictionary()) { (error) in
-//
-//                            // TODO: - do I need to keep track of errors / completions here?
-//                            if let error = error {
-//                                // Print and return the error
-//                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                                return completion(.failure(.fsError(error)))
-//                            }
-//                    }
+                    //                    self?.db.collection(VotingSessionInviteStrings.recordType)
+                    //                        .addDocument(data: votingSessionInvite.asDictionary()) { (error) in
+                    //
+                    //                            // TODO: - do I need to keep track of errors / completions here?
+                    //                            if let error = error {
+                    //                                // Print and return the error
+                    //                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    //                                return completion(.failure(.fsError(error)))
+                    //                            }
+                    //                    }
                 }
                 
                 // Return the success
@@ -208,13 +209,17 @@ class VotingSessionController {
                 }
                 
                 // Unwrap the data
-                guard let document = results?.documents.first,
-                    let votingSession = VotingSession(dictionary: document.data())
+                guard let document = results?.documents.first
                     else { return completion(.failure(.couldNotUnwrap)) }
-                votingSession.documentID = document.documentID
                 
-                // Return the success
-                return completion(.success(votingSession))
+                _ = VotingSession.init(dictionary: document.data()) { (votingSession) in
+                    guard let votingSession = votingSession else { return completion(.failure(.couldNotUnwrap)) }
+                    
+                    votingSession.documentID = document.documentID
+                    
+                    // Return the success
+                    return completion(.success(votingSession))
+                }
         }
     }
     
@@ -273,6 +278,7 @@ class VotingSessionController {
             // Make sure the user is subscribed to notifications related to sessions
             subscribeToInvitationResponseNotifications()
             subscribeToSessionOverNotifications()
+            subscribeToVoteNotifications()
             
             // Add the voting session to the user's list of active voting sessions
             currentUser.activeVotingSessions.append(votingSessionInvite.votingSessionID)
@@ -540,6 +546,101 @@ class VotingSessionController {
                 })
                 
                 
+        }
+    }
+    
+    // A vote has been submitted
+    func subscribeToVoteNotifications() {
+        // Set up a listener on all votes referencing voting sessions the user is currently involved in
+        guard let currentUser = UserController.shared.currentUser,
+            currentUser.activeVotingSessions.count > 0
+            else { return }
+        
+        db.collection(VoteStrings.recordType)
+            .whereField(VoteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
+            .addSnapshotListener { [weak self] (snapshots, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+                
+                // Unwrap the data
+                guard let snapshots = snapshots else { return }
+                snapshots.documents.forEach { (document) in
+                    guard let vote = Vote(dictionary: document.data()) else { return }
+                    
+                    // Do not try to calculate an outcome if there are still outstanding invitations to the voting session
+                    self?.db.collection(VotingSessionInviteStrings.recordType)
+                        .whereField(VotingSessionInviteStrings.votingSessionIDKey, isEqualTo: vote.votingSessionID)
+                        .getDocuments { (results, error) in
+                            
+                            if let error = error {
+                                // Print and return the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                return
+                            }
+                            
+                            // Only move forward if there are not any outstanding invitations
+                            guard results?.documents.count == 0 else { return }
+                            
+                            // Get the voting session
+                            self?.fetchVotingSession(with: vote.votingSessionID, completion: { (result) in
+                                switch result {
+                                case .success(let votingSession):
+                                    self?.calculateOutcome(of: votingSession)
+                                case .failure(let error):
+                                    // Print and return the error
+                                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                    return
+                                }
+                            })
+                    }
+                }
+        }
+    }
+    
+    // A helper function to calculate the outcome of a voting session
+    func calculateOutcome(of votingSession: VotingSession) {
+        // Fetch all the votes associated with the voting session
+        fetchVotes(in: votingSession) { (result) in
+            switch result {
+            case .success(let votes):
+                // first cehck to see if alreayd had result or not
+                
+                // if only one user left (self) then delete voting session
+                
+                // Calculate the number of votes needed to reach an outcome
+                guard let numberOfUsers = votingSession.users?.count else { return }
+                let necessaryNumberOfVotes = votingSession.votesEach * numberOfUsers
+                
+                // Compare the number of votes submitted to the number of votes needed
+                guard votes.count == necessaryNumberOfVotes else { return }
+                
+                // Create a data structure of restaurants and their votes
+                var results = [String : (numberOfVotes: Int, valueOfVotes: Int)]()
+                for vote in votes {
+//                    results[vote.restaurantID]
+                }
+                
+                // First to use the restaurant with the most number of votes
+                guard let restaurants = votingSession.restaurants else { return }
+//                var winningRestaurant
+                
+                // In case of a tie, use the restaurant with the higher value of votes
+                
+                // If that is still a tie, randomly pick a tie breaker
+                
+                // Save the outcome of the voting session
+                
+                // Delete the voting session from the cloud
+                
+                // FIXME: - either need to receive notifications when app is closed, or can directly add outcome to each user's previous restaurants
+                
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
         }
     }
 }
