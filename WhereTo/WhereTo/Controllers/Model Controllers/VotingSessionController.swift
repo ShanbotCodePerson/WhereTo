@@ -186,7 +186,14 @@ class VotingSessionController {
                 for document in documents {
                     guard let votingSession = VotingSession(dictionary: document.data()) else { return completion(.failure(.couldNotUnwrap)) }
                     votingSession.documentID = document.documentID
-                    votingSessions.append(votingSession)
+                    
+                    // If the voting session is over, handle that
+                    if votingSession.outcomeID != nil {
+                        self?.handleFinishedSession(votingSession)
+                    } else {
+                        // Otherwise, add it to the source of truth
+                        votingSessions.append(votingSession)
+                    }
                 }
                 
                 // Save to the source of truth and return the success
@@ -327,6 +334,19 @@ class VotingSessionController {
                     return completion(.failure(.fsError(error)))
                 }
         }
+    }
+    
+    // Update a voting session with an outcome
+    func saveOutcome(of votingSession: VotingSession, outcomeID: String) {
+        guard let documentID = votingSession.documentID else { return }
+        
+        // Add the outcome to the voting session
+        votingSession.outcomeID = outcomeID
+        
+        // Save the change to the cloud
+        db.collection(VotingSessionStrings.recordType)
+            .document(documentID)
+            .setData([VotingSessionStrings.outcomeKey : outcomeID]) 
     }
     
     // Update a voting session with votes
@@ -498,6 +518,7 @@ class VotingSessionController {
         }
     }
     
+    // FIXME: - need to handle this differently
     // The voting session is over and has been deleted
     func subscribeToSessionOverNotifications() {
         guard let currentUser = UserController.shared.currentUser,
@@ -603,14 +624,17 @@ class VotingSessionController {
     
     // A helper function to calculate the outcome of a voting session
     func calculateOutcome(of votingSession: VotingSession) {
+        
+        // Check to see if the voting session already has an outcome
+        // FIXME: - probably don't need this
+        if votingSession.outcomeID != nil {
+            handleFinishedSession(votingSession)
+        }
+        
         // Fetch all the votes associated with the voting session
         fetchVotes(in: votingSession) { (result) in
             switch result {
             case .success(let votes):
-                // first cehck to see if alreayd had result or not
-                
-                // if only one user left (self) then delete voting session
-                
                 // Calculate the number of votes needed to reach an outcome
                 guard let numberOfUsers = votingSession.users?.count else { return }
                 let necessaryNumberOfVotes = votingSession.votesEach * numberOfUsers
@@ -618,28 +642,94 @@ class VotingSessionController {
                 // Compare the number of votes submitted to the number of votes needed
                 guard votes.count == necessaryNumberOfVotes else { return }
                 
-                // Create a data structure of restaurants and their votes
-                var results = [String : (numberOfVotes: Int, valueOfVotes: Int)]()
+                // Create a data structure linking restaurants with their votes
+                var results: [String : (numberOfVotes: Int, valueOfVotes: Int)] = [:]
                 for vote in votes {
-//                    results[vote.restaurantID]
+                    results[vote.restaurantID]?.numberOfVotes += 1
+                    results[vote.restaurantID]?.valueOfVotes += vote.voteValue
                 }
                 
-                // First to use the restaurant with the most number of votes
-                guard let restaurants = votingSession.restaurants else { return }
-//                var winningRestaurant
-                
-                // In case of a tie, use the restaurant with the higher value of votes
-                
-                // If that is still a tie, randomly pick a tie breaker
-                
-                // Save the outcome of the voting session
-                
-                // Delete the voting session from the cloud
-                
-                // FIXME: - either need to receive notifications when app is closed, or can directly add outcome to each user's previous restaurants
-                
+                // First try to get the restaurant with the most number of votes
+                let mostVotes = results.values.map({ $0.numberOfVotes }).max(by: { $0 > $1 })
+                var winningRestaurant = results.filter { (element) -> Bool in
+                    element.value.numberOfVotes == mostVotes
+                }
+                if winningRestaurant.count == 1 {
+                    guard let outcomeID = winningRestaurant.keys.first else { return }
+                    
+                    // Save the changes to the voting session
+                    self.saveOutcome(of: votingSession, outcomeID: outcomeID)
+                    
+                    // Handle the finish
+                    self.handleFinishedSession(votingSession)
+                } else {
+                    // In case of a tie, use the restaurant with the higher value of votes
+                    let highestVoteValue = winningRestaurant.values.map({ $0.valueOfVotes }).max(by: { $0 > $1 })
+                    winningRestaurant = winningRestaurant.filter({ (element) -> Bool in
+                        element.value.valueOfVotes == highestVoteValue
+                    })
+                    
+                    if winningRestaurant.count == 1 {
+                        guard let outcomeID = winningRestaurant.keys.first else { return }
+                        
+                        // Save the changes to the voting session
+                        self.saveOutcome(of: votingSession, outcomeID: outcomeID)
+                        
+                        // Handle the finish
+                        self.handleFinishedSession(votingSession)
+                    } else {
+                        // If that is still a tie, choose based on alphabetical order
+                        guard let outcomeID = winningRestaurant.keys.sorted().first else { return }
+                        
+                        // Save the changes to the voting session
+                        self.saveOutcome(of: votingSession, outcomeID: outcomeID)
+                        
+                        // Handle the finish
+                        self.handleFinishedSession(votingSession)
+                    }
+                }
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+    }
+    
+    // A helper function to handle a finished voting session
+    func handleFinishedSession(_ votingSession: VotingSession) {
+        guard let currentUser = UserController.shared.currentUser,
+            let outcomeID = votingSession.outcomeID
+            else { return }
+        
+        // Add the outcome to the user's list of previous restaurants
+        currentUser.previousRestaurants.append(outcomeID)
+        
+        // Remove the voting session from the user's list of active voting sessions
+        currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession.uuid })
+        
+        // Save the changes to the user
+        UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                // Display an alert with the outcome of the voting session
+                NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
+                
+                // If the current user is the last user referencing this voting session, then delete it from the cloud
+                if votingSession.users?.count == 1 {
+                    self?.delete(votingSession, completion: { (result) in
+                        switch result {
+                        case .success(_):
+                            print("successfully deleted voting session from cloud")
+                            return
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return
+                        }
+                    })
+                }
+                return
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return
             }
         }
     }

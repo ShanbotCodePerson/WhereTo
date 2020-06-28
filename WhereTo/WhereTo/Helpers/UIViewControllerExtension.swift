@@ -8,16 +8,9 @@
 
 import UIKit
 
-// TODO: - find a better place to put this
-// Names of local notifications
-let newFriendRequest = Notification.Name("newFriendRequest")
-let responseToFriendRequest = Notification.Name("responseToFriendRequest")
-let updateFriendsList = Notification.Name("updateFriendsList")
-let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
+// MARK: - Navigation
 
 extension UIViewController {
-    
-    // MARK: - Navigation
     
     enum StoryboardNames: String {
         case Main
@@ -57,8 +50,13 @@ extension UIViewController {
         
         self.present(initialVC, animated: false)
     }
+}
     
-    // MARK: - Generic Alerts
+// MARK: - Alerts
+
+extension UIViewController {
+    
+    // Generic Alerts
     
     // Present an alert with a simple dismiss button to display a message to the user
     func presentAlert(title: String, message: String, completion: @escaping () -> Void = { () in }) {
@@ -147,7 +145,7 @@ extension UIViewController {
         present(alertController, animated: true)
     }
     
-    // MARK: - Friend Request Alerts
+    // Friend Request Alerts
     
     func presentNewFriendRequestAlert(_ friendRequest: FriendRequest) {
         guard let currentUser = UserController.shared.currentUser else { return }
@@ -222,7 +220,7 @@ extension UIViewController {
             message: "\(friendRequest.toName) has \(friendRequest.status == .accepted ? "accepted" : "denied") your friend request")
     }
     
-    // MARK: - Voting Session Invitation Alert
+    // Voting Session Invitation Alert
     
     func presentVotingSessionInvitationAlert(_ votingSessionInvite: VotingSessionInvite, completion: @escaping (VotingSession?) -> Void) {
         // Create the alert controller
@@ -267,5 +265,79 @@ extension UIViewController {
         alertController.addAction(denyAction)
         alertController.addAction(acceptAction)
         present(alertController, animated: true)
+    }
+    
+    // Voting Session Results Alert
+    
+    // TODO: - what if no restaurant won because the voting session was cancelled somehow?
+    func presentVotingSessionResultAlert(_ votingSession: VotingSession) {
+        guard let winningRestaurant = votingSession.winningRestaurant else { return }
+        
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Vote Decided!", message: "The crowd has spoken! You have decided to eat at \(winningRestaurant.name)!", preferredStyle: .alert)
+        
+        // Create the dismiss button
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
+        
+        // Create the open in maps button
+        let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { (_) in
+            // TODO: - how to open in maps?
+        }
+        
+        // Add the buttons and present the alert
+        alertController.addAction(dismissAction)
+        alertController.addAction(openInMapsAction)
+        present(alertController, animated: true)
+    }
+}
+
+// MARK: - Respond to and Display Notifications
+
+// Names of local notifications
+let newFriendRequest = Notification.Name("newFriendRequest")
+let responseToFriendRequest = Notification.Name("responseToFriendRequest")
+let updateFriendsList = Notification.Name("updateFriendsList")
+let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
+let votingSessionResult = Notification.Name("votingSessionResult")
+
+extension UIViewController {
+    
+    func setUpNotificationObservers() {
+        // Set up the observers to listen for friend request notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: FriendRequest.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: newFriendRequest, object: FriendRequest.self)
+        
+        // Set up the observer to listen for voting session invitation notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: VotingSessionInvite.self)
+        
+        // Set up the observer to listen for voting session result notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: votingSessionResult, object: VotingSessionInvite.self)
+    }
+    
+    @objc func showNewFriendRequest(_ sender: NSNotification) {
+        guard let friendRequest = sender.object as? FriendRequest else { return }
+        DispatchQueue.main.async { self.presentNewFriendRequestAlert(friendRequest) }
+    }
+    
+    @objc func showFriendRequestResult(_ sender: NSNotification) {
+        guard let friendRequest = sender.object as? FriendRequest else { return }
+        DispatchQueue.main.async { self.presentFriendRequestResponseAlert(friendRequest) }
+    }
+    
+    @objc func showVotingSessionInvitation(_ sender: NSNotification) {
+        guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
+        DispatchQueue.main.async {
+            self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
+                // If the user accepted the invitation, transition them to the voting session page
+                if let newVotingSession = newVotingSession {
+                    self?.transitionToVotingSessionPage(with: newVotingSession)
+                }
+            }
+        }
+    }
+    
+    @objc func showVotingSessionResult(_ sender: NSNotification) {
+        guard let votingSession = sender.object as? VotingSession else { return }
+        DispatchQueue.main.async { self.presentVotingSessionResultAlert(votingSession) }
     }
 }

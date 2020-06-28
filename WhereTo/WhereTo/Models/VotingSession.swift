@@ -117,4 +117,15 @@ class VotingSession {
          VotingSessionStrings.outcomeKey : outcomeID as Any,
          VotingSessionStrings.uuidKey : uuid]
     }
+    
+    // MARK: - Helper Properties
+    
+    // A nicely formatted list of the other users participating in the vote
+    // TODO: - fix this - won't work for end of vote display
+    
+    // The winning restaurant
+    var winningRestaurant: Restaurant? {
+        guard let outcomeID = outcomeID else { return nil }
+        return restaurants?.first(where: { $0.restaurantID == outcomeID })
+    }
 }
