@@ -122,6 +122,7 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                         switch result {
                         case .success(_):
                             cell.isSavedButton.isSelected = false
+                            self.tableView.reloadData()
                         case .failure(let error):
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             return
@@ -162,7 +163,7 @@ extension SavedRestaurantsTableViewController {
         
         // Create the Current Location button
         let removeFromFavorites = UIAlertAction(title: "Yes", style: .default) { (_) in
-            return completion(.success(true))
+            completion(.success(true))
             }
         // Add the buttons to the alert and present it
         alertController.addAction(cancelAction)
