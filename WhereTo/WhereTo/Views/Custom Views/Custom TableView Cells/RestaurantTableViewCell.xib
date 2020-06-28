@@ -45,6 +45,7 @@
                                     <constraint firstAttribute="width" secondItem="Eq9-7h-sRL" secondAttribute="height" multiplier="1:1" id="1qZ-1i-HUf"/>
                                 </constraints>
                                 <state key="normal" image="star" catalog="system"/>
+                                <state key="selected" image="star.fill" catalog="system"/>
                                 <connections>
                                     <action selector="saveButtonTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="QJd-sS-jyy"/>
                                 </connections>
@@ -71,5 +72,6 @@
     </objects>
     <resources>
         <image name="star" catalog="system" width="128" height="116"/>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
     </resources>
 </document>

@@ -24,6 +24,7 @@ class HistoryTableViewController: UITableViewController {
     // MARK: - Helper Methods
     
     func loadData() {
+        
         if RestaurantController.shared.previousRestaurants == nil {
             RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
                 DispatchQueue.main.async {
@@ -52,7 +53,13 @@ class HistoryTableViewController: UITableViewController {
 
         guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return cell }
         cell.restaurant = restaurant
-
+        cell.delegate = self
+        
+        if let currentUser = UserController.shared.currentUser {
+            if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
+                cell.isSavedButton.isSelected = true
+            }
+        }
         return cell
     }
    
@@ -61,6 +68,41 @@ class HistoryTableViewController: UITableViewController {
             // TODO: - enable swipe to delete
             // Delete the row from the data source
 //            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+}
+
+// MARK: - Extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate
+extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate {
+    
+    func saveRestaurantButton(for cell: RestaurantTableViewCell) {
+        
+        guard let restaurantID = cell.restaurant?.restaurantID else { return }
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        if (currentUser.favoriteRestaurants.contains(restaurantID)) {
+            currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurantID})
+            UserController.shared.saveChanges(to: currentUser) { (result) in
+                switch result {
+                case .success(_):
+                    cell.isSavedButton.isSelected = false
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+            }
+        }
+        else {
+            currentUser.favoriteRestaurants.append(restaurantID)
+            UserController.shared.saveChanges(to: currentUser) { (result) in
+                switch result {
+                case .success(_):
+                    cell.isSavedButton.isSelected = true
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+            }
         }
     }
 }
