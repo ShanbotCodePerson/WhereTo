@@ -60,7 +60,6 @@ class HistoryTableViewController: UITableViewController {
                 cell.isSavedButton.isSelected = true
             }
         }
-
         return cell
     }
    

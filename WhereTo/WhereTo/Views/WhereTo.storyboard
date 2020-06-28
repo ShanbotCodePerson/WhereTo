@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -33,8 +34,8 @@
                                         </navigationItem>
                                     </items>
                                 </navigationBar>
-                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ip-y2-H0a">
-                                    <rect key="frame" x="132" y="55" width="150" height="35.5"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ip-y2-H0a">
+                                    <rect key="frame" x="132" y="55" width="150" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="150" id="7V2-PE-sG8"/>
                                     </constraints>
@@ -43,9 +44,8 @@
                                         <action selector="pickRandomRestaurantButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="Jik-3c-MyR"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="or invite friends to vote..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sd-Ed-eIV">
-                                    <rect key="frame" x="112" y="110.5" width="190" height="20.5"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or invite friends to vote..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sd-Ed-eIV">
+                                    <rect key="frame" x="112.5" y="105" width="189.5" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -53,33 +53,46 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
+                                <constraint firstItem="4ip-y2-H0a" firstAttribute="top" secondItem="aFk-ja-mqr" secondAttribute="bottom" constant="10" id="2dV-3p-luF"/>
                                 <constraint firstItem="aFk-ja-mqr" firstAttribute="leading" secondItem="arM-LP-fRH" secondAttribute="leading" id="KtA-sA-1RM"/>
+                                <constraint firstItem="4ip-y2-H0a" firstAttribute="centerX" secondItem="arM-LP-fRH" secondAttribute="centerX" id="Tsh-rp-N2n"/>
                                 <constraint firstAttribute="trailing" secondItem="aFk-ja-mqr" secondAttribute="trailing" id="VsD-Ff-GqK"/>
+                                <constraint firstItem="3sd-Ed-eIV" firstAttribute="top" secondItem="4ip-y2-H0a" secondAttribute="bottom" constant="20" id="YSB-9O-n4U"/>
                                 <constraint firstItem="aFk-ja-mqr" firstAttribute="top" secondItem="arM-LP-fRH" secondAttribute="top" id="d1b-uK-iPI"/>
+                                <constraint firstItem="3sd-Ed-eIV" firstAttribute="centerX" secondItem="arM-LP-fRH" secondAttribute="centerX" id="yIy-b1-vbv"/>
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="xtO-sn-LRy">
                             <rect key="frame" x="0.0" y="276" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zpe-fH-99n">
-                                    <rect key="frame" x="341" y="7" width="36" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Vote!"/>
-                                    <connections>
-                                        <action selector="voteButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="N1u-kG-xex"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JqS-fU-8xa">
-                                    <rect key="frame" x="8" y="7" width="193" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="View Active Voting Sessions"/>
-                                    <connections>
-                                        <segue destination="rWr-rK-Y5U" kind="show" id="f7s-uv-yno"/>
-                                    </connections>
-                                </button>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="5Sp-Yd-wa6">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JqS-fU-8xa">
+                                            <rect key="frame" x="0.0" y="7" width="349" height="30"/>
+                                            <state key="normal" title="View Active Voting Sessions"/>
+                                            <connections>
+                                                <segue destination="rWr-rK-Y5U" kind="show" id="f7s-uv-yno"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zpe-fH-99n">
+                                            <rect key="frame" x="357" y="7" width="57" height="30"/>
+                                            <state key="normal" title="Vote!"/>
+                                            <connections>
+                                                <action selector="voteButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="N1u-kG-xex"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </stackView>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="5Sp-Yd-wa6" secondAttribute="trailing" id="bkG-bG-no2"/>
+                                <constraint firstAttribute="bottom" secondItem="5Sp-Yd-wa6" secondAttribute="bottom" id="es2-Zv-Ezw"/>
+                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="top" secondItem="xtO-sn-LRy" secondAttribute="top" id="fyH-Kz-ZOG"/>
+                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="leading" secondItem="xtO-sn-LRy" secondAttribute="leading" id="z1J-jE-OUG"/>
+                            </constraints>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="friendCell" rowHeight="89" id="Qot-1s-9Li" customClass="FriendTableViewCell" customModule="WhereTo" customModuleProvider="target">

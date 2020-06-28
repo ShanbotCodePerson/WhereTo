@@ -66,6 +66,10 @@ class SavedRestaurantsTableViewController: UITableViewController {
     @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
     }
     
+    @IBAction func segmentedControlTapped(_ sender: Any) {
+        self.tableView.reloadData()
+    }
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,7 +88,10 @@ class SavedRestaurantsTableViewController: UITableViewController {
         } else {
             restaurant = RestaurantController.shared.blacklistedRestaurants?[indexPath.row]
         }
+        
         cell.restaurant = restaurant
+        cell.delegate = self
+        cell.isSavedButton.isSelected = true
         
         return cell
     }
@@ -107,11 +114,20 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
         guard let currentUser = UserController.shared.currentUser else { return }
         
         if (currentUser.favoriteRestaurants.contains(restaurantID)) {
-            currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurantID})
-            UserController.shared.saveChanges(to: currentUser) { (result) in
+            presentLocationSelectionAlert { (result) in
                 switch result {
                 case .success(_):
-                    cell.isSavedButton.isSelected = false
+                    currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurantID})
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            cell.isSavedButton.isSelected = false
+                            self.tableView.reloadData()
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return
+                        }
+                    }
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
@@ -133,3 +149,25 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
     }
 }
 
+
+// MARK: - Extension:SavedRestaurantsTableViewController: Confirm removal from Favs
+extension SavedRestaurantsTableViewController {
+    
+    // Present an alert with a text field to get some input from the user
+    func presentLocationSelectionAlert(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Are you sure you want to remove from favorites?", message: "", preferredStyle: .alert)
+        
+        // Create the cancel button
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        // Create the Current Location button
+        let removeFromFavorites = UIAlertAction(title: "Yes", style: .default) { (_) in
+            completion(.success(true))
+            }
+        // Add the buttons to the alert and present it
+        alertController.addAction(cancelAction)
+        alertController.addAction(removeFromFavorites)
+        present(alertController, animated: true)
+    }
+}
