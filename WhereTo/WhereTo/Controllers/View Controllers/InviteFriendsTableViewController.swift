@@ -194,7 +194,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func pickRandomRestaurantButtonTapped(_ sender: UIButton) {
         // Get the current location or allow the user to choose a location
-        fetchCurrentLocation()
+        fetchCurrentLocation(locationManager)
         guard let currentLocation = locationManager.location,
             let currentUser = UserController.shared.currentUser
             else { return }
