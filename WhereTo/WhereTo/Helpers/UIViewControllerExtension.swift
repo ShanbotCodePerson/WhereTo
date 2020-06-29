@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 // MARK: - Navigation
 
@@ -525,5 +526,20 @@ extension UIViewController: CLLocationManagerDelegate {
         
         // Can now request location since status is Authorized
         locationManager.requestLocation()
+    }
+}
+
+// MARK: - Apple Maps
+extension UIViewController {
+    
+    func launchMapWith(restaurant: Restaurant) {
+                
+//        let latitude = CLLocationDegrees(exactly: restaurant.coordinates["latitude"])
+//        let longitude = CLLocationDegrees(exactly: restaurant.coordinates["longitude"])
+//        let location = CLLocationCoordinate2D(latitude: latitude , longitude: longitude)
+//        let placemark = MKPlacemark(coordinate: location, addressDictionary: nil)
+//        let mapItem = MKMapItem(placemark: placemark)
+//
+//        mapItem.openInMaps()
     }
 }
