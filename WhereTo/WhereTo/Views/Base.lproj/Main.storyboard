@@ -15,28 +15,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg">
-                                <rect key="frame" x="94" y="102" width="227" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg">
+                                <rect key="frame" x="40" y="124" width="334" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAt-O7-sUA">
-                                <rect key="frame" x="150" y="243" width="114" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAt-O7-sUA">
+                                <rect key="frame" x="150" y="232" width="114" height="30"/>
                                 <state key="normal" title="Login or Sign Up"/>
                                 <connections>
                                     <action selector="loginSignUpButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jvr-YB-7kP"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM">
-                                <rect key="frame" x="104" y="176" width="206" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM">
+                                <rect key="frame" x="40" y="178" width="334" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="6Kw-Xj-2zg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="80" id="43Z-V1-9qQ"/>
+                            <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="r46-jI-bPM" secondAttribute="bottom" constant="20" id="Asl-KB-czn"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="r46-jI-bPM" secondAttribute="trailing" constant="40" id="H1g-7b-Wx7"/>
+                            <constraint firstItem="r46-jI-bPM" firstAttribute="top" secondItem="6Kw-Xj-2zg" secondAttribute="bottom" constant="20" id="doa-Gd-VFl"/>
+                            <constraint firstItem="6Kw-Xj-2zg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="hz3-Je-t7S"/>
+                            <constraint firstItem="kAt-O7-sUA" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="ibE-tB-SHg"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6Kw-Xj-2zg" secondAttribute="trailing" constant="40" id="ppX-83-AWK"/>
+                            <constraint firstItem="r46-jI-bPM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="qCs-1n-a6h"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
