@@ -284,8 +284,9 @@ extension UIViewController {
         let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
         
         // Create the open in maps button
-        let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { (_) in
-            // TODO: - how to open in maps?
+        let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { [weak self] (_) in
+            guard let restaurant = RestaurantController.shared.previousRestaurants?.last else { return }
+            self?.launchMapWith(restaurant: restaurant )
         }
         
         // Add the buttons and present the alert
@@ -304,8 +305,8 @@ extension UIViewController {
         let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
         
         // Create the open in maps button
-        let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { (_) in
-            // TODO: - how to open in maps?
+        let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { [weak self] (_) in
+            self?.launchMapWith(restaurant: restaurant)
         }
         
         // Add the buttons and present the alert
@@ -323,6 +324,7 @@ let responseToFriendRequest = Notification.Name("responseToFriendRequest")
 let updateFriendsList = Notification.Name("updateFriendsList")
 let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
 let votingSessionResult = Notification.Name("votingSessionResult")
+let updateHistoryList = Notification.Name("updateHistoryList")
 
 extension UIViewController {
     
@@ -336,6 +338,8 @@ extension UIViewController {
         
         // Set up the observer to listen for voting session result notifications
         NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: votingSessionResult, object: VotingSessionInvite.self)
+        
+        print("got here to \(#function) and should have set up all notification observers")
     }
     
     @objc func showNewFriendRequest(_ sender: NSNotification) {
@@ -349,6 +353,7 @@ extension UIViewController {
     }
     
     @objc func showVotingSessionInvitation(_ sender: NSNotification) {
+        print("got here to \(#function) and \(sender.object)")
         guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
         DispatchQueue.main.async {
             self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
