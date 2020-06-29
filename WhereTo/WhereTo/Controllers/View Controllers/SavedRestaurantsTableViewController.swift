@@ -72,13 +72,38 @@ class SavedRestaurantsTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
-        
-        fetchCurrentLocation(locationManager)
-        guard let currentLocation = locationManager.location else { return }
-        
-        presentAddRestaurantBySearchAlert(currentLocation: currentLocation) { (result) in
+    
+        presentAddRestaurantBySearchAlert() { (result) in
             switch result {
-            case .success(_):
+            case .success(let searchComponets):
+                if searchComponets.count == 1 {
+                    self.fetchCurrentLocation(self.locationManager)
+                    guard let currentLocation = self.locationManager.location, let name = searchComponets.first else { return }
+                    RestaurantController.shared.fetchRestaurantsByName(name: name, address: nil, currentLocation: currentLocation) { (result) in
+                        switch result {
+                        case .success(let restaurants):
+                            // TODO: presentListOfRestaurants(restaurants) to choose from
+                            return
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return
+                        }
+                    }
+                } else {
+                    guard let name = searchComponets.first else {return}
+                    let address = searchComponets[1]
+                    
+                    RestaurantController.shared.fetchRestaurantsByName(name: name, address: address, currentLocation: nil) { (result) in
+                        switch result {
+                        case .success(let restaurants):
+                            // TODO: presentListOfRestaurants(restaurants) to choose from
+                            return
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return
+                        }
+                    }
+                }
                 return
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

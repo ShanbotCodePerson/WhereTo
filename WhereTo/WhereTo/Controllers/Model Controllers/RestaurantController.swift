@@ -18,6 +18,7 @@ struct yelpStrings {
     static let searchPath = "search"
     static let termKey = "term"
     static let termValue = "restaurants"
+    static let locationKey = "location"
     static let categoriesKey = "categories"
     static let longitudeKey = "longitude"
     static let latitudeKey = "latitude"
@@ -162,6 +163,56 @@ class RestaurantController {
             return completion(.success(restaurants))
         }
     }
+    
+    // fetch restaurants with user input name and optional address
+    func fetchRestaurantsByName(name: String, address: String?, currentLocation: CLLocation?, completion: @escaping resultCompletionWith<[Restaurant]?>) {
+        
+        guard let address = address, let currentLocation = currentLocation else { return }
+            
+        var request = URLRequest(url: URL(string: "")!)
+        // 1 - URL setup
+        if !address.isEmpty {
+            // request by address
+            request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.termKey)=\(name)&\(yelpStrings.locationKey)=\(address)")!, timeoutInterval: Double.infinity)
+            request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
+            request.httpMethod = yelpStrings.methodValue
+        } else {
+            // request by currentLocation
+            request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(currentLocation.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(currentLocation.coordinate.longitude)\(yelpStrings.termKey)=\(name)")!, timeoutInterval: Double.infinity)
+            request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
+            request.httpMethod = yelpStrings.methodValue
+        }
+        
+        // 2 - Data task
+        URLSession.shared.dataTask(with: request) { data, _, error in
+          
+            // 3 - Error Handling
+            if let error = error {
+                return completion(.failure(.thrownError(error)))
+            }
+            
+            // 4 - check for data
+            guard let data = data else { return completion(.failure(.noData))}
+            
+            // 5 - Decode data
+            do {
+                let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
+                let businesses = topLevelDictionary.businesses
+                
+                var restaurants: [Restaurant] = []
+                
+                for restaurant in businesses {
+                    restaurants.append(restaurant)
+                }
+                return completion(.success(restaurants))
+                
+            } catch {
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.thrownError(error)))
+            }
+        }.resume()
+    }
+    
     
     // Read (fetch) all the user's previous restaurants
     func fetchPreviousRestaurants(completion: @escaping resultCompletion) {
