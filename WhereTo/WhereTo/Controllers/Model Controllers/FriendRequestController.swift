@@ -32,8 +32,7 @@ class FriendRequestController {
         
         // Save it to the cloud
         db.collection(FriendRequestStrings.recordType)
-            .document("\(friendRequest.fromID)-\(friendRequest.toID)")
-            .setData(friendRequest.asDictionary()) { (error) in
+            .addDocument(data: friendRequest.asDictionary()) { (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -53,7 +52,7 @@ class FriendRequestController {
         currentUser.friends.removeAll(where: { $0 == user.uuid })
         
         // Save the changes to the user
-        UserController.shared.saveChanges(to: user) { [weak self] (result) in
+        UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
             switch result {
             case .success(_):
                 // Send the notification to the unfriended user
@@ -84,7 +83,11 @@ class FriendRequestController {
                 
                 // Unwrap the data
                 guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                let pendingFriendRequests = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                let pendingFriendRequests = documents.compactMap { (document) -> FriendRequest? in
+                    guard let friendRequest = FriendRequest(dictionary: document.data()) else { return nil }
+                    friendRequest.documentID = document.documentID
+                    return friendRequest
+                }
                 
                 // Return the success
                 return completion(.success(pendingFriendRequests))
@@ -94,19 +97,42 @@ class FriendRequestController {
     // Update a friend request with a response
     func respondToFriendRequest(_ friendRequest: FriendRequest, accept: Bool, completion: @escaping resultCompletion) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        guard let documentID = friendRequest.documentID else { return completion(.failure(.noData)) }
         
         // Update the friend request
         friendRequest.status = accept ? .accepted : .denied
         
-        // Add the friend to the user's list of friends
-        currentUser.friends.append(friendRequest.fromID)
-        
-        // Save the changes to the user
-        UserController.shared.saveChanges(to: currentUser) { (_) in }
+        // If the user accepted the friend request, add and save the friend
+        if accept {
+            currentUser.friends.append(friendRequest.fromID)
+            
+            // Save the changes to the user
+            UserController.shared.saveChanges(to: currentUser) { (result) in
+                switch result {
+                case .success(_):
+                    // Update the source of truth
+                    UserController.shared.fetchUsersFriends { (result) in
+                        switch result {
+                        case .success(_):
+                            // Send a local notification to update the tableview as necessary
+                            NotificationCenter.default.post(Notification(name: updateFriendsList))
+                        case .failure(let error):
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(error))
+                        }
+                    }
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        }
         
         // Save the changes to the friend request
         db.collection(FriendRequestStrings.recordType)
-            .document("\(friendRequest.fromID)-\(friendRequest.toID)")
+            .document(documentID)
             .updateData([FriendRequestStrings.statusKey : friendRequest.status.rawValue]) { (error) in
                 
                 if let error = error {
@@ -114,16 +140,19 @@ class FriendRequestController {
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.fsError(error)))
                 }
-                    // Otherwise return the success
-                else { return completion(.success(true)) }
+                
+                // Otherwise return the success
+                return completion(.success(true))
         }
     }
     
     // Delete a friend request when it's no longer needed
     func delete(_ friendRequest: FriendRequest, completion: @escaping resultCompletion) {
+        guard let documentID = friendRequest.documentID else { return completion(.failure(.noData)) }
+        
         // Delete the friend request from the cloud
         db.collection(FriendRequestStrings.recordType)
-            .document("\(friendRequest.fromID)-\(friendRequest.toID)")
+            .document(documentID)
             .delete() { (error) in
                 
                 if let error = error {
@@ -189,6 +218,7 @@ class FriendRequestController {
     
     func subscribeToFriendRequestNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
+        print("got here to \(#function)")
         
         // Set up a listener to be alerted of any adding-type friend requests with the current user as the recipient
         db.collection(FriendRequestStrings.recordType)
@@ -204,7 +234,13 @@ class FriendRequestController {
                 
                 // Unwrap the data
                 guard let documents = snapshot?.documents else { return }
-                let newFriendRequests = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                let newFriendRequests = documents.compactMap { (document) -> FriendRequest? in
+                    guard let friendRequest = FriendRequest(dictionary: document.data()) else { return nil }
+                    friendRequest.documentID = document.documentID
+                    return friendRequest
+                }
+                
+                print("got here to \(#function) and there are \(newFriendRequests.count) new friend requests")
                 
                 for friendRequest in newFriendRequests {
                     // Send a local notification to present an alert
@@ -217,9 +253,12 @@ class FriendRequestController {
     func subscribeToFriendRequestResponseNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
+        print("got here to \(#function)")
+        
         // Set up a listener to be alerted of changes to friend requests with the current user as the sender
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.uuid)
+            .whereField(FriendRequestStrings.statusKey, in: [FriendRequest.Status.accepted.rawValue, FriendRequest.Status.denied.rawValue])
             .addSnapshotListener { [weak self] (snapshot, error) in
                 
                 if let error = error {
@@ -230,21 +269,38 @@ class FriendRequestController {
                 
                 // Unwrap the data
                 guard let documents = snapshot?.documents else { return }
-                let newResponses = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                let newResponses = documents.compactMap { (document) -> FriendRequest? in
+                    guard let friendRequest = FriendRequest(dictionary: document.data()) else { return nil }
+                    friendRequest.documentID = document.documentID
+                    return friendRequest
+                }
+                
+                print("got here to \(#function) and there are \(newResponses.count) friend request responses")
                 
                 // If the request was accepted, add the friends to the user's list of friends
                 currentUser.friends.append(contentsOf: newResponses.filter({ $0.status == .accepted }).map({ $0.toID }))
                 
                 // Save the changes to the user
-                UserController.shared.saveChanges(to: currentUser) { (_) in }
-                
-                for response in newResponses {
-                    // Send a local notification to present an alert and update the tableview as necessary
-                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
-                    NotificationCenter.default.post(Notification(name: updateFriendsList))
-                    
-                    // Delete the requests from the cloud now that they're no longer necessary
-                    self?.delete(response, completion: { (_) in })
+                UserController.shared.saveChanges(to: currentUser) { (result) in
+                    switch result {
+                    case .success(_):
+                        for response in newResponses {
+                            // Update the source of truth
+                            UserController.shared.fetchUsersFriends { (result) in
+                                switch result {
+                                case .success(_):
+                                    // Send a local notification to update the tableview as necessary
+                                    NotificationCenter.default.post(Notification(name: updateFriendsList))
+                                case .failure(let error):
+                                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                }
+                            }
+                            // Delete the requests from the cloud now that they're no longer necessary
+                            self?.delete(response, completion: { (_) in })
+                        }
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    }
                 }
         }
     }
@@ -252,6 +308,8 @@ class FriendRequestController {
     // When someone removes the current user as a friend
     func subscribeToRemovingFriendNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
+        
+        print("got here to \(#function)")
         
         // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
         db.collection(FriendRequestStrings.recordType)
@@ -267,20 +325,34 @@ class FriendRequestController {
                 
                 // Unwrap the data
                 guard let documents = snapshot?.documents else { return }
-                let friendsRemoving = documents.compactMap { FriendRequest(dictionary: $0.data()) }
+                let friendsRemoving = documents.compactMap { (document) -> FriendRequest? in
+                    guard let friendRequest = FriendRequest(dictionary: document.data()) else { return nil }
+                    friendRequest.documentID = document.documentID
+                    return friendRequest
+                }
                 let friendsIDs = friendsRemoving.compactMap { $0.fromID }
+                
+                print("got here to \(#function) and there are \(friendsIDs.count) friends removing")
                 
                 // Remove the friends from the users list of friends
                 currentUser.friends.removeAll(where: { friendsIDs.contains($0) })
                 
                 // Save the changes to the user
-                UserController.shared.saveChanges(to: currentUser) { (_) in }
+                UserController.shared.saveChanges(to: currentUser) { (result) in
+                    switch result {
+                    case .success(_):
+                        // Update the source of truth
+                        UserController.shared.friends?.removeAll(where: { currentUser.friends.contains($0.uuid) })
+                        
+                        // Send a local notification to update the tableview
+                        NotificationCenter.default.post(Notification(name: updateFriendsList))
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    }
+                }
                 
                 // Delete the requests from the cloud now that they're no longer necessary
                 friendsRemoving.forEach({ self?.delete($0, completion: { (_) in }) })
-                
-                // Send a local notification to update the tableview
-                // TODO: - need to present an alert to the user
         }
     }
 }
