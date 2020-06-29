@@ -21,8 +21,12 @@ class LoginSignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Try to log the user in automatically
-        autoLogin()
+//        // Try to log the user in automatically
+//        autoLogin()
+        
+        // TODO: - first make sure email is verified
+        
+        // TODO: - have option to resend
     }
     
     // MARK: - Actions
@@ -53,19 +57,17 @@ class LoginSignUpViewController: UIViewController {
                 return
             }
             
-            
-            
-//            // Send an email to verify the user's email address
-//            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
-//
-//                if let error = error {
-//                    // Print and display the error
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
-//                }
-//
-//                // TODO: - not sure what to do here
-//            })
+            // Send an email to verify the user's email address
+            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+
+                if let error = error {
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                }
+
+                // TODO: - alert, tell them to check email, have button to continue
+            })
             // FIXME: - how to verify the email?
             // Once the email is verified, finish setting up the user
             self?.setUpUser(with: email)

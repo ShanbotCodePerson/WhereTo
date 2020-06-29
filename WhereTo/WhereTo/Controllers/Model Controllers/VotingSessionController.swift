@@ -785,6 +785,9 @@ class VotingSessionController {
             // Add the restaurant to the source of truth of previous restaurants in the restaurant controller
             guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
             RestaurantController.shared.previousRestaurants?.append(restaurant)
+            
+            // Send a notification to update the tableview as necessary
+            NotificationCenter.default.post(Notification(name: updateHistoryList))
         }
         
         // Remove the voting session from the user's list of active voting sessions

@@ -23,7 +23,7 @@ class HistoryTableViewController: UITableViewController {
         
         // Set up the observers to listen for changes in the data
         // FIXME: - need a notification just for updating history
-//        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
     }
     
     // MARK: - Respond to Notifications

@@ -330,14 +330,14 @@ extension UIViewController {
     
     func setUpNotificationObservers() {
         // Set up the observers to listen for friend request notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: FriendRequest.self)
-        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: responseToFriendRequest, object: FriendRequest.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: responseToFriendRequest, object: nil)
         
         // Set up the observer to listen for voting session invitation notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: VotingSessionInvite.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: nil)
         
         // Set up the observer to listen for voting session result notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: votingSessionResult, object: VotingSessionInvite.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: votingSessionResult, object: nil)
         
         print("got here to \(#function) and should have set up all notification observers")
     }
