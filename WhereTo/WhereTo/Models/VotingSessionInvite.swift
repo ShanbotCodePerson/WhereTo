@@ -25,6 +25,7 @@ class VotingSessionInvite {
     let toID: String                // The uuid of the friend who is being invited
 //    let locationName: String
     let votingSessionID: String     // The uuid of the voting session
+    var documentID: String?
     
     // MARK: - Initializers
     

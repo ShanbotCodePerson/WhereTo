@@ -30,13 +30,11 @@ class InviteFriendsTableViewController: UITableViewController {
         // Load the data if it hasn't been loaded already
         loadAllData()
         
-        // Set up the observers to listen for friend request notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: FriendRequest.self)
-        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: newFriendRequest, object: FriendRequest.self)
+        // Set up the observers to listen for notifications telling this particular view to update
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
         
-        // Set up the observer to listen for voting session invitation notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: VotingSessionInvite.self)
+        // Set up the observer to listen for notifications telling any view to display an alert
+        setUpNotificationObservers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
