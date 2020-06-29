@@ -152,7 +152,11 @@ class VotingSessionController {
                 
                 // Unwrap the data
                 guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                let pendingInvitations = documents.compactMap { VotingSessionInvite(dictionary: $0.data()) }
+                let pendingInvitations = documents.compactMap { (document) -> VotingSessionInvite? in
+                    guard let votingSessionInvite = VotingSessionInvite(dictionary: document.data()) else { return nil }
+                    votingSessionInvite.documentID = document.documentID
+                    return votingSessionInvite
+                }
                 
                 // Return the success
                 return completion(.success(pendingInvitations))
@@ -186,6 +190,8 @@ class VotingSessionController {
                 for document in documents {
                     guard let votingSession = VotingSession(dictionary: document.data()) else { return completion(.failure(.couldNotUnwrap)) }
                     votingSession.documentID = document.documentID
+                    
+                    // FIXME: - check to see if all votes have been cast?
                     
                     // If the voting session is over, handle that
                     if votingSession.outcomeID != nil {
@@ -254,12 +260,10 @@ class VotingSessionController {
     
     // Read (fetch) all the votes made by the user in a given voting session
     func fetchVotes(in votingSession: VotingSession, completion: @escaping resultCompletionWith<[Vote]>) {
-        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        
         // Fetch the data from the cloud
         db.collection(VoteStrings.recordType)
             .whereField(VoteStrings.votingSessionIDKey, isEqualTo: votingSession.uuid)
-            .whereField(VoteStrings.userIDKey, isEqualTo: currentUser.uuid)
+//            .whereField(VoteStrings.userIDKey, isEqualTo: currentUser.uuid)
             .getDocuments { (results, error) in
                 
                 if let error = error {
@@ -324,8 +328,9 @@ class VotingSessionController {
         // FIXME: - need to make sure this is getting called somewhere
         
         // Delete the invitation from the cloud now that it's no longer necessary
+        guard let documentID = votingSessionInvite.documentID else { return completion(.failure(.noData)) }
         db.collection(VotingSessionInviteStrings.recordType)
-            .document("\(votingSessionInvite.toID)-\(votingSessionInvite.votingSessionID)")
+            .document(documentID)
             .delete() { (error) in
                 
                 if let error = error {
@@ -352,6 +357,8 @@ class VotingSessionController {
     // Update a voting session with votes
     func vote(value: Int, for restaurant: Restaurant, in votingSession: VotingSession, completion: @escaping resultCompletionWith<Vote>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // FIXME: - check to see if it's the last vote?
         
         // Create the vote
         let vote = Vote(voteValue: value, userID: currentUser.uuid, restaurantID: restaurant.restaurantID, votingSessionID: votingSession.uuid)
@@ -518,9 +525,11 @@ class VotingSessionController {
                 
                 // Unwrap the data
                 guard let documents = snapshot?.documents else { return }
-                let newInvitations = documents.compactMap { VotingSessionInvite(dictionary: $0.data()) }
-                
-                // TODO: - add to source of truth?
+                let newInvitations = documents.compactMap { (document) -> VotingSessionInvite? in
+                    guard let votingSessionInvite = VotingSessionInvite(dictionary: document.data()) else { return nil }
+                    votingSessionInvite.documentID = document.documentID
+                    return votingSessionInvite
+                }
                 
                 // Send a local notification to present an alert for each invitation
                 for invitation in newInvitations {
@@ -628,6 +637,7 @@ class VotingSessionController {
         guard let currentUser = UserController.shared.currentUser,
             currentUser.activeVotingSessions.count > 0
             else { return }
+        print("got here to \(#function)")
         
         db.collection(VoteStrings.recordType)
             .whereField(VoteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
@@ -639,8 +649,11 @@ class VotingSessionController {
                     return
                 }
                 
+                print("got here to \(#function) and have \(snapshots?.documents.count) documents")
+                
                 // Unwrap the data
                 guard let snapshots = snapshots else { return }
+                // FIXME: - convert to list of votes, get set of voting session id's, work from there to reduce redundancy
                 snapshots.documents.forEach { (document) in
                     guard let vote = Vote(dictionary: document.data()) else { return }
                     
@@ -673,6 +686,8 @@ class VotingSessionController {
                 }
         }
     }
+    
+    // MARK: - Helper Methods
     
     // A helper function to calculate the outcome of a voting session
     func calculateOutcome(of votingSession: VotingSession) {

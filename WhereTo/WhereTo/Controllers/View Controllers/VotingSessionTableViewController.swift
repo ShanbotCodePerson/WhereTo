@@ -41,7 +41,9 @@ class VotingSessionTableViewController: UITableViewController {
     }
     
     func loadData() {
-        guard let votingSession = votingSession else { return }
+        guard let votingSession = votingSession,
+            let currentUser = UserController.shared.currentUser
+            else { return }
         
         // Fetch any votes previously made by this user in this voting session
         VotingSessionController.shared.fetchVotes(in: votingSession) { [weak self] (result) in
@@ -50,7 +52,7 @@ class VotingSessionTableViewController: UITableViewController {
                 case .success(let votes):
                     // Save the data
                     print("got here to \(#function) and there are \(votes.count) votes")
-                    self?.votes = votes
+                    self?.votes = votes.filter { $0.userID == currentUser.uuid }
                     
                     // Update the tableview
                     self?.tableView.reloadData()

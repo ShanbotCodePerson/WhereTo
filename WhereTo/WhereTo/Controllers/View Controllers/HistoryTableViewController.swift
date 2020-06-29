@@ -18,13 +18,23 @@ class HistoryTableViewController: UITableViewController {
         // Load the data if it hasn't been loaded already
         loadData()
         
+        // Set up the tableview cells
         tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        
+        // Set up the observers to listen for changes in the data
+        // FIXME: - need a notification just for updating history
+//        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
+    }
+    
+    // MARK: - Respond to Notifications
+    
+   @objc func refreshData() {
+        DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
     // MARK: - Helper Methods
     
     func loadData() {
-        
         if RestaurantController.shared.previousRestaurants == nil {
             RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
                 DispatchQueue.main.async {
