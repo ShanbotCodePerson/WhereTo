@@ -28,6 +28,7 @@ class FriendRequest {
     let toID: String
     let toName: String
     var status: Status
+    var documentID: String?
     
     enum Status: Int {
         case waiting
