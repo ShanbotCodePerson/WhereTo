@@ -432,34 +432,40 @@ extension UIViewController {
     }
     
     // Present an alert with a text field to get some input from the user
-    func presentAddRestaurantBySearchAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
+    func presentAddRestaurantBySearchAlert(completion: @escaping (Result<[String], WhereToError>) -> Void) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "Where To?", message: "Enter the name of the restaurant you would like to add.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "", message: "Enter the name of the restaurant then search by current location or enter address to search from.", preferredStyle: .alert)
         
         // Add text fields
         alertController.addTextField { (restaurantName) in
-            restaurantName.placeholder = "Enter name here..."
+            restaurantName.placeholder = "Enter restaurant name here..."
         }
         
         alertController.addTextField { (location) in
-            location.placeholder = "Current Location"
+            location.placeholder = "Enter address or city, state"
         }
         
         // Create the cancel button
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
-        let searchAction = UIAlertAction(title: "Search", style: .default) { [weak self] (_) in
+        let currentLocationAction = UIAlertAction(title: "Search Current Location", style: .default) { [weak self] (_) in
             // Get the text from text field
             guard let name = alertController.textFields?.first?.text, !name.isEmpty else { return }
+            completion(.success([name]))
         }
         
-        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { [weak self] (_) in
+        let enteredLocationAction = UIAlertAction(title: "Search Entered Address", style: .default) { [weak self] (_) in
             // Get the text from the text field
-            guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
-        }
+            guard let address = alertController.textFields?[1].text, !address.isEmpty,
+                let name = alertController.textFields?.first?.text, !name.isEmpty
+                else { return }
+            completion(.success([name, address]))
+            }
+        
         // Add the buttons to the alert and present it
         alertController.addAction(cancelAction)
-        alertController.addAction(searchAction)
+        alertController.addAction(currentLocationAction)
+        alertController.addAction(enteredLocationAction)
         present(alertController, animated: true)
     }
 }
