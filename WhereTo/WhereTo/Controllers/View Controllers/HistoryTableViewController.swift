@@ -21,14 +21,16 @@ class HistoryTableViewController: UITableViewController {
         // Set up the tableview cells
         tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
-        // Set up the observers to listen for changes in the data
-        // FIXME: - need a notification just for updating history
+        // Set up the observer to listen for changes in the data
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
+        
+        // Set up the observer to listen for notifications telling any view to display an alert
+        setUpNotificationObservers()
     }
     
     // MARK: - Respond to Notifications
     
-   @objc func refreshData() {
+    @objc func refreshData() {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
