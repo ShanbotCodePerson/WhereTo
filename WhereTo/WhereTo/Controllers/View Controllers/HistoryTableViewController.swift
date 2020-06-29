@@ -72,7 +72,7 @@ class HistoryTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate
+// MARK: - Extension:SavedButtonDelegate
 extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func saveRestaurantButton(for cell: RestaurantTableViewCell) {

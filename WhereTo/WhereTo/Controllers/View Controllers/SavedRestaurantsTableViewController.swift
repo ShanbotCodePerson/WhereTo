@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SavedRestaurantsTableViewController: UITableViewController {
+    
+    // MARK: - Properties
+    
+    let locationManager = CLLocationManager()
     
     // MARK: - Outlets
     
@@ -18,6 +23,9 @@ class SavedRestaurantsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
         // Load the data if it hasn't been loaded already
         loadAllData()
@@ -64,6 +72,19 @@ class SavedRestaurantsTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
+        
+        fetchCurrentLocation(locationManager)
+        guard let currentLocation = locationManager.location else { return }
+        
+        presentAddRestaurantBySearchAlert(currentLocation: currentLocation) { (result) in
+            switch result {
+            case .success(_):
+                return
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+        //fetchRestaurantByName(name)
     }
     
     @IBAction func segmentedControlTapped(_ sender: Any) {
@@ -105,7 +126,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate
+// MARK: - SavedButtonDelegate
 extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func saveRestaurantButton(for cell: RestaurantTableViewCell) {
@@ -146,28 +167,5 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                 }
             }
         }
-    }
-}
-
-
-// MARK: - Extension:SavedRestaurantsTableViewController: Confirm removal from Favs
-extension SavedRestaurantsTableViewController {
-    
-    // Present an alert with a text field to get some input from the user
-    func presentLocationSelectionAlert(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
-        // Create the alert controller
-        let alertController = UIAlertController(title: "Are you sure you want to remove from favorites?", message: "", preferredStyle: .alert)
-        
-        // Create the cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        // Create the Current Location button
-        let removeFromFavorites = UIAlertAction(title: "Yes", style: .default) { (_) in
-            completion(.success(true))
-            }
-        // Add the buttons to the alert and present it
-        alertController.addAction(cancelAction)
-        alertController.addAction(removeFromFavorites)
-        present(alertController, animated: true)
     }
 }
