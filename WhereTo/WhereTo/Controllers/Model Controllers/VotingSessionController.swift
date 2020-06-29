@@ -447,6 +447,58 @@ class VotingSessionController {
     }
     // TODO: - make sure to also remove from users list of active sessions
     
+    // Delete all votes associated with the current user
+    func deleteAllVotes(completion: @escaping (WhereToError?) -> Void) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.noUserFound) }
+        
+        // Fetch all the user's active votes from the cloud
+        db.collection(VoteStrings.recordType)
+            .whereField(VoteStrings.userIDKey, isEqualTo: currentUser.uuid)
+            .getDocuments(completion: { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.fsError(error))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.couldNotUnwrap) }
+                
+                // Delete all the votes
+                documents.forEach { self?.db.collection(VoteStrings.recordType).document($0.documentID).delete() }
+                
+                return completion(nil)
+            })
+    }
+    
+    // Delete all voting session invitations associated with the current user
+    func deleteAllVotingInvites(completion: @escaping (WhereToError?) -> Void) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.noUserFound) }
+        
+        // Fetch all the user's outstanding voting session invitations from the cloud
+        db.collection(VotingSessionInviteStrings.recordType)
+            .whereField(VotingSessionInviteStrings.toIDKey, isEqualTo: currentUser.uuid)
+            .getDocuments(completion: { [weak self] (results, error) in
+                
+                if let error = error {
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.fsError(error))
+                }
+                
+                // Unwrap the data
+                guard let documents = results?.documents else { return completion(.couldNotUnwrap) }
+                
+                // Delete all the voting invitations
+                documents.forEach {
+                    self?.db.collection(VotingSessionInviteStrings.recordType).document($0.documentID).delete()
+                }
+                
+                return completion(nil)
+            })
+    }
+    
     // MARK: - Set Up Notifications
     
     // The current user has been invited to a voting session

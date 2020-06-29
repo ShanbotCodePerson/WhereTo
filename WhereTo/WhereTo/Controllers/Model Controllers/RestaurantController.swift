@@ -85,6 +85,39 @@ class RestaurantController {
         }.resume()
     }
     
+    // Read (fetch) a random restaurant by location
+    func fetchRandomRestaurant(near location: CLLocation, completion: @escaping resultCompletionWith<Restaurant>) {
+        
+        // Fetch the list of restaurants near that location that are currently open
+        fetchRestaurantsByLocation(location: location) { (result) in
+            switch result {
+            case .success(let restaurants):
+                guard let restaurants = restaurants else { return completion(.failure(.noRestaurantsMatch)) }
+                
+                // Make sure the restaurants have ratings
+                var sortedRestaurants = restaurants.filter { $0.rating != nil }
+                guard sortedRestaurants.count > 0 else {
+                    let randomRestaurant = restaurants[Int.random(in: 0..<restaurants.count)]
+                    return completion(.success(randomRestaurant))
+                }
+                
+                // Sort the restaurants in order of highest rankings
+                sortedRestaurants = sortedRestaurants.sorted(by: { $0.rating! > $1.rating! })
+                
+                // Limit to the highest ranked restaurants
+                sortedRestaurants = Array(sortedRestaurants.prefix(min(10, sortedRestaurants.count / 4)))
+                
+                // Return a random restaurant
+                let randomRestaurant = sortedRestaurants[Int.random(in: 0..<sortedRestaurants.count)]
+                return completion(.success(randomRestaurant))
+            case .failure(let error):
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+        }
+    }
+    
     // Read (fetch) a list of restaurants from the API from a list of restaurant ID's
     func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]?>) {
         

@@ -289,6 +289,26 @@ extension UIViewController {
         alertController.addAction(openInMapsAction)
         present(alertController, animated: true)
     }
+    
+    // Random Restaurant Alert
+    
+    func presentRandomRestaurantAlert(_ restaurant: Restaurant) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken! You have decided to eat at \(restaurant.name)!", preferredStyle: .alert)
+        
+        // Create the dismiss button
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
+        
+        // Create the open in maps button
+        let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { (_) in
+            // TODO: - how to open in maps?
+        }
+        
+        // Add the buttons and present the alert
+        alertController.addAction(dismissAction)
+        alertController.addAction(openInMapsAction)
+        present(alertController, animated: true)
+    }
 }
 
 // MARK: - Respond to and Display Notifications

@@ -21,4 +21,6 @@ enum WhereToError: LocalizedError {
     case noRestaurantsMatch
     case noLocationForAddress
     
+    // TODO: - add in string descriptions of each error
+    
 }

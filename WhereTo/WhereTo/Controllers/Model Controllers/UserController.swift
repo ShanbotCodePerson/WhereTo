@@ -170,8 +170,39 @@ class UserController {
                     return completion(.failure(.fsError(error)))
                 }
                 
+                let group = DispatchGroup()
+                
+                // Delete all friend requests, votes, and voting session invitations associated with the user
+                group.enter()
+                FriendRequestController.shared.deleteAll { (error) in
+                    if let error = error {
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                    group.leave()
+                }
+                group.enter()
+                VotingSessionController.shared.deleteAllVotes { (error) in
+                    if let error = error {
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                    group.leave()
+                }
+                group.enter()
+                VotingSessionController.shared.deleteAllVotingInvites { (error) in
+                    if let error = error {
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                    group.leave()
+                }
+                
                 // Return the success
-                return completion(.success(true))
+                group.notify(queue: .main) {  return completion(.success(true)) }
         }
     }
     
