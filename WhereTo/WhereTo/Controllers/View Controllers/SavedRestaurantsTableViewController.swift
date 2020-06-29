@@ -126,10 +126,6 @@ class SavedRestaurantsTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Extensions
-
-
-
 // MARK: - SavedButtonDelegate
 extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
@@ -171,64 +167,5 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                 }
             }
         }
-    }
-}
-
-
-// MARK: - Confirm removal from Favs
-extension SavedRestaurantsTableViewController {
-    
-    // Present an alert with a text field to get some input from the user
-    func presentLocationSelectionAlert(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
-        // Create the alert controller
-        let alertController = UIAlertController(title: "Are you sure you want to remove from favorites?", message: "", preferredStyle: .alert)
-        
-        // Create the cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        // Create the Current Location button
-        let removeFromFavorites = UIAlertAction(title: "Yes", style: .default) { (_) in
-            completion(.success(true))
-            }
-        // Add the buttons to the alert and present it
-        alertController.addAction(cancelAction)
-        alertController.addAction(removeFromFavorites)
-        present(alertController, animated: true)
-    }
-}
-
-// MARK: - Alert:Enter name to add to favs
-extension SavedRestaurantsTableViewController {
-    
-    // Present an alert with a text field to get some input from the user
-    func presentAddRestaurantBySearchAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
-        // Create the alert controller
-        let alertController = UIAlertController(title: "Where To?", message: "Enter the name of the restaurant you would like to add.", preferredStyle: .alert)
-        
-        // Add text fields
-        alertController.addTextField { (restaurantName) in
-            restaurantName.placeholder = "Enter name here..."
-        }
-        
-        alertController.addTextField { (location) in
-            location.placeholder = "Current Location"
-        }
-        
-        // Create the cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        let searchAction = UIAlertAction(title: "Search", style: .default) { [weak self] (_) in
-            // Get the text from text field
-            guard let name = alertController.textFields?.first?.text, !name.isEmpty else { return }
-        }
-        
-        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { [weak self] (_) in
-            // Get the text from the text field
-            guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
-        }
-        // Add the buttons to the alert and present it
-        alertController.addAction(cancelAction)
-        alertController.addAction(searchAction)
-        present(alertController, animated: true)
     }
 }
