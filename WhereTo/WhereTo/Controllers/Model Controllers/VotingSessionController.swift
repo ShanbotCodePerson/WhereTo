@@ -222,8 +222,7 @@ class VotingSessionController {
                 }
                 
                 // Unwrap the data
-                guard let document = results?.documents.first
-                    else { return completion(.failure(.couldNotUnwrap)) }
+                guard let document = results?.documents.first else { return completion(.failure(.couldNotUnwrap)) }
                 
                 _ = VotingSession.init(dictionary: document.data()) { (votingSession) in
                     guard let votingSession = votingSession else { return completion(.failure(.couldNotUnwrap)) }
