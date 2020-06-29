@@ -216,5 +216,6 @@ class UserController {
         VotingSessionController.shared.subscribeToInvitationNotifications()
         VotingSessionController.shared.subscribeToInvitationResponseNotifications()
         VotingSessionController.shared.subscribeToSessionOverNotifications()
+        VotingSessionController.shared.subscribeToVoteNotifications()
     }
 }
