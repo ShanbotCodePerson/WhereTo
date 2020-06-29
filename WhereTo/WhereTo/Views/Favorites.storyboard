@@ -19,7 +19,10 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X2i-BZ-Bro">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="45" id="Egv-gd-Kyv"/>
+                                    </constraints>
                                     <items>
                                         <navigationItem title="Saved Restaurants" id="9l6-d2-EhQ">
                                             <barButtonItem key="rightBarButtonItem" systemItem="add" id="Msi-GO-zhV">
@@ -30,9 +33,8 @@
                                         </navigationItem>
                                     </items>
                                 </navigationBar>
-                                <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="17E-hW-8uu">
-                                    <rect key="frame" x="125" y="49" width="164" height="32"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="17E-hW-8uu">
+                                    <rect key="frame" x="120.5" y="53" width="173" height="26"/>
                                     <segments>
                                         <segment title="Favorites"/>
                                         <segment title="Blacklisted"/>
@@ -44,9 +46,12 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
+                                <constraint firstItem="17E-hW-8uu" firstAttribute="centerX" secondItem="hea-kj-jH9" secondAttribute="centerX" id="2RK-GX-XhJ"/>
                                 <constraint firstItem="X2i-BZ-Bro" firstAttribute="top" secondItem="hea-kj-jH9" secondAttribute="top" id="3d2-A9-jrT"/>
                                 <constraint firstItem="X2i-BZ-Bro" firstAttribute="leading" secondItem="hea-kj-jH9" secondAttribute="leading" id="NB7-sG-7Xw"/>
                                 <constraint firstAttribute="trailing" secondItem="X2i-BZ-Bro" secondAttribute="trailing" id="RGD-Rg-5Vw"/>
+                                <constraint firstItem="17E-hW-8uu" firstAttribute="top" secondItem="X2i-BZ-Bro" secondAttribute="bottom" constant="8" id="nGN-FS-sFO"/>
+                                <constraint firstAttribute="bottom" secondItem="17E-hW-8uu" secondAttribute="bottom" constant="8" id="xQg-Et-DhI"/>
                             </constraints>
                         </view>
                         <prototypes>
