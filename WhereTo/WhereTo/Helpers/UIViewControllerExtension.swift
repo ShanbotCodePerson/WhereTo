@@ -532,6 +532,8 @@ extension UIViewController: CLLocationManagerDelegate {
             return
         }
         
+        // Set Desired Accuracy
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         // Can now request location since status is Authorized
         locationManager.requestLocation()
     }

@@ -26,7 +26,6 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // set InviteFriendsTableViewController as delegate of CLLocationManager
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
         // Load the data if it hasn't been loaded already
         loadAllData()
