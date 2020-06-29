@@ -193,7 +193,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func pickRandomRestaurantButtonTapped(_ sender: UIButton) {
         // Get the current location or allow the user to choose a location
-        fetchCurrentLocation()
+        fetchCurrentLocation(locationManager)
         guard let currentLocation = locationManager.location else { return }
         
         presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
@@ -227,7 +227,7 @@ class InviteFriendsTableViewController: UITableViewController {
         let friends = indexPaths.compactMap { UserController.shared.friends?[$0.row] }
         
         // Get the current location or allow the user to choose a location
-        fetchCurrentLocation()
+        fetchCurrentLocation(locationManager)
         guard let currentLocation = locationManager.location else { return }
         
         // TODO: - disable vote button until at least one other person is selected
@@ -256,41 +256,6 @@ class InviteFriendsTableViewController: UITableViewController {
                     self?.presentAlert(title: "Location Not Found", message: "The location you entered was not found - please try again")
                 }
             }
-        }
-    }
-    
-    // MARK: - Helper Functions
-    
-    func fetchCurrentLocation() {
-        // retrieve authorization status
-        let status = CLLocationManager.authorizationStatus()
-        
-        if(status == .denied || status == .restricted || !CLLocationManager.locationServicesEnabled()) {
-            // show alert telling user they need to allow location data to use features of the app
-            return
-        }
-        
-        if(status == .notDetermined) {
-            locationManager.requestWhenInUseAuthorization()
-            return
-        }
-        
-        // Can now request location since status is Authorized
-        locationManager.requestLocation()
-    }
-    
-    func getLocationFromString(addressString: String, completion: @escaping(Result<CLLocation, WhereToError>) -> Void) {
-        
-        let geoCoder = CLGeocoder()
-        geoCoder.geocodeAddressString(addressString) { (placemarks, error) in
-            if error == nil {
-                if let placemark = placemarks?[0] {
-                    let location = placemark.location!
-                
-                    return completion(.success(location))
-                }
-            }
-            return completion(.failure(.noLocationForAddress))
         }
     }
     
@@ -356,83 +321,5 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
-    }
-}
-
-// MARK: Extension: LocationManagerDelegate
-extension InviteFriendsTableViewController: CLLocationManagerDelegate {
-    
-    // methods for locationManagerDelegate
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        
-        switch status {
-        case .notDetermined:
-            print("Location permissions haven't been shown to the user yet.")
-        case .restricted:
-            print("Parental control setting disallows loacation data.")
-        case .denied:
-            print("User has disallowed permission, unable to get location data.")
-        case .authorizedAlways:
-            print("User has allowed app to get location data when app is active or in background.")
-        case .authorizedWhenInUse:
-            print("User has allowed app to get location data when app is active.")
-        @unknown default:
-            print("Unknown failure.")
-            fatalError()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        // TODO: show alert that getting current location failed
-        
-    }
-}
-
-// MARK: - Extension:InviteFriendsTableViewController: Location selection alerts
-extension InviteFriendsTableViewController {
-    
-    // Present an alert with a text field to get some input from the user
-    func presentLocationSelectionAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
-        // Create the alert controller
-        let alertController = UIAlertController(title: "Where To?", message: "Use Current location or enter an address to get available restaurant options", preferredStyle: .alert)
-        
-        // Add the text field
-        alertController.addTextField { (textField) in
-            textField.placeholder = "Enter address or city here..."
-        }
-        
-        // Create the cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        // Create the Current Location button
-        let currentLocation = UIAlertAction(title: "Current Location", style: .default) { (_) in
-            return completion(.success(currentLocation))
-        }
-        
-        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { [weak self] (_) in
-            // Get the text from the text field
-            guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
-            
-            // Create CLLocation using GeoCoding
-            self?.getLocationFromString(addressString: address) { (result) in
-                switch result {
-                case .success(let location):
-                    return completion(.success(location))
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(.noLocationForAddress))
-                }
-            }
-        }
-        // Add the buttons to the alert and present it
-        alertController.addAction(cancelAction)
-        alertController.addAction(currentLocation)
-        alertController.addAction(enteredLocation)
-        present(alertController, animated: true)
     }
 }

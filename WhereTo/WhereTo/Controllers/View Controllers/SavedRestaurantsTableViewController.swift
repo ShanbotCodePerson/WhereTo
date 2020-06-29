@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SavedRestaurantsTableViewController: UITableViewController {
+    
+    // MARK: - Properties
+    
+    let locationManager = CLLocationManager()
     
     // MARK: - Outlets
     
@@ -18,6 +23,9 @@ class SavedRestaurantsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         
         // Load the data if it hasn't been loaded already
         loadAllData()
@@ -64,6 +72,19 @@ class SavedRestaurantsTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
+        
+        fetchCurrentLocation(locationManager)
+        guard let currentLocation = locationManager.location else { return }
+        
+        presentAddRestaurantBySearchAlert(currentLocation: currentLocation) { (result) in
+            switch result {
+            case .success(_):
+                return
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+        //fetchRestaurantByName(name)
     }
     
     @IBAction func segmentedControlTapped(_ sender: Any) {
@@ -105,7 +126,11 @@ class SavedRestaurantsTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate
+// MARK: - Extensions
+
+
+
+// MARK: - SavedButtonDelegate
 extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func saveRestaurantButton(for cell: RestaurantTableViewCell) {
@@ -150,7 +175,7 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
 }
 
 
-// MARK: - Extension:SavedRestaurantsTableViewController: Confirm removal from Favs
+// MARK: - Confirm removal from Favs
 extension SavedRestaurantsTableViewController {
     
     // Present an alert with a text field to get some input from the user
@@ -168,6 +193,42 @@ extension SavedRestaurantsTableViewController {
         // Add the buttons to the alert and present it
         alertController.addAction(cancelAction)
         alertController.addAction(removeFromFavorites)
+        present(alertController, animated: true)
+    }
+}
+
+// MARK: - Alert:Enter name to add to favs
+extension SavedRestaurantsTableViewController {
+    
+    // Present an alert with a text field to get some input from the user
+    func presentAddRestaurantBySearchAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Where To?", message: "Enter the name of the restaurant you would like to add.", preferredStyle: .alert)
+        
+        // Add text fields
+        alertController.addTextField { (restaurantName) in
+            restaurantName.placeholder = "Enter name here..."
+        }
+        
+        alertController.addTextField { (location) in
+            location.placeholder = "Current Location"
+        }
+        
+        // Create the cancel button
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        let searchAction = UIAlertAction(title: "Search", style: .default) { [weak self] (_) in
+            // Get the text from text field
+            guard let name = alertController.textFields?.first?.text, !name.isEmpty else { return }
+        }
+        
+        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { [weak self] (_) in
+            // Get the text from the text field
+            guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
+        }
+        // Add the buttons to the alert and present it
+        alertController.addAction(cancelAction)
+        alertController.addAction(searchAction)
         present(alertController, animated: true)
     }
 }

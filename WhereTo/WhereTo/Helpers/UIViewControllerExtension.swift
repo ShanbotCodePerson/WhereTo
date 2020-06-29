@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 // MARK: - Navigation
 
@@ -359,5 +360,116 @@ extension UIViewController {
     @objc func showVotingSessionResult(_ sender: NSNotification) {
         guard let votingSession = sender.object as? VotingSession else { return }
         DispatchQueue.main.async { self.presentVotingSessionResultAlert(votingSession) }
+    }
+}
+
+// MARK: - Location selection alerts
+extension UIViewController {
+    
+    // Present an alert with a text field to get some input from the user
+    func presentLocationSelectionAlert(currentLocation: CLLocation, completion: @escaping (Result<CLLocation, WhereToError>) -> Void) {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Where To?", message: "Use Current location or enter an address to get available restaurant options", preferredStyle: .alert)
+        
+        // Add the text field
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Enter address or city here..."
+        }
+        
+        // Create the cancel button
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        // Create the Current Location button
+        let currentLocation = UIAlertAction(title: "Current Location", style: .default) { (_) in
+            return completion(.success(currentLocation))
+        }
+        
+        let enteredLocation = UIAlertAction(title: "Use Entered Address", style: .default) { [weak self] (_) in
+            // Get the text from the text field
+            guard let address = alertController.textFields?.first?.text, !address.isEmpty else { return }
+            
+            // Create CLLocation using GeoCoding
+            self?.getLocationFromString(addressString: address) { (result) in
+                switch result {
+                case .success(let location):
+                    return completion(.success(location))
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(.noLocationForAddress))
+                }
+            }
+        }
+        // Add the buttons to the alert and present it
+        alertController.addAction(cancelAction)
+        alertController.addAction(currentLocation)
+        alertController.addAction(enteredLocation)
+        present(alertController, animated: true)
+    }
+}
+
+// MARK: LocationManagerDelegate
+extension UIViewController: CLLocationManagerDelegate {
+    
+    // methods for locationManagerDelegate
+    
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+        switch status {
+        case .notDetermined:
+            print("Location permissions haven't been shown to the user yet.")
+        case .restricted:
+            print("Parental control setting disallows loacation data.")
+        case .denied:
+            print("User has disallowed permission, unable to get location data.")
+        case .authorizedAlways:
+            print("User has allowed app to get location data when app is active or in background.")
+        case .authorizedWhenInUse:
+            print("User has allowed app to get location data when app is active.")
+        @unknown default:
+            print("Unknown failure.")
+            fatalError()
+        }
+    }
+    
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    
+    }
+    
+    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        // TODO: show alert that getting current location failed
+        
+    }
+    
+    func getLocationFromString(addressString: String, completion: @escaping(Result<CLLocation, WhereToError>) -> Void) {
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(addressString) { (placemarks, error) in
+            if error == nil {
+                if let placemark = placemarks?[0] {
+                    let location = placemark.location!
+                
+                    return completion(.success(location))
+                }
+            }
+            return completion(.failure(.noLocationForAddress))
+        }
+    }
+    
+    func fetchCurrentLocation(_ locationManager: CLLocationManager) {
+        // retrieve authorization status
+        let status = CLLocationManager.authorizationStatus()
+        
+        if(status == .denied || status == .restricted || !CLLocationManager.locationServicesEnabled()) {
+            // show alert telling user they need to allow location data to use features of the app
+            return
+        }
+        
+        if(status == .notDetermined) {
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        // Can now request location since status is Authorized
+        locationManager.requestLocation()
     }
 }
