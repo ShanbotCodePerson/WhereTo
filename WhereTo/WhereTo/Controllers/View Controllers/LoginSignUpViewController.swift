@@ -21,8 +21,8 @@ class LoginSignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        // Try to log the user in automatically
-//        autoLogin()
+        // Try to log the user in automatically
+        autoLogin()
         
         // TODO: - first make sure email is verified
         

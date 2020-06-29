@@ -33,9 +33,6 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
-//        // Set up the observer to listen for voting session invitation notifications
-//        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: nil)
-//        print(NotificationCenter.default.debugDescription)
         
         // Load the data if it hasn't been loaded already
         loadAllData()
@@ -88,21 +85,6 @@ class InviteFriendsTableViewController: UITableViewController {
         print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
-    
-//    @objc func showVotingSessionInvitation(_ sender: NSNotification) {
-//        print("got here to \(#function) and \(String(describing: sender.object))")
-//        
-//        guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
-//        
-//        DispatchQueue.main.async {
-//            self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
-//                // If the user accepted the invitation, transition them to the voting session page
-//                if let newVotingSession = newVotingSession {
-//                    self?.transitionToVotingSessionPage(with: newVotingSession)
-//                }
-//            }
-//        }
-//    }
     
     // MARK: - Set Up UI
     
@@ -235,8 +217,7 @@ class InviteFriendsTableViewController: UITableViewController {
                                     switch result {
                                     case .success(_):
                                         // Send the notification telling the history page to update its data
-                                        // TODO: - send notificatoin
-                                        print("todo")
+                                        NotificationCenter.default.post(Notification(name: updateHistoryList))
                                     case .failure(let error):
                                         // Print and display the error
                                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
