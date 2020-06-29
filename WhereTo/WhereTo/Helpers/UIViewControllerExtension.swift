@@ -199,6 +199,7 @@ extension UIViewController {
                         self?.presentAlert(title: "Added Friend", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                         
                         // Send a notification for the list of friends to be updated
+                        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
                         NotificationCenter.default.post(Notification(name: updateFriendsList))
                     case .failure(let error):
                         // Print and display the error

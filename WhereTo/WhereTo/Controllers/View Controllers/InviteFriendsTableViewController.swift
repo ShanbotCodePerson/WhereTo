@@ -84,7 +84,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
-        print("got here to \(#function)")
+        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -99,7 +99,8 @@ class InviteFriendsTableViewController: UITableViewController {
                 switch result {
                 case .success(_):
                     // Reload the tableview
-                    self?.tableView.reloadData()
+                    print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+                    self?.refreshData()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
