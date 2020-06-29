@@ -172,7 +172,23 @@ class UserController {
                 
                 let group = DispatchGroup()
                 
-                // Delete all friend requests, votes, and voting session invitations associated with the user
+                // Remove all friends, delete all outstanding friend requests, votes, and voting session invitations associated with the user
+                if let friends = self.friends {
+                    for friend in friends {
+                        group.enter()
+                        FriendRequestController.shared.sendRequestToRemove(friend) { (result) in
+                            switch result {
+                            case .success(_):
+                                print("successfully removed friend")
+                            case .failure(let error):
+                                // Print and return the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                return completion(.failure(error))
+                            }
+                            group.leave()
+                        }
+                    }
+                }
                 group.enter()
                 FriendRequestController.shared.deleteAll { (error) in
                     if let error = error {

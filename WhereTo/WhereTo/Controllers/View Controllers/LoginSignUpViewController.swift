@@ -20,13 +20,13 @@ class LoginSignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         
         // Try to log the user in automatically
         autoLogin()
-        
-        // TODO: - first make sure email is verified
-        
-        // TODO: - have option to resend
     }
     
     // MARK: - Actions
@@ -66,11 +66,9 @@ class LoginSignUpViewController: UIViewController {
                     DispatchQueue.main.async { self?.presentErrorAlert(error) }
                 }
 
-                // TODO: - alert, tell them to check email, have button to continue
+                // Present an alert asking them to check their email
+                self?.presentVerifyEmailAlert(with: email)
             })
-            // FIXME: - how to verify the email?
-            // Once the email is verified, finish setting up the user
-            self?.setUpUser(with: email)
         }
     }
     
@@ -78,7 +76,13 @@ class LoginSignUpViewController: UIViewController {
     
     // Try to log the user in automatically
     func autoLogin() {
-        if Auth.auth().currentUser != nil {
+        if let user = Auth.auth().currentUser {
+            // If the user's email account has not yet been verified, present the alert asking them to check their email
+            guard user.isEmailVerified else {
+                presentVerifyEmailAlert(with: user.email ?? "")
+                return
+            }
+            
             UserController.shared.fetchCurrentUser { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
@@ -90,6 +94,37 @@ class LoginSignUpViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    // Present an alert prompting the user to verify their email address
+    func presentVerifyEmailAlert(with email: String) {
+        // FIXME: - allow user to edit email address
+        // FIXME: - refactor to elsewhere
+        
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Verify Email Address", message: "Please check your email \(email) to verify your email address", preferredStyle: .alert)
+        
+        // Create the button to resend the email
+        let resendAction = UIAlertAction(title: "Resend Email", style: .default) { [weak self] (_) in
+            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+                if let error = error {
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                }
+                
+                // Present the same alert telling them to check their email
+                self?.presentVerifyEmailAlert(with: email)
+            })
+        }
+        
+        // Create the button to continue and check for verification
+        let continueAction = UIAlertAction(title: "Log In", style: .cancel)
+        
+        // Add the buttons and present the alert
+        alertController.addAction(resendAction)
+        alertController.addAction(continueAction)
+        present(alertController, animated: true)
     }
     
     // If the user already exists, sign them in
