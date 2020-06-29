@@ -201,6 +201,7 @@ extension UIViewController {
                         self?.presentAlert(title: "Added Friend", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                         
                         // Send a notification for the list of friends to be updated
+                        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
                         NotificationCenter.default.post(Notification(name: updateFriendsList))
                     case .failure(let error):
                         // Print and display the error
@@ -327,7 +328,7 @@ extension UIViewController {
     func setUpNotificationObservers() {
         // Set up the observers to listen for friend request notifications
         NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: FriendRequest.self)
-        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: newFriendRequest, object: FriendRequest.self)
+        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: responseToFriendRequest, object: FriendRequest.self)
         
         // Set up the observer to listen for voting session invitation notifications
         NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: VotingSessionInvite.self)

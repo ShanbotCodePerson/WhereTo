@@ -84,7 +84,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
-        print("got here to \(#function)")
+        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -99,7 +99,8 @@ class InviteFriendsTableViewController: UITableViewController {
                 switch result {
                 case .success(_):
                     // Reload the tableview
-                    self?.tableView.reloadData()
+                    print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+                    self?.refreshData()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -193,8 +194,10 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func pickRandomRestaurantButtonTapped(_ sender: UIButton) {
         // Get the current location or allow the user to choose a location
-        fetchCurrentLocation(locationManager)
-        guard let currentLocation = locationManager.location else { return }
+        fetchCurrentLocation()
+        guard let currentLocation = locationManager.location,
+            let currentUser = UserController.shared.currentUser
+            else { return }
         
         presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
             DispatchQueue.main.async {
@@ -202,14 +205,33 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let location):
                     // Choose a random restaurant
                     RestaurantController.shared.fetchRandomRestaurant(near: location) { (result) in
-                        switch result {
-                        case .success(let restaurant):
-                            // Present the alert with the restaurant
-                            self?.presentRandomRestaurantAlert(restaurant)
-                        case .failure(let error):
-                            // Print and display the error
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            self?.presentErrorAlert(error)
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let restaurant):
+                                // Present the alert with the restaurant
+                                self?.presentRandomRestaurantAlert(restaurant)
+                                
+                                // Add the restaurant to the user's list of previous restaurants
+                                currentUser.previousRestaurants.append(restaurant.restaurantID)
+                                
+                                // Save the changes to the user
+                                UserController.shared.saveChanges(to: currentUser) { (result) in
+                                    switch result {
+                                    case .success(_):
+                                        // Send the notification telling the history page to update its data
+                                        // TODO: - send notificatoin
+                                        print("todo")
+                                    case .failure(let error):
+                                        // Print and display the error
+                                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                        DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                                    }
+                                }
+                            case .failure(let error):
+                                // Print and display the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                            }
                         }
                     }
                 case .failure(let error):
@@ -262,6 +284,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("got here to \(#function) and \(UserController.shared.friends?.count)")
         return UserController.shared.friends?.count ?? 0
     }
 
@@ -281,7 +304,7 @@ class InviteFriendsTableViewController: UITableViewController {
                 else { return }
             
             // Present an alert confirming that the user wants to remove the friend
-            presentChoiceAlert(title: "Are you sure?", message: "Are you sure you want to de-friend \(friend.name)") {
+            presentChoiceAlert(title: "Are you sure?", message: "Are you sure you want to de-friend \(friend.name)?") {
                 
                 // If the user clicks "confirm," remove the friend and update the tableview
                 FriendRequestController.shared.sendRequestToRemove(friend) { [weak self] (result) in
@@ -301,6 +324,9 @@ class InviteFriendsTableViewController: UITableViewController {
                                         case .success(_):
                                             // Display the success
                                             self?.presentAlert(title: "Successfully Blocked", message: "You have successfully blocked \(friend.name)")
+                                            
+                                            // Update the tableview
+                                            self?.refreshData()
                                         case .failure(let error):
                                             // Print and display the error
                                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
