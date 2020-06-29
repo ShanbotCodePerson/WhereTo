@@ -6,34 +6,24 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-const db = admin.firestore();
+// exports.voteReceived = functions.firestore.document('vote/{voteID}').onCreate(async (snapshot, context) => {
 
-exports.voteReceived = functions.firestore.document('vote/{voteID}').onCreate((snapshot, context) => {
-  console.log('This has happened');
-  console.log(`data is ${snapshot.data()}`);
-  console.log(`voting session id is ${snapshot.data()['votingSessionID']}`);
-
-  return(null);
-    //
-    // const text = snapshot.data().userID;
-    // const payload = {
-    //   notification: {
-    //     title: `${snapshot.data().userID} voted`,
-    //     body: 'This is just a test'
-    //   }
-    // };
-    //
-    // // Get the list of device tokens.
-    // const allTokens = await admin.firestore().collection('fcmTokens').get();
-    // const tokens = [];
-    // allTokens.forEach((tokenDoc) => {
-    //   tokens.push(tokenDoc.id);
-    // });
-    //
-    // if (tokens.length > 0) {
-    //   // Send notifications to all tokens.
-    //   const response = await admin.messaging().sendToDevice(tokens, payload);
-    //   await cleanupTokens(response, tokens);
-    //   console.log('Notifications have been sent and tokens cleaned up.');
-    // }
-  });
+  // const db = admin.firestore();
+  //
+  // console.log('This has happened');
+  // const votingSessionID = snapshot.data()['votingSessionID'];
+  // console.log(`voting session id is ${votingSessionID}`);
+  //
+  // const votingSessionData = await db.collection('votingSession').where('uuid', '==', votingSessionID).get();
+  // if (votingSessionData.empty) {
+  //   console.log('no data found');
+  //   return;
+  // }
+  // votingSessionData.forEach(doc => {
+  //   console.log(doc);
+  //   console.log(doc.fieldsProto);
+  //   console.log(doc.fieldsProto['uuid']);
+  // });
+  //
+  // return(null);
+  // });

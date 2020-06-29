@@ -44,33 +44,8 @@ class LoginSignUpViewController: UIViewController {
             guard authResult?.user != nil, error == nil else {
                 // If the error is that the user name already exists, try to log in to that account
                 if let nsError = error as NSError?, nsError.code == 17007 {
-                    // TODO: - refactor this to separate method
-                    Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
-                        if let error = error {
-                            // Print and display the error
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            DispatchQueue.main.async { self?.presentErrorAlert(error) }
-                            return
-                        }
-                        
-                        // Fetch the details of the current user
-                        UserController.shared.fetchCurrentUser { (result) in
-                            DispatchQueue.main.async {
-                                switch result {
-                                case .success(_):
-                                    // Navigate to the main screen of the app
-                                    print("it worked")
-                                    self?.goToMainApp()
-                                case .failure(let error):
-                                    // Print and display the error
-                                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                    self?.presentErrorAlert(error)
-                                }
-                            }
-                        }
-                    }
-                }
-                else {
+                    self?.signIn(with: email, password: password)
+                } else {
                     // Print and display the error
                     print("Error in \(#function) : \(error!.localizedDescription) \n---\n \(error!)")
                     DispatchQueue.main.async { self?.presentErrorAlert(error!) }
@@ -78,21 +53,22 @@ class LoginSignUpViewController: UIViewController {
                 return
             }
             
-            // Save the user
-            UserController.shared.newUser(with: email) { (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(_):
-                        // Navigate to the main screen of the app
-                        print("it worked")
-                        self?.goToMainApp()
-                    case .failure(let error):
-                        // Print and display the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                    }
-                }
-            }
+            
+            
+//            // Send an email to verify the user's email address
+//            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+//
+//                if let error = error {
+//                    // Print and display the error
+//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+//                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
+//                }
+//
+//                // TODO: - not sure what to do here
+//            })
+            // FIXME: - how to verify the email?
+            // Once the email is verified, finish setting up the user
+            self?.setUpUser(with: email)
         }
     }
     
@@ -109,6 +85,52 @@ class LoginSignUpViewController: UIViewController {
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     }
+                }
+            }
+        }
+    }
+    
+    // If the user already exists, sign them in
+    func signIn(with email: String, password: String) {
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
+            if let error = error {
+                // Print and display the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                return
+            }
+            
+            // Fetch the details of the current user
+            UserController.shared.fetchCurrentUser { (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Navigate to the main screen of the app
+                        print("it worked")
+                        self?.goToMainApp()
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Once a user has verified their email, finish completing their account
+    func setUpUser(with email: String) {
+        UserController.shared.newUser(with: email) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Navigate to the main screen of the app
+                    print("it worked")
+                    self?.goToMainApp()
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
                 }
             }
         }

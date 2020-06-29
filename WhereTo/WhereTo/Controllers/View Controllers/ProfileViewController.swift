@@ -175,7 +175,35 @@ class ProfileViewController: UIViewController {
     
     @IBAction func deleteAccountButtonTapped(_ sender: UIButton) {
         dietaryRestrictionsPickerView.isHidden = true
-        // TODO: - decide what this should do
+        
+        // Present an alert to confirm deleting the account
+        presentChoiceAlert(title: "Delete account?", message: "Are you sure you want to delete your account? This will permanently remove all your data from this device and from the cloud.") {
+            
+            // If the user clicks confirm, delete their information from the cloud
+            UserController.shared.deleteCurrentUser { [weak self] (result) in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        // Delete the user's account from the authorization side of Firebase
+                        let user = Auth.auth().currentUser
+                        user?.delete(completion: { (error) in
+                            if let error = error {
+                                // Print and display the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                self?.presentErrorAlert(error)
+                            } else {
+                                // Return to the login screen
+                                self?.transitionToStoryboard(named: .Main)
+                            }
+                        })
+                    case .failure(let error):
+                        // Print and display the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                    }
+                }
+            }
+        }
     }
 }
 

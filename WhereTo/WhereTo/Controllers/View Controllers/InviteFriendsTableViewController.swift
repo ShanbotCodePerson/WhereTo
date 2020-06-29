@@ -88,28 +88,6 @@ class InviteFriendsTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
-    @objc func showNewFriendRequest(_ sender: NSNotification) {
-        guard let friendRequest = sender.object as? FriendRequest else { return }
-        DispatchQueue.main.async { self.presentNewFriendRequestAlert(friendRequest) }
-    }
-    
-    @objc func showFriendRequestResult(_ sender: NSNotification) {
-        guard let friendRequest = sender.object as? FriendRequest else { return }
-        DispatchQueue.main.async { self.presentFriendRequestResponseAlert(friendRequest) }
-    }
-    
-    @objc func showVotingSessionInvitation(_ sender: NSNotification) {
-        guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
-        DispatchQueue.main.async {
-            self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
-                // If the user accepted the invitation, transition them to the voting session page
-                if let newVotingSession = newVotingSession {
-                    self?.transitionToVotingSessionPage(with: newVotingSession)
-                }
-            }
-        }
-    }
-    
     // MARK: - Set Up UI
     
     func loadAllData() {
@@ -214,6 +192,33 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     @IBAction func pickRandomRestaurantButtonTapped(_ sender: UIButton) {
+        // Get the current location or allow the user to choose a location
+        fetchCurrentLocation()
+        guard let currentLocation = locationManager.location else { return }
+        
+        presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let location):
+                    // Choose a random restaurant
+                    RestaurantController.shared.fetchRandomRestaurant(near: location) { (result) in
+                        switch result {
+                        case .success(let restaurant):
+                            // Present the alert with the restaurant
+                            self?.presentRandomRestaurantAlert(restaurant)
+                        case .failure(let error):
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.presentErrorAlert(error)
+                        }
+                    }
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentAlert(title: "Location Not Found", message: "The location you entered was not found - please try again")
+                }
+            }
+        }
     }
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
@@ -227,7 +232,7 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // TODO: - disable vote button until at least one other person is selected
         
-        self.presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
+        presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let location):
