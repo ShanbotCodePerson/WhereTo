@@ -38,9 +38,8 @@ class RestaurantTableViewCell: UITableViewCell {
         guard let restaurant = restaurant else { return }
         
         nameLabel.text = restaurant.name
-        if let rating = restaurant.rating { ratingLabel.text = "Rating: \(rating)" }
-        voteStatusImage.isHidden = true
-        imageContainerView.isHidden = true
+        categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
+        if let rating = restaurant.rating { ratingLabel.text = "\(rating) Stars" }
         
         // Check if the restaurant is blacklisted or favorited, and format it accordingly
         if RestaurantController.shared.favoriteRestaurants?.contains(restaurant) ?? false {
@@ -56,7 +55,6 @@ class RestaurantTableViewCell: UITableViewCell {
         guard let vote = vote else { return }
         
         imageContainerView.isHidden = false
-        voteStatusImage.isHidden = false
         voteStatusImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
         // TODO: - change color of image, or of entire cell, based on ranking?
     }

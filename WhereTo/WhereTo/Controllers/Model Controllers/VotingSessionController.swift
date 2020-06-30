@@ -33,9 +33,17 @@ class VotingSessionController {
     func newVotingSession(with friends: [User], at location: CLLocation, filterByDiet: Bool, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
+        // Filter the restaurants by the dietary restrictions
+        var dietaryRestrictions: [String] = []
+        if filterByDiet {
+            var allDietaryRestrictions = currentUser.dietaryRestrictions
+            allDietaryRestrictions.append(contentsOf: friends.map({ $0.dietaryRestrictions }).joined())
+            dietaryRestrictions = Array(Set(allDietaryRestrictions.map({ $0.rawValue })))
+        }
+        
         // Fetch the restaurants within the radius of the coordinates
         // TODO: - need to be able to end a location
-        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
+        RestaurantController.shared.fetchRestaurantsByLocation(location: location, searchByIsOpen: true, dietaryRestrictions: dietaryRestrictions) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard var restaurants = restaurants else { return completion(.failure(.noData)) }
@@ -45,18 +53,6 @@ class VotingSessionController {
                 allBlacklisted.append(contentsOf: friends.map({ $0.blacklistedRestaurants }).joined())
                 let blacklisted = Set(allBlacklisted)
                 restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
-                
-                // Filter the restaurants by the dietary restrictions
-                if filterByDiet {
-                    var allDietaryRestrictions = currentUser.dietaryRestrictions
-                    allDietaryRestrictions.append(contentsOf: friends.map({ $0.dietaryRestrictions }).joined())
-                    var dietaryRestrictions = Set(allDietaryRestrictions.map({ $0.rawValue }))
-                    if dietaryRestrictions.contains(User.DietaryRestriction.vegan.rawValue) {
-                        dietaryRestrictions.remove(User.DietaryRestriction.vegetarian.rawValue)
-                    }
-                    
-//                    restaurants = restaurants.filter({ dietaryRestrictions.isSubset(of: $0.categoryNames) })
-                }
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }

@@ -48,18 +48,17 @@ class RestaurantController {
     // MARK: - CRUD Methods
     
     // Read (fetch) a list of restaurants from the API based on location
-    func fetchRestaurantsByLocation(location: CLLocation, isOpen: Bool = false, dietaryRestrictions: [String]? = [], completion: @escaping resultCompletionWith<[Restaurant]?>) {
+    func fetchRestaurantsByLocation(location: CLLocation, searchByIsOpen: Bool = false, dietaryRestrictions: [String] = [], completion: @escaping resultCompletionWith<[Restaurant]?>) {
+        
+        let isOpenQuery = searchByIsOpen ? "&\(yelpStrings.openNowKey)=true" : ""
         
         var categoriesQuery = ""
-        
-        if let restriction = dietaryRestrictions {
-            for value in restriction {
-                categoriesQuery += "&\(yelpStrings.categoriesKey)=\(value)"
-            }
+        for restriction in dietaryRestrictions {
+            categoriesQuery += "&\(yelpStrings.categoriesKey)=\(restriction)"
         }
         
         // 1 - URL setup
-        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)&\(yelpStrings.openNowKey)=\(isOpen)\(categoriesQuery)")!, timeoutInterval: Double.infinity)
+        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)\(isOpenQuery)\(categoriesQuery)")!, timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
          
@@ -94,10 +93,17 @@ class RestaurantController {
     }
     
     // Read (fetch) a random restaurant by location
-    func fetchRandomRestaurant(near location: CLLocation, completion: @escaping resultCompletionWith<Restaurant>) {
+    func fetchRandomRestaurant(near location: CLLocation, usingDietaryRestrictions: Bool, completion: @escaping resultCompletionWith<Restaurant>) {
+        guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Get the user's dietary restrictions
+        var dietaryRestrictions: [String] = []
+        if usingDietaryRestrictions {
+            dietaryRestrictions = currentUser.dietaryRestrictions.map { $0.rawValue }
+        }
         
         // Fetch the list of restaurants near that location that are currently open
-        fetchRestaurantsByLocation(location: location) { (result) in
+        fetchRestaurantsByLocation(location: location, searchByIsOpen: true, dietaryRestrictions: dietaryRestrictions) { (result) in
             switch result {
             case .success(let restaurants):
                 guard let restaurants = restaurants else { return completion(.failure(.noRestaurantsMatch)) }
@@ -256,7 +262,7 @@ class RestaurantController {
             switch result {
             case .success(let restaurants):
                 // Save to the source of truth and return the success
-                self?.previousRestaurants = restaurants ?? []
+                self?.previousRestaurants = restaurants
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -275,7 +281,7 @@ class RestaurantController {
             switch result {
             case .success(let restaurants):
                 // Save to the source of truth and return the success
-                self?.favoriteRestaurants = restaurants ?? []
+                self?.favoriteRestaurants = restaurants
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error
@@ -294,7 +300,7 @@ class RestaurantController {
             switch result {
             case .success(let restaurants):
                 // Save to the source of truth and return the success
-                self?.blacklistedRestaurants = restaurants ?? []
+                self?.blacklistedRestaurants = restaurants
                 return completion(.success(true))
             case .failure(let error):
                 // Print and return the error

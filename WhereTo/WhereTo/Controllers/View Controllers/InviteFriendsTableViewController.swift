@@ -225,7 +225,7 @@ class InviteFriendsTableViewController: UITableViewController {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // FIXME: - what happens when there are no restaurants?
-        RestaurantController.shared.fetchRandomRestaurant(near: location) { [weak self] (result) in
+        RestaurantController.shared.fetchRandomRestaurant(near: location, usingDietaryRestrictions: filterByDiet) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let restaurant):
