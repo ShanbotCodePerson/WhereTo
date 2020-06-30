@@ -256,7 +256,6 @@ class RestaurantController {
         }.resume()
     }
     
-    
     // Read (fetch) all the user's previous restaurants
     func fetchPreviousRestaurants(completion: @escaping resultCompletion) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }

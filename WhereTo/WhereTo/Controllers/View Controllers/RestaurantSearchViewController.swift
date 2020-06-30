@@ -116,7 +116,7 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
 
 // MARK: - SavedButtonDelegate
 
-extension RestaurantTableViewCellSavedButtonDelegate: RestaurantTableViewCellSavedButtonDelegate {
+extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         guard let currentUser = UserController.shared.currentUser,
