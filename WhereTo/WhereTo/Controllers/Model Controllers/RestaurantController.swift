@@ -172,7 +172,7 @@ class RestaurantController {
     }
     
     // fetch restaurants with user input name and optional address
-    func fetchRestaurantsByName(name: String, address: String?, currentLocation: CLLocation?, completion: @escaping resultCompletionWith<[Restaurant]?>) {
+    func fetchRestaurantsByName(name: String, address: String? = nil, currentLocation: CLLocation? = nil, completion: @escaping resultCompletionWith<[Restaurant]?>) {
         
         var urlString = ""
         

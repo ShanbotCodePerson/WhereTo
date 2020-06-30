@@ -27,25 +27,43 @@ class RestaurantSearchViewController: UIViewController {
     // MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        locationManager.delegate = self
+        setUpDelegates()
     }
     
+    // MARK: - Helpers
+    
+    func setUpDelegates() -> Void {
+        locationManager.delegate = self
+        nameTextField.delegate = self
+        addressTextField.delegate = self
+    }
     // MARK: - Actions
     @IBAction func searchButtonTapped(_ sender: Any) {
         // TODO: Fix error that happens in RestaurantTableViewCell
         guard let name = nameTextField.text, !name.isEmpty,
-            let address = addressTextField.text
-            else { return }
+        let address = addressTextField.text else { return }
         
-        fetchCurrentLocation(locationManager)
-        let currentLocation = locationManager.location
         
-        if  address.isEmpty {
-            RestaurantController.shared.fetchRestaurantsByName(name: name, address: nil, currentLocation: currentLocation) { (result) in
+        if address != "" {
+            
+            RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { (result) in
                 switch result {
                 case .success(let results):
                     guard let restaurants = results else { return }
+                    self.restaurants = restaurants
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+            }
+        } else {
+            fetchCurrentLocation(locationManager)
+            let currentLocation = locationManager.location
+            
+            RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { (result) in
+                switch result {
+                case .success(let restaurants):
+                    guard let restaurants = restaurants else { return }
                     self.restaurants = restaurants
                     
                 case .failure(let error):
@@ -53,24 +71,23 @@ class RestaurantSearchViewController: UIViewController {
                     return
                 }
             }
-            
-        } else {
-            RestaurantController.shared.fetchRestaurantsByName(name: name, address: address, currentLocation: nil) { (result) in
-                switch result {
-                case .success(let results):
-                    guard let restaurants = results else { return }
-                    self.restaurants = restaurants
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return
-                }
-            }
         }
     }
-
+        
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+    }
+}
+
+// MARK: - Extensions
+extension RestaurantSearchViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        
+        return true
     }
 }
