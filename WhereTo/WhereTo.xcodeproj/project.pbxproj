@@ -38,11 +38,13 @@
 		40B258A824A253610090495C /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A724A253610090495C /* HistoryTableViewController.swift */; };
 		40B258AA24A253700090495C /* SavedRestaurantsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */; };
 		40B258AC24A2537E0090495C /* VotingSessionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */; };
+		7830709524AAA6A4001876C5 /* RestaurantSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7830709424AAA6A4001876C5 /* RestaurantSearchViewController.swift */; };
+		7830709724AACD24001876C5 /* SearchViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7830709624AACD24001876C5 /* SearchViewController.storyboard */; };
 		78508DB224A296BD00A525FF /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB124A296BD00A525FF /* Profile.storyboard */; };
 		78508DB424A296DB00A525FF /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB324A296DB00A525FF /* History.storyboard */; };
 		78508DB624A296FA00A525FF /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB524A296FA00A525FF /* Favorites.storyboard */; };
 		78508DB824A2987900A525FF /* WhereTo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB724A2987900A525FF /* WhereTo.storyboard */; };
-		78FAB73F24AA8C3D008126B6 /* addToSavedListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FAB73E24AA8C3D008126B6 /* addToSavedListTableViewController.swift */; };
+		78FAB73F24AA8C3D008126B6 /* AddToSavedListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FAB73E24AA8C3D008126B6 /* AddToSavedListTableViewController.swift */; };
 		BC8B5353175386317AFE3306 /* Pods_WhereTo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */; };
 /* End PBXBuildFile section */
 
@@ -82,11 +84,13 @@
 		40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRestaurantsTableViewController.swift; sourceTree = "<group>"; };
 		40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionTableViewController.swift; sourceTree = "<group>"; };
 		57C4430FA7DE0C832FCF4430 /* Pods-WhereTo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.debug.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.debug.xcconfig"; sourceTree = "<group>"; };
+		7830709424AAA6A4001876C5 /* RestaurantSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantSearchViewController.swift; sourceTree = "<group>"; };
+		7830709624AACD24001876C5 /* SearchViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SearchViewController.storyboard; sourceTree = "<group>"; };
 		78508DB124A296BD00A525FF /* Profile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		78508DB324A296DB00A525FF /* History.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = History.storyboard; sourceTree = "<group>"; };
 		78508DB524A296FA00A525FF /* Favorites.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
 		78508DB724A2987900A525FF /* WhereTo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WhereTo.storyboard; sourceTree = "<group>"; };
-		78FAB73E24AA8C3D008126B6 /* addToSavedListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addToSavedListTableViewController.swift; sourceTree = "<group>"; };
+		78FAB73E24AA8C3D008126B6 /* AddToSavedListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToSavedListTableViewController.swift; sourceTree = "<group>"; };
 		F4A020CE53683948133E3F08 /* Pods-WhereTo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.release.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -181,6 +185,7 @@
 				78508DB724A2987900A525FF /* WhereTo.storyboard */,
 				401715B224A3E977002D86E0 /* VotingSession.storyboard */,
 				78508DB524A296FA00A525FF /* Favorites.storyboard */,
+				7830709624AACD24001876C5 /* SearchViewController.storyboard */,
 				78508DB324A296DB00A525FF /* History.storyboard */,
 				78508DB124A296BD00A525FF /* Profile.storyboard */,
 				40B2585524A119B50090495C /* Custom Views */,
@@ -219,7 +224,8 @@
 				40B258A924A253700090495C /* SavedRestaurantsTableViewController.swift */,
 				401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */,
 				40B258AB24A2537E0090495C /* VotingSessionTableViewController.swift */,
-				78FAB73E24AA8C3D008126B6 /* addToSavedListTableViewController.swift */,
+				78FAB73E24AA8C3D008126B6 /* AddToSavedListTableViewController.swift */,
+				7830709424AAA6A4001876C5 /* RestaurantSearchViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -324,6 +330,7 @@
 				78508DB824A2987900A525FF /* WhereTo.storyboard in Resources */,
 				40B2588224A156460090495C /* TabViewHome.storyboard in Resources */,
 				78508DB424A296DB00A525FF /* History.storyboard in Resources */,
+				7830709724AACD24001876C5 /* SearchViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +395,8 @@
 				40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */,
 				40B2587E24A1528D0090495C /* WhereToError.swift in Sources */,
 				40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */,
-				78FAB73F24AA8C3D008126B6 /* addToSavedListTableViewController.swift in Sources */,
+				7830709524AAA6A4001876C5 /* RestaurantSearchViewController.swift in Sources */,
+				78FAB73F24AA8C3D008126B6 /* AddToSavedListTableViewController.swift in Sources */,
 				40B2583724A115D30090495C /* SceneDelegate.swift in Sources */,
 				40B258AC24A2537E0090495C /* VotingSessionTableViewController.swift in Sources */,
 				40B2589124A16F150090495C /* RestaurantController.swift in Sources */,
