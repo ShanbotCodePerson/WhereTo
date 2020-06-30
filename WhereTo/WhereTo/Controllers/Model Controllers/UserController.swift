@@ -52,7 +52,7 @@ class UserController {
     
     // Read (fetch) the current user
     func fetchCurrentUser(completion: @escaping resultCompletion) {
-        guard let user = Auth.auth().currentUser, let email = user.email else { return }
+        guard let user = Auth.auth().currentUser, let email = user.email else { return completion(.failure(.noUserFound)) }
         
         db.collection(UserStrings.recordType)
             .whereField(UserStrings.emailKey, isEqualTo: email)
@@ -65,7 +65,10 @@ class UserController {
                 }
                 
                 // Unwrap the data
-                guard let document = results?.documents.first else { return completion(.failure(.couldNotUnwrap)) }
+                guard let documents = results?.documents,
+                    documents.count > 0
+                    else { return completion(.failure(.noUserFound)) }
+                guard let document = documents.first else { return completion(.failure(.couldNotUnwrap)) }
                 let currentUser = User(dictionary: document.data())
                 currentUser?.documentID = document.documentID
                 
