@@ -48,9 +48,9 @@ class RestaurantSearchViewController: UIViewController {
             
             RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { (result) in
                 switch result {
-                case .success(let results):
-                    guard let restaurants = results else { return }
+                case .success(let restaurants):
                     self.restaurants = restaurants
+                    
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
@@ -63,7 +63,6 @@ class RestaurantSearchViewController: UIViewController {
             RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { (result) in
                 switch result {
                 case .success(let restaurants):
-                    guard let restaurants = restaurants else { return }
                     self.restaurants = restaurants
                     
                 case .failure(let error):
