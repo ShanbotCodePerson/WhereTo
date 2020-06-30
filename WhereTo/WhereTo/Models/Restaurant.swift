@@ -27,3 +27,9 @@ struct Restaurant: Codable {
 struct RestaurantTopLevelDictionary: Codable {
     let businesses: [Restaurant]
 }
+
+extension Restaurant: Equatable {
+    static func == (lhs: Restaurant, rhs: Restaurant) -> Bool {
+        return lhs.restaurantID == rhs.restaurantID
+    }
+}
