@@ -166,24 +166,22 @@ class RestaurantController {
     
     // fetch restaurants with user input name and optional address
     func fetchRestaurantsByName(name: String, address: String?, currentLocation: CLLocation?, completion: @escaping resultCompletionWith<[Restaurant]?>) {
-            
+        
         var urlString = ""
         
         // 1 - URL setup
         if !(address?.isEmpty ?? true) {
             // request by address
-            let request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.termKey)=\(name)&\(yelpStrings.locationKey)=\(address)")!, timeoutInterval: Double.infinity)
-            urlString = "\(request)"
-            
+            guard let address = address else { return }
+            urlString = "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.termKey)=\(name)&\(yelpStrings.locationKey)=\(address)"
         } else {
             guard let currentLocation = currentLocation else { return }
             // request by currentLocation
-            let request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(currentLocation.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(currentLocation.coordinate.longitude)&\(yelpStrings.termKey)=\(name)")!, timeoutInterval: Double.infinity)
-            urlString = "\(request)"
-            
+            urlString =  "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(currentLocation.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(currentLocation.coordinate.longitude)&\(yelpStrings.termKey)=\(name)"
         }
     
-        var request = URLRequest(url: URL(string: "\(urlString)")!)
+        guard let finalURL = URL(string: urlString) else { return }
+        var request = URLRequest(url: finalURL)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
         // 2 - Data task

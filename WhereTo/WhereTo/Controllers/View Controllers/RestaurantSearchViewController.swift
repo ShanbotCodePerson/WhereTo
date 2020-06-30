@@ -1,5 +1,5 @@
 //
-//  addToSavedListTableViewController.swift
+//  AddToSavedViewController.swift
 //  WhereTo
 //
 //  Created by Bryce Bradshaw on 6/29/20.
@@ -9,17 +9,24 @@
 import UIKit
 import CoreLocation
 
-class addToSavedListTableViewController: UITableViewController {
+class RestaurantSearchViewController: UIViewController {
+    
+    // MARK: - Singleton
+    
+    static let shared = RestaurantSearchViewController()
 
-    // MARK: - Outlets
-    
-    @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var addressTextField: UITextField!
-    
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
     var restaurants: [Restaurant] = []
+    
+    // MARK: - Outlets
+    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var addressTextField: UITextField!
+    @IBOutlet weak var ratingButton: UIButton!
+    @IBOutlet weak var dietaryButton: UIButton!
+    @IBOutlet weak var openNowButton: UIButton!
+    
     
     // MARK: - LifeCycles
     override func viewDidLoad() {
@@ -29,7 +36,6 @@ class addToSavedListTableViewController: UITableViewController {
     }
     
     // MARK: - Actions
-    
     @IBAction func searchButtonTapped(_ sender: Any) {
         // TODO: Fix error that happens in RestaurantTableViewCell
         guard let name = nameTextField.text, !name.isEmpty,
@@ -45,7 +51,7 @@ class addToSavedListTableViewController: UITableViewController {
                 case .success(let results):
                     guard let restaurants = results else { return }
                     self.restaurants = restaurants
-                    self.reloadData()
+                    
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
@@ -58,7 +64,6 @@ class addToSavedListTableViewController: UITableViewController {
                 case .success(let results):
                     guard let restaurants = results else { return }
                     self.restaurants = restaurants
-                    self.reloadData()
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
@@ -66,28 +71,19 @@ class addToSavedListTableViewController: UITableViewController {
             }
         }
     }
+    @IBAction func ratingButtonTapped(_ sender: Any) {
+    }
     
-    // MARK: - Helpers
-    func reloadData() -> Void {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+    @IBAction func dietaryButtonTapped(_ sender: Any) {
+    }
+    
+    @IBAction func openNowButtonTapped(_ sender: Any) {
     }
     
     
-
-    // MARK: - Table view data source
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return restaurants.count
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
-
-        let restaurant = restaurants[indexPath.row]
-        cell.restaurant = restaurant
-
-        return cell
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
     }
 }
-
