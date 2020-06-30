@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UIImage
 
 // MARK: - String Constants
 
@@ -32,6 +33,7 @@ class User {
     let email: String
     var name: String
     var profilePhotoURL: String?
+    var photo: UIImage?
     var dietaryRestrictions: [DietaryRestriction]
     var friends: [String]                       // uuid's of other users
     var blockedUsers: [String]                  // uuid's of other users
@@ -86,6 +88,14 @@ class User {
         self.activeVotingSessions = activeVotingSessions ?? []
         self.documentID = documentID
         self.uuid = uuid
+        
+        UserController.shared.fetchUsersProfilePhoto(user: self) { [weak self] (photo) in
+            self?.photo = photo
+            
+            // Update the UI
+            NotificationCenter.default.post(Notification(name: updateFriendsList))
+            NotificationCenter.default.post(Notification(name: updateProfileView))
+        }
     }
     
     convenience init?(dictionary: [String: Any]) {

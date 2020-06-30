@@ -20,6 +20,10 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var dietaryRestrictionsTableView: UITableView!
     @IBOutlet weak var dietaryRestrictionsPickerView: UIPickerView!
     
+    // MARK: - Properties
+    
+    var imagePicker = UIImagePickerController()
+    
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
@@ -30,14 +34,25 @@ class ProfileViewController: UIViewController {
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
+        
+        // Set up the observer to update the view once the photo has loaded
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: updateProfileView, object: nil)
     }
     
+    // MARK: - Respond to Notifications
+    
+    @objc func refreshUI() {
+        DispatchQueue.main.async { self.profileImageView.image = UserController.shared.currentUser?.photo }
+    }
     
     // MARK: - Set Up UI
     
     func setUpViews() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
+        imagePicker.delegate = self
+        
+        profileImageView.image = currentUser.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = currentUser.name
         emailLabel.text = currentUser.email
         
@@ -61,6 +76,30 @@ class ProfileViewController: UIViewController {
     
     @IBAction func editImageButtonTapped(_ sender: Any) {
         dietaryRestrictionsPickerView.isHidden = true
+        
+        // Create an alert controller with options for how to get a photo
+        let alertController = UIAlertController(title: "Choose a Photo", message: nil, preferredStyle: .actionSheet)
+        
+        // Add a button option for the photo library
+        let photoLibraryAction = UIAlertAction(title: "Choose a photo from the library", style: .default) { [weak self] (_) in
+            self?.openPhotoLibrary()
+        }
+        
+        // Add a button option for the camera
+        let cameraAction = UIAlertAction(title: "Take a photo with the camera", style: .default) { [weak self] (_) in
+            self?.openCamera()
+        }
+        
+        // Add a button for the user to dismiss the alert
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] (_) in
+            self?.imagePicker.dismiss(animated: true, completion: nil)
+        }
+        
+        // Add the actions and present the alert
+        alertController.addAction(photoLibraryAction)
+        alertController.addAction(cameraAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
     }
     
     @IBAction func editNameButtonTapped(_ sender: Any) {
@@ -68,7 +107,12 @@ class ProfileViewController: UIViewController {
         guard let currentUser = UserController.shared.currentUser else { return }
         
         // Present an alert allowing the user to enter a new name
-        presentTextFieldAlert(title: "Enter a new username", message: "Choose how your name will appear to your friends", textFieldPlaceholder: currentUser.name) { [weak self] (newName) in
+        presentTextFieldAlert(title: "Enter a new username", message: "Choose how your name will appear to your friends", textFieldPlaceholder: nil, textFieldText: currentUser.name) { [weak self] (newName) in
+            // Make sure the new username is valid
+            guard !newName.isEmpty, newName != "" else {
+                self?.presentAlert(title: "Invalid Username", message: "Your name cannot be blank")
+                return
+            }
             
             // Update the user's name
             currentUser.name = newName
@@ -272,5 +316,55 @@ extension ProfileViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         guard let currentUser = UserController.shared.currentUser else { return "ERROR" }
         let options = User.DietaryRestriction.allCases.filter({ !currentUser.dietaryRestrictions.contains($0) })
         return options[row].formatted
+    }
+}
+
+// MARK: - Image Picker Delegate
+
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func openPhotoLibrary() {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            imagePicker.sourceType = .photoLibrary
+            present(imagePicker, animated: true)
+        } else {
+            presentAlert(title: "Camera Access Not Available", message: "Please allow access to your camera to use this feature")
+        }
+    }
+    
+    func openCamera() {
+          if UIImagePickerController.isSourceTypeAvailable(.camera) {
+              imagePicker.sourceType = .camera
+              present(imagePicker, animated: true)
+          } else {
+            presentAlert(title: "Photo Library Access Not Available", message: "Please allow access to your photo library to use this feature")
+          }
+      }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        // Get the photo
+        guard let photo = info[.originalImage] as? UIImage else { return }
+        
+        // Close the image picker
+        imagePicker.dismiss(animated: true)
+        
+        // Save the photo to the cloud
+        UserController.shared.savePhotoToCloud(photo) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    // Update the UI
+                    self?.profileImageView.image = photo
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+      
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        imagePicker.dismiss(animated: true)
     }
 }
