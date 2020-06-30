@@ -120,7 +120,7 @@ class RestaurantController {
     }
     
     // Read (fetch) a list of restaurants from the API from a list of restaurant ID's
-    func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]?>) {
+    func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]>) {
         
         var restaurants: [Restaurant] = []
         
@@ -129,39 +129,64 @@ class RestaurantController {
         for id in restaurantIDs {
             group.enter()
             
-            // 1 - URL setup
-            var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(id)")!, timeoutInterval: Double.infinity)
-            request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
-
-            request.httpMethod = yelpStrings.methodValue
-            
-            // 2 - Data task
-            URLSession.shared.dataTask(with: request) { data, _, error in
-                
-                // 3 - Error Handling
-                if let error = error {
-                    return completion(.failure(.thrownError(error)))
-                }
-                
-                // 4 - check for data
-                guard let data = data else { return completion(.failure(.noData))}
-                
-                // 5 - Decode data
-                do {
-                    let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
+            fetchRestaurantByID(id) { (result) in
+                switch result {
+                case .success(let restaurant):
                     restaurants.append(restaurant)
-                } catch {
-                    // TODO: - if error is that too many queries per second, if so, retry fetching later?
+                case .failure(let error):
+                    // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(.thrownError(error)))
+                    return completion(.failure(error))
                 }
                 group.leave()
-            }.resume()
+            }
         }
         
         group.notify(queue: .main) {
             return completion(.success(restaurants))
         }
+    }
+    
+    // Fetch a single restaurant by its ID
+    func fetchRestaurantByID(_ restaurantID: String, completion: @escaping resultCompletionWith<Restaurant>) {
+        // 1 - URL setup
+        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(restaurantID)")!, timeoutInterval: Double.infinity)
+        request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
+
+        request.httpMethod = yelpStrings.methodValue
+        
+        // 2 - Data task
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            
+            // 3 - Error Handling
+            if let error = error {
+                return completion(.failure(.thrownError(error)))
+            }
+            
+            // 4 - check for data
+            guard let data = data else { return completion(.failure(.noData))}
+            
+            // 5 - Decode data
+            do {
+                // Check to see if the result is an error about too many requests per second
+                if let error = (try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary)?["error"] {
+                    if let errorCode = (error as? NSDictionary)?["code"] as? String, errorCode == "TOO_MANY_REQUESTS_PER_SECOND" {
+                        // Wait a tiny bit then try the request again
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            self.fetchRestaurantByID(restaurantID, completion: completion)
+                        }
+                    }
+                }
+                else {
+                    let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
+                    return completion(.success(restaurant))
+                }
+            } catch {
+                // TODO: - if error is that too many queries per second, if so, retry fetching later?
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.thrownError(error)))
+            }
+        }.resume()
     }
     
     // fetch restaurants with user input name and optional address

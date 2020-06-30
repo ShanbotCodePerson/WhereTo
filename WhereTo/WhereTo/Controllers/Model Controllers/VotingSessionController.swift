@@ -55,11 +55,20 @@ class VotingSessionController {
                         dietaryRestrictions.remove(User.DietaryRestriction.vegetarian.rawValue)
                     }
                     
-                    restaurants = restaurants.filter({ dietaryRestrictions.isSubset(of: $0.categoryNames) })
+//                    restaurants = restaurants.filter({ dietaryRestrictions.isSubset(of: $0.categoryNames) })
                 }
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
+                
+                // Sort the restaurants, first by highest to lowest rating, then alphabetically
+                restaurants = restaurants.sorted(by: { (restaurant0, restaurant1) -> Bool in
+                    if let rating0 = restaurant0.rating, let rating1 = restaurant1.rating {
+                        if rating0 == rating1 { return restaurant1.name > restaurant0.name }
+                        return rating1 > rating0
+                    }
+                    return restaurant1.name > restaurant0.name
+                })
                 
                 // Calculate how many votes each user should get
                 var users = friends
