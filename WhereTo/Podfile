@@ -11,5 +11,6 @@ target 'WhereTo' do
   pod 'Firebase/Firestore'
   pod 'Firebase/Functions'
   pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Storage'
 
 end

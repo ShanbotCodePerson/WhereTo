@@ -96,13 +96,14 @@ extension UIViewController {
     }
     
     // Present an alert with a text field to get some input from the user
-    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String?, textFieldText: String? = nil, saveButtonTitle: String = "Save", completion: @escaping (String) -> Void) {
+    func presentTextFieldAlert(title: String, message: String, textFieldPlaceholder: String?, textFieldText: String? = nil, saveButtonTitle: String = "Save", keyboardType: UIKeyboardType = .default, completion: @escaping (String) -> Void) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the text field
         alertController.addTextField { (textField) in
             textField.placeholder = textFieldPlaceholder
+            textField.keyboardType = keyboardType
             if let textFieldText = textFieldText {
                 textField.text = textFieldText
             }
@@ -202,7 +203,7 @@ extension UIViewController {
                         self?.presentAlert(title: "Added Friend", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                         
                         // Send a notification for the list of friends to be updated
-                        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+                        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
                         NotificationCenter.default.post(Notification(name: updateFriendsList))
                     case .failure(let error):
                         // Print and display the error

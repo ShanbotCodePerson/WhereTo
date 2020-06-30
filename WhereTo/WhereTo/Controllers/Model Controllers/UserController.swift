@@ -158,6 +158,7 @@ class UserController {
     }
     
     // Delete a user
+    // FIXME: - this doesn't quite work
     func deleteCurrentUser(completion: @escaping resultCompletion) {
         guard let currentUser = currentUser, let documentID = currentUser.documentID
             else { return completion(.failure(.noUserFound)) }
