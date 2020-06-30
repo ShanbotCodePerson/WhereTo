@@ -62,6 +62,7 @@ class RestaurantTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        print("got here to \(#function) and \(isFavoriteButton.isSelected)")
         // Update the UI
         if isFavoriteButton.isSelected {
             // Deselect the favorites button and show the blacklist button
@@ -78,6 +79,7 @@ class RestaurantTableViewCell: UITableViewCell {
     }
     
     @IBAction func blacklistedButtonTapped(_ sender: UIButton) {
+        print("got here to \(#function) and \(isBlacklistedButton.isSelected)")
         // Update the UI
         if isBlacklistedButton.isSelected {
             // Deselect the blacklist button and show the favorite button

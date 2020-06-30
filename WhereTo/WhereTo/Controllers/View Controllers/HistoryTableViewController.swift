@@ -98,31 +98,47 @@ class HistoryTableViewController: UITableViewController {
 extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
+        guard let currentUser = UserController.shared.currentUser,
+            let restaurant = cell.restaurant
+            else { return }
         
-        guard let restaurantID = cell.restaurant?.restaurantID else { return }
-        guard let currentUser = UserController.shared.currentUser else { return }
-        
-        if (currentUser.favoriteRestaurants.contains(restaurantID)) {
-            currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurantID})
-            UserController.shared.saveChanges(to: currentUser) { (result) in
+        if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
+            // Remove the restaurant from the user's list of favorite restaurants
+            currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurant.restaurantID})
+            
+            // Remove the restaurant from the source of truth
+            RestaurantController.shared.favoriteRestaurants?.removeAll(where: { $0 == restaurant })
+            
+            // Save the changes to the user
+            UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
                 switch result {
                 case .success(_):
-                    cell.isFavoriteButton.isSelected = false
+                    // Send the notification to update the saved restaurants list
+                    NotificationCenter.default.post(Notification(name: updateSavedList))
                 case .failure(let error):
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return
+                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
                 }
             }
         }
         else {
-            currentUser.favoriteRestaurants.append(restaurantID)
-            UserController.shared.saveChanges(to: currentUser) { (result) in
+            // Add the restaurant from the user's list of favorite restaurants
+            currentUser.favoriteRestaurants.append(restaurant.restaurantID)
+            
+            // Add the restaurant to the source of truth
+            RestaurantController.shared.favoriteRestaurants?.append(restaurant)
+            
+            // Save the changes to the user
+            UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
                 switch result {
                 case .success(_):
-                    cell.isFavoriteButton.isSelected = true
+                    // Send the notification to update the saved restaurants list
+                    NotificationCenter.default.post(Notification(name: updateSavedList))
                 case .failure(let error):
+                    // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return
+                    DispatchQueue.main.async { self?.presentErrorAlert(error) }
                 }
             }
         }
