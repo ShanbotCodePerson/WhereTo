@@ -37,12 +37,19 @@ class RestaurantTableViewCell: UITableViewCell {
     func setUpViews() {
         guard let restaurant = restaurant else { return }
         
+        // Fill in the basic information about the restaurant
         nameLabel.text = restaurant.name
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
         if let rating = restaurant.rating { ratingLabel.text = "\(rating) Stars" }
         
+        // Establish the defaults for the buttons
         isFavoriteButton.isHidden = false
+        isFavoriteButton.isSelected = false
         isBlacklistedButton.isHidden = false
+        isBlacklistedButton.isSelected = false
+        isFavoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+        isFavoriteButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        isBlacklistedButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
         isBlacklistedButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .selected)
         
         // Check if the restaurant is blacklisted or favorited, and format it accordingly
@@ -69,8 +76,10 @@ class RestaurantTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        guard let restaurant = restaurant, let currentUser = UserController.shared.currentUser else { return }
+        
         // Update the UI
-        if isFavoriteButton.isSelected {
+        if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             // Deselect the favorites button and show the blacklist button
             isFavoriteButton.isSelected = false
             isBlacklistedButton.isHidden = false
@@ -86,8 +95,10 @@ class RestaurantTableViewCell: UITableViewCell {
     }
     
     @IBAction func blacklistedButtonTapped(_ sender: UIButton) {
+        guard let restaurant = restaurant, let currentUser = UserController.shared.currentUser else { return }
+        
         // Update the UI
-        if isBlacklistedButton.isSelected {
+        if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             // Deselect the blacklist button and show the favorite button
             isBlacklistedButton.isSelected = false
             isFavoriteButton.isHidden = false
