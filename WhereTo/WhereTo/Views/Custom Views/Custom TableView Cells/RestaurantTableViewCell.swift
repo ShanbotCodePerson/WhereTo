@@ -41,13 +41,20 @@ class RestaurantTableViewCell: UITableViewCell {
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
         if let rating = restaurant.rating { ratingLabel.text = "\(rating) Stars" }
         
+        isFavoriteButton.isHidden = false
+        isBlacklistedButton.isHidden = false
+        isBlacklistedButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .selected)
+        
         // Check if the restaurant is blacklisted or favorited, and format it accordingly
-        if RestaurantController.shared.favoriteRestaurants?.contains(restaurant) ?? false {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             isFavoriteButton.isSelected = true
             isBlacklistedButton.isHidden = true
-        } else if RestaurantController.shared.blacklistedRestaurants?.contains(restaurant) ?? false {
+            isBlacklistedButton.isSelected = false
+        } else if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             isBlacklistedButton.isSelected = true
             isFavoriteButton.isHidden = true
+            isFavoriteButton.isSelected = false
         }
     }
     
@@ -62,15 +69,15 @@ class RestaurantTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
-        print("got here to \(#function) and \(isFavoriteButton.isSelected)")
         // Update the UI
         if isFavoriteButton.isSelected {
             // Deselect the favorites button and show the blacklist button
             isFavoriteButton.isSelected = false
             isBlacklistedButton.isHidden = false
         } else {
-            // Select the favorites button and hide the blacklist button
+            // Select the favorites button and deselect and hide the blacklist button
             isFavoriteButton.isSelected = true
+            isBlacklistedButton.isSelected = false
             isBlacklistedButton.isHidden = true
         }
         
@@ -79,7 +86,6 @@ class RestaurantTableViewCell: UITableViewCell {
     }
     
     @IBAction func blacklistedButtonTapped(_ sender: UIButton) {
-        print("got here to \(#function) and \(isBlacklistedButton.isSelected)")
         // Update the UI
         if isBlacklistedButton.isSelected {
             // Deselect the blacklist button and show the favorite button
