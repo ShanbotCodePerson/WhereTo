@@ -29,8 +29,8 @@ class UserController {
     // MARK: - CRUD Methods
     
     // Create a new user
-    func newUser(with email: String, completion: @escaping resultCompletion) {
-        let user = User(email: email)
+    func newUser(with email: String, name: String?, completion: @escaping resultCompletion) {
+        let user = User(email: email, name: (name ?? email.components(separatedBy: "@").first) ?? email)
         
         // Save the user object to the cloud and save the documentID for editing purposes
         let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { (error) in
@@ -179,7 +179,7 @@ class UserController {
                 if let friends = self.friends {
                     for friend in friends {
                         group.enter()
-                        FriendRequestController.shared.sendRequestToRemove(friend) { (result) in
+                        FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
                             switch result {
                             case .success(_):
                                 print("successfully removed friend")

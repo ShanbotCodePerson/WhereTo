@@ -45,11 +45,14 @@ class FriendRequestController {
     }
     
     // Create a request to remove a friend
-    func sendRequestToRemove(_ user: User, completion: @escaping resultCompletion) {
+    func sendRequestToRemove(_ user: User, userBeingDeleted: Bool = false, completion: @escaping resultCompletion) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Remove the friend from the user's list of friends
         currentUser.friends.removeAll(where: { $0 == user.uuid })
+        
+        // Don't try to save the changes to the user if this is part of deleting the user
+        if userBeingDeleted { return completion(.success(true)) }
         
         // Save the changes to the user
         UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
@@ -290,8 +293,8 @@ class FriendRequestController {
                             UserController.shared.fetchUsersFriends { (result) in
                                 switch result {
                                 case .success(_):
-                                    // Send a local notification to update the tableview as necessary
-                                    print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+                                    // Send local notifications to show an alert and update the tableview as necessary
+                                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
                                     NotificationCenter.default.post(Notification(name: updateFriendsList))
                                 case .failure(let error):
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -347,7 +350,7 @@ class FriendRequestController {
                         UserController.shared.friends?.removeAll(where: { friendsIDs.contains($0.uuid) })
                         
                         // Send a local notification to update the tableview
-                        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+                        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
                         NotificationCenter.default.post(Notification(name: updateFriendsList))
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

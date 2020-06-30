@@ -29,10 +29,6 @@ class LoginSignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
         
         // Try to log the user in automatically
         autoLogin()
@@ -148,6 +144,12 @@ class LoginSignUpViewController: UIViewController {
         // Make sure the email doesn't already exist
         // TODO: - fill this out later
         
+        // Make sure the username isn't blank
+        guard usernameTextField.text == nil || usernameTextField.text != "" else {
+            presentAlert(title: "Invalid Username", message: "Username can't be blank")
+            return
+        }
+        
         // Make sure the passwords match
         guard confirmPasswordTextField.text == password else {
             presentAlert(title: "Passwords Do Not Match", message: "The passwords do not match - make sure to enter passwords carefully")
@@ -221,7 +223,7 @@ class LoginSignUpViewController: UIViewController {
     
     // Once a user has verified their email, finish completing their account
     func setUpUser(with email: String) {
-        UserController.shared.newUser(with: email) { [weak self] (result) in
+        UserController.shared.newUser(with: email, name: usernameTextField.text) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
