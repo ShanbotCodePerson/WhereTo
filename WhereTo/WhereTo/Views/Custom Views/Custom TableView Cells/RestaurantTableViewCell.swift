@@ -64,9 +64,13 @@ class RestaurantTableViewCell: UITableViewCell {
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
         // Update the UI
         if isFavoriteButton.isSelected {
-            isBlacklistedButton.isHidden = true
-        } else {
+            // Deselect the favorites button and show the blacklist button
+            isFavoriteButton.isSelected = false
             isBlacklistedButton.isHidden = false
+        } else {
+            // Select the favorites button and hide the blacklist button
+            isFavoriteButton.isSelected = true
+            isBlacklistedButton.isHidden = true
         }
         
         // Handle the action in the delegate
@@ -76,9 +80,13 @@ class RestaurantTableViewCell: UITableViewCell {
     @IBAction func blacklistedButtonTapped(_ sender: UIButton) {
         // Update the UI
         if isBlacklistedButton.isSelected {
-            isFavoriteButton.isHidden = true
-        } else {
+            // Deselect the blacklist button and show the favorite button
+            isBlacklistedButton.isSelected = false
             isFavoriteButton.isHidden = false
+        } else {
+            // Select the blacklist button and hide the favorite button
+            isBlacklistedButton.isSelected = true
+            isFavoriteButton.isHidden = true
         }
         
         // Handle the action in the delegate

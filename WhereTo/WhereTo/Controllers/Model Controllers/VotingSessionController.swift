@@ -72,7 +72,7 @@ class VotingSessionController {
                 let votesEach = min(restaurants.count, users.count + 1, 5)
                 
                 // Create the voting session
-                let votingSession = VotingSession(votesEach: votesEach, location: location, restaurantIDs: restaurants.map({ $0.restaurantID }))
+                let votingSession = VotingSession(votesEach: votesEach, dietaryRestrictions: dietaryRestrictions, location: location, restaurantIDs: restaurants.map({ $0.restaurantID }))
                 votingSession.users = users
                 votingSession.restaurants = restaurants
                 
@@ -89,6 +89,9 @@ class VotingSessionController {
                 
                 // Add the reference to the voting session to the user's list of active voting sessions
                 currentUser.activeVotingSessions.append(votingSession.uuid)
+                
+                // Add the voting session to the source of truth
+                self?.votingSessions?.append(votingSession)
                 
                 // Save the changes to the user
                 UserController.shared.saveChanges(to: currentUser) { (result) in
@@ -120,16 +123,6 @@ class VotingSessionController {
                                 return completion(.failure(.fsError(error)))
                             }
                     }
-                    //                    self?.db.collection(VotingSessionInviteStrings.recordType)
-                    //                        .addDocument(data: votingSessionInvite.asDictionary()) { (error) in
-                    //
-                    //                            // TODO: - do I need to keep track of errors / completions here?
-                    //                            if let error = error {
-                    //                                // Print and return the error
-                    //                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    //                                return completion(.failure(.fsError(error)))
-                    //                            }
-                    //                    }
                 }
                 
                 // Return the success
