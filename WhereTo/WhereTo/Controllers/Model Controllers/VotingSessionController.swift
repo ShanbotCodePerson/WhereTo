@@ -30,7 +30,7 @@ class VotingSessionController {
     // MARK: - CRUD Methods
     
     // Create a new voting session and send invites to all participants
-    func newVotingSession(with friends: [User], at location: CLLocation, usingDietaryRestrictions: Bool = true, completion: @escaping resultCompletionWith<VotingSession>) {
+    func newVotingSession(with friends: [User], at location: CLLocation, filterByDiet: Bool, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
         
         // Fetch the restaurants within the radius of the coordinates
@@ -47,14 +47,16 @@ class VotingSessionController {
                 restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
                 
                 // Filter the restaurants by the dietary restrictions
-                if usingDietaryRestrictions {
+                if filterByDiet {
+                    var allDietaryRestrictions = currentUser.dietaryRestrictions
+                    allDietaryRestrictions.append(contentsOf: friends.map({ $0.dietaryRestrictions }).joined())
+                    var dietaryRestrictions = Set(allDietaryRestrictions.map({ $0.rawValue }))
+                    if dietaryRestrictions.contains(User.DietaryRestriction.vegan.rawValue) {
+                        dietaryRestrictions.remove(User.DietaryRestriction.vegetarian.rawValue)
+                    }
                     
+                    restaurants = restaurants.filter({ dietaryRestrictions.isSubset(of: $0.categoryNames) })
                 }
-                
-                // Filter the restaurants by which ones are currently open
-                
-                //                restaurants = restaurants.filter { $0.hours.openNow }
-                
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }

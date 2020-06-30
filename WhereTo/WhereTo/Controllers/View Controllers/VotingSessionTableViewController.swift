@@ -94,6 +94,7 @@ class VotingSessionTableViewController: UITableViewController {
         guard let restaurant = votingSession?.restaurants?[indexPath.row] else { return cell }
 //        print("got here to \(#function) and restaurant is \(restaurant)")
         cell.restaurant = restaurant
+        cell.delegate = self
         if let voteIndex = votes.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) {
             cell.vote = voteIndex
         }
@@ -140,4 +141,47 @@ class VotingSessionTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Button Delegate
+// MARK: - SavedButtonDelegate
+
+extension VotingSessionTableViewController: RestaurantTableViewCellSavedButtonDelegate {
+    
+    func saveRestaurantButton(for cell: RestaurantTableViewCell) {
+        
+        guard let restaurantID = cell.restaurant?.restaurantID else { return }
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        if (currentUser.favoriteRestaurants.contains(restaurantID)) {
+            presentLocationSelectionAlert { (result) in
+                switch result {
+                case .success(_):
+                    currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurantID})
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            cell.isSavedButton.isSelected = false
+                            self.tableView.reloadData()
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return
+                        }
+                    }
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+            }
+        }
+        else {
+            currentUser.favoriteRestaurants.append(restaurantID)
+            UserController.shared.saveChanges(to: currentUser) { (result) in
+                switch result {
+                case .success(_):
+                    cell.isSavedButton.isSelected = true
+                case .failure(let error):
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return
+                }
+            }
+        }
+    }
+}

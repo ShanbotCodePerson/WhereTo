@@ -81,7 +81,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
-        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
+//        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -200,40 +200,58 @@ class InviteFriendsTableViewController: UITableViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let location):
-                    // Choose a random restaurant
-                    RestaurantController.shared.fetchRandomRestaurant(near: location) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(let restaurant):
-                                // Present the alert with the restaurant
-                                self?.presentRandomRestaurantAlert(restaurant)
-                                
-                                // Add the restaurant to the user's list of previous restaurants
-                                currentUser.previousRestaurants.append(restaurant.restaurantID)
-                                
-                                // Save the changes to the user
-                                UserController.shared.saveChanges(to: currentUser) { (result) in
-                                    switch result {
-                                    case .success(_):
-                                        // Send the notification telling the history page to update its data
-                                        NotificationCenter.default.post(Notification(name: updateHistoryList))
-                                    case .failure(let error):
-                                        // Print and display the error
-                                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                        DispatchQueue.main.async { self?.presentErrorAlert(error) }
-                                    }
-                                }
-                            case .failure(let error):
-                                // Print and display the error
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                            }
-                        }
+                    // If the user has any dietary restrictions, give them the opportunity to filter results by their restrictions
+                    if currentUser.dietaryRestrictions.count > 0 {
+                        // Allow the user to choose to filter by dietary restrictions or not
+                        self?.presentChoiceAlert(title: "Filter By Diet?", message: "Filter the restaurants by your dietary restrictions?", cancelText: "No", confirmText: "Yes", cancelCompletion: {
+                            self?.getRandomRestaurant(by: location, filterByDiet: false)
+                        }, confirmCompletion: {
+                            self?.getRandomRestaurant(by: location, filterByDiet: true)
+                        })
+                    }
+                    else {
+                        self?.getRandomRestaurant(by: location, filterByDiet: false)
                     }
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentAlert(title: "Location Not Found", message: "The location you entered was not found - please try again")
+                }
+            }
+        }
+    }
+    
+    // A helper method to actually fetch the random restaurant
+    func getRandomRestaurant(by location: CLLocation, filterByDiet: Bool) {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // FIXME: - what happens when there are no restaurants?
+        RestaurantController.shared.fetchRandomRestaurant(near: location) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let restaurant):
+                    // Present the alert with the restaurant
+                    self?.presentRandomRestaurantAlert(restaurant)
+                    
+                    // Add the restaurant to the user's list of previous restaurants
+                    currentUser.previousRestaurants.append(restaurant.restaurantID)
+                    
+                    // Save the changes to the user
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            // Send the notification telling the history page to update its data
+                            NotificationCenter.default.post(Notification(name: updateHistoryList))
+                        case .failure(let error):
+                            // Print and display the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            DispatchQueue.main.async { self?.presentErrorAlert(error) }
+                        }
+                    }
+                case .failure(let error):
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
                 }
             }
         }
@@ -254,20 +272,12 @@ class InviteFriendsTableViewController: UITableViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let location):
-                    // Create the voting session
-                    VotingSessionController.shared.newVotingSession(with: friends, at: location) { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(let votingSession):
-                                // Transition to the voting page
-                                self?.transitionToVotingSessionPage(with: votingSession)
-                            case .failure(let error):
-                                // Print and display the error
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                self?.presentErrorAlert(error)
-                            }
-                        }
-                    }
+                    // Allow the user to choose to filter results by dietary restrictions
+                    self?.presentChoiceAlert(title: "Filter By Diet?", message: "Filter the restaurants by the group's dietary restrictions?", cancelText: "No", confirmText: "Yes", cancelCompletion: {
+                            self?.startVotingSession(with: friends, at: location, filterByDiet: false)
+                        }, confirmCompletion: {
+                            self?.startVotingSession(with: friends, at: location, filterByDiet: true )
+                        })
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -277,10 +287,39 @@ class InviteFriendsTableViewController: UITableViewController {
         }
     }
     
+    // A helper method to actually start the voting session
+    func startVotingSession(with friends: [User], at location: CLLocation, filterByDiet: Bool) {
+        // Create the voting session
+        VotingSessionController.shared.newVotingSession(with: friends, at: location, filterByDiet: filterByDiet) { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let votingSession):
+                    // Transition to the voting page
+                    self?.transitionToVotingSessionPage(with: votingSession)
+                case .failure(let error):
+                    // If the error is that no restaurants match the search, allow the user to turn off the dietary restrictions filter, or just alert them that there are no restaurants
+                    if case WhereToError.noRestaurantsMatch = error {
+                        if filterByDiet {
+                            self?.presentChoiceAlert(title: "No Restaurants Found", message: "There are no restaurants matching your search criteria. Would you like to try again without filtering by dietary restrictions?", cancelText: "No", confirmText: "Yes", confirmCompletion: {
+                                self?.startVotingSession(with: friends, at: location, filterByDiet: false)
+                            })
+                        } else {
+                            self?.presentAlert(title: "No Restaurants Found", message: "There are currently no open restaurants in the location you have selected")
+                        }
+                    }
+                    
+                    // Print and display the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.presentErrorAlert(error)
+                }
+            }
+        }
+    }
+    
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("got here to \(#function) and \(String(describing: UserController.shared.friends?.count))")
+//        print("got here to \(#function) and \(String(describing: UserController.shared.friends?.count))")
         return UserController.shared.friends?.count ?? 0
     }
 
@@ -308,7 +347,7 @@ class InviteFriendsTableViewController: UITableViewController {
                         switch result {
                         case .success(_):
                             // Give the user an opportunity to block the unwanted friend
-                            self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friend.name) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", completion: {
+                            self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friend.name) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", confirmCompletion: {
                                 
                                 // Add the friend's ID to the user's list of blocked people
                                 currentUser.blockedUsers.append(friend.uuid)
