@@ -357,8 +357,9 @@ extension UIViewController {
         guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
         DispatchQueue.main.async {
             self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
-                // If the user accepted the invitation, transition them to the voting session page
+                // If the user accepted the invitation, add it to the source of truth and transition them to the voting session page
                 if let newVotingSession = newVotingSession {
+                    VotingSessionController.shared.votingSessions?.append(newVotingSession)
                     self?.transitionToVotingSessionPage(with: newVotingSession)
                 }
             }
