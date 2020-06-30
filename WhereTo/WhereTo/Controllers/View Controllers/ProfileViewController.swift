@@ -27,6 +27,9 @@ class ProfileViewController: UIViewController {
         
         // Set up the UI
         setUpViews()
+        
+        // Set up the observer to listen for notifications telling any view to display an alert
+        setUpNotificationObservers()
     }
     
     

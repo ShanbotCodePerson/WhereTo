@@ -222,8 +222,7 @@ class VotingSessionController {
                 }
                 
                 // Unwrap the data
-                guard let document = results?.documents.first
-                    else { return completion(.failure(.couldNotUnwrap)) }
+                guard let document = results?.documents.first else { return completion(.failure(.couldNotUnwrap)) }
                 
                 _ = VotingSession.init(dictionary: document.data()) { (votingSession) in
                     guard let votingSession = votingSession else { return completion(.failure(.couldNotUnwrap)) }
@@ -779,13 +778,17 @@ class VotingSessionController {
             else { return }
         
         // Add the outcome to the user's list of previous restaurants (making sure not to add a duplicate)
-        if currentUser.previousRestaurants.last != outcomeID {
-            currentUser.previousRestaurants.append(outcomeID)
-            
-            // Add the restaurant to the source of truth of previous restaurants in the restaurant controller
-            guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
-            RestaurantController.shared.previousRestaurants?.append(restaurant)
-        }
+        var usersPreviousRestaurants = currentUser.previousRestaurants
+        usersPreviousRestaurants.append(outcomeID)
+        currentUser.previousRestaurants = Array(Set(usersPreviousRestaurants))
+        
+        // Add the restaurant to the source of truth of previous restaurants in the restaurant controller
+        guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
+        // FIXME: - need to get set of this list of restaurants
+        RestaurantController.shared.previousRestaurants?.append(restaurant)
+        
+        // Send a notification to update the tableview as necessary
+        NotificationCenter.default.post(Notification(name: updateHistoryList))
         
         // Remove the voting session from the user's list of active voting sessions
         currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession.uuid })

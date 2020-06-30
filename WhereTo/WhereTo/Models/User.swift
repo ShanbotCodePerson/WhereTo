@@ -62,7 +62,7 @@ class User {
     // MARK: - Initializers
     
     init(email: String,
-         name: String? = nil,
+         name: String,
          profilePhotoURL: String? = nil,
          dietaryRestrictions: [DietaryRestriction]? = nil,
          friends: [String]? = nil,
@@ -75,7 +75,7 @@ class User {
          uuid: String = UUID().uuidString) {
         
         self.email = email
-        self.name = (name ?? email.components(separatedBy: "@").first) ?? email
+        self.name = name
         self.profilePhotoURL = profilePhotoURL
         self.dietaryRestrictions = dietaryRestrictions ?? []
         self.friends = friends ?? []

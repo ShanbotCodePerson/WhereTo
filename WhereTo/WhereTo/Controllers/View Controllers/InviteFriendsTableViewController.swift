@@ -27,14 +27,14 @@ class InviteFriendsTableViewController: UITableViewController {
         // set InviteFriendsTableViewController as delegate of CLLocationManager
         locationManager.delegate = self
         
-        // Load the data if it hasn't been loaded already
-        loadAllData()
-        
         // Set up the observers to listen for notifications telling this particular view to update
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
+        
+        // Load the data if it hasn't been loaded already
+        loadAllData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,7 +81,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
-        print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -216,8 +216,7 @@ class InviteFriendsTableViewController: UITableViewController {
                                     switch result {
                                     case .success(_):
                                         // Send the notification telling the history page to update its data
-                                        // TODO: - send notificatoin
-                                        print("todo")
+                                        NotificationCenter.default.post(Notification(name: updateHistoryList))
                                     case .failure(let error):
                                         // Print and display the error
                                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

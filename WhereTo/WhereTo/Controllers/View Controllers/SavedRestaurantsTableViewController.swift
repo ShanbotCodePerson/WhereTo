@@ -29,8 +29,20 @@ class SavedRestaurantsTableViewController: UITableViewController {
         // Load the data if it hasn't been loaded already
         loadAllData()
         
-        // TODO: - may need to register tableview cell and nib
+        // Set up the tableview cells
         tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        
+        // Set up the observer to listen for changes in the data
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateSavedList, object: nil)
+        
+        // Set up the observer to listen for notifications telling any view to display an alert
+        setUpNotificationObservers()
+    }
+    
+    // MARK: - Respond to Notifications
+    
+    @objc func refreshData() {
+        DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
     // MARK: - Helper Methods
