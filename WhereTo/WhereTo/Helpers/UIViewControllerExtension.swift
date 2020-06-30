@@ -327,6 +327,7 @@ let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
 let votingSessionResult = Notification.Name("votingSessionResult")
 let updateHistoryList = Notification.Name("updateHistoryList")
 let updateSavedList = Notification.Name("updateSavedList")
+let updateProfileView = Notification.Name("updateProfileView")
 
 extension UIViewController {
     

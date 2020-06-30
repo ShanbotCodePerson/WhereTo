@@ -24,7 +24,7 @@ class FriendTableViewCell: UITableViewCell {
     func setUpViews() {
         guard let friend = friend else { return }
         
-        profileImageView.image = friend.photo
+        profileImageView.image = friend.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = friend.name
     }
 }

@@ -82,26 +82,26 @@ class UserController {
     }
     
     // Read (fetch) a user's profile photo
-    func fetchUsersProfilePhoto(user: User, completion: @escaping resultCompletionWith<UIImage>) {
+    func fetchUsersProfilePhoto(user: User, completion: @escaping (UIImage) -> Void) {
         // If the user doesn't have a photo, use the default one
-        guard let profilePhotoURL = user.profilePhotoURL else {  return completion(.success(#imageLiteral(resourceName: "default_profile_picture"))) }
+        guard let profilePhotoURL = user.profilePhotoURL else { return completion(#imageLiteral(resourceName: "default_profile_picture")) }
         
         // Get the reference to the profile photo
         let photoRef = storage.reference().child(profilePhotoURL)
         
         // Download the photo from the cloud
-        photoRef.getData(maxSize: 1 * 1024 * 1024) { (data, error) in
+        photoRef.getData(maxSize: Int64(1.2 * 1024 * 1024)) { (data, error) in
             if let error = error {
                 // Print and return the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                return completion(.failure(.fsError(error)))
+                return completion(#imageLiteral(resourceName: "default_profile_picture"))
             }
             
             // Convert the data to an image and return it
             guard let data = data,
                 let photo = UIImage(data: data)
-                else { return completion(.failure(.couldNotUnwrap)) }
-            return completion(.success(photo))
+                else { return completion(#imageLiteral(resourceName: "default_profile_picture")) }
+            return completion(photo)
         }
     }
     
@@ -188,7 +188,7 @@ class UserController {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Convert the image to data
-        guard let data = photo.jpegData(compressionQuality: 0.5) else { return completion(.failure(.badPhotoFile)) }
+        guard let data = photo.compressTo(1) else { return completion(.failure(.badPhotoFile)) }
         
         // Create a name for the file in the cloud using the user's id
         let photoRef = storage.reference().child("images/\(currentUser.uuid).jpg")

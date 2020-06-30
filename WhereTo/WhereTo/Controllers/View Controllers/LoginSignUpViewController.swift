@@ -36,6 +36,14 @@ class LoginSignUpViewController: UIViewController {
     
     // MARK: - Actions
 
+    @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
+        // Dismiss the keyboard
+        emailTextField.resignFirstResponder()
+        usernameTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
+        confirmPasswordTextField.resignFirstResponder()
+    }
+    
     @IBAction func signUpToggleButtonTapped(_ sender: UIButton) {
         UIView.animate(withDuration: 0.2) {
             self.isSigningUp = true

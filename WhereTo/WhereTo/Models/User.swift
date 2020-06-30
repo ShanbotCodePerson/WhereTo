@@ -88,6 +88,14 @@ class User {
         self.activeVotingSessions = activeVotingSessions ?? []
         self.documentID = documentID
         self.uuid = uuid
+        
+        UserController.shared.fetchUsersProfilePhoto(user: self) { [weak self] (photo) in
+            self?.photo = photo
+            
+            // Update the UI
+            NotificationCenter.default.post(Notification(name: updateFriendsList))
+            NotificationCenter.default.post(Notification(name: updateProfileView))
+        }
     }
     
     convenience init?(dictionary: [String: Any]) {

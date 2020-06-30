@@ -34,15 +34,25 @@ class ProfileViewController: UIViewController {
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
+        
+        // Set up the observer to update the view once the photo has loaded
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: updateProfileView, object: nil)
     }
     
+    // MARK: - Respond to Notifications
+    
+    @objc func refreshUI() {
+        DispatchQueue.main.async { self.profileImageView.image = UserController.shared.currentUser?.photo }
+    }
     
     // MARK: - Set Up UI
     
     func setUpViews() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
-        profileImageView.image = currentUser.photo
+        imagePicker.delegate = self
+        
+        profileImageView.image = currentUser.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = currentUser.name
         emailLabel.text = currentUser.email
         
