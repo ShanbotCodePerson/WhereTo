@@ -20,6 +20,7 @@ enum WhereToError: LocalizedError {
     case documentNotFound
     case noRestaurantsMatch
     case noLocationForAddress
+    case badPhotoFile
     
     // TODO: - add in string descriptions of each error
     

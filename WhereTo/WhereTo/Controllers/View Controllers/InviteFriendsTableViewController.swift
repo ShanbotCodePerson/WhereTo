@@ -96,7 +96,7 @@ class InviteFriendsTableViewController: UITableViewController {
                 switch result {
                 case .success(_):
                     // Reload the tableview
-                    print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
+                    print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
                     self?.refreshData()
                 case .failure(let error):
                     // Print and display the error
@@ -131,7 +131,7 @@ class InviteFriendsTableViewController: UITableViewController {
         // TODO: - allow searching by email or username
         
         // Present the text field for the user to enter the desired email
-        presentTextFieldAlert(title: "Add Friend", message: "Send a friend request", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send Friend Request", completion: sendRequest(to:))
+        presentTextFieldAlert(title: "Add Friend", message: "Send a friend request", textFieldPlaceholder: "Enter email here...", saveButtonTitle: "Send Friend Request", keyboardType: .emailAddress, completion: sendRequest(to:))
     }
     
     func sendRequest(to email: String) {
@@ -280,7 +280,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("got here to \(#function) and \(UserController.shared.friends?.count)")
+        print("got here to \(#function) and \(String(describing: UserController.shared.friends?.count))")
         return UserController.shared.friends?.count ?? 0
     }
 

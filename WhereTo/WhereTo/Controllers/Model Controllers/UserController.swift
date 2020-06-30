@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import FirebaseStorage
 
 class UserController {
     
@@ -23,8 +24,9 @@ class UserController {
     // MARK: - Properties
     
     let db = Firestore.firestore()
+    let storage = Storage.storage()
     typealias resultCompletion = (Result<Bool, WhereToError>) -> Void
-    typealias resultCompletionWithObject = (Result<User, WhereToError>) -> Void
+    typealias resultCompletionWith<T> = (Result<T, WhereToError>) -> Void
     
     // MARK: - CRUD Methods
     
@@ -79,8 +81,32 @@ class UserController {
         }
     }
     
+    // Read (fetch) a user's profile photo
+    func fetchUsersProfilePhoto(user: User, completion: @escaping (UIImage) -> Void) {
+        // If the user doesn't have a photo, use the default one
+        guard let profilePhotoURL = user.profilePhotoURL else { return completion(#imageLiteral(resourceName: "default_profile_picture")) }
+        
+        // Get the reference to the profile photo
+        let photoRef = storage.reference().child(profilePhotoURL)
+        
+        // Download the photo from the cloud
+        photoRef.getData(maxSize: Int64(1.2 * 1024 * 1024)) { (data, error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(#imageLiteral(resourceName: "default_profile_picture"))
+            }
+            
+            // Convert the data to an image and return it
+            guard let data = data,
+                let photo = UIImage(data: data)
+                else { return completion(#imageLiteral(resourceName: "default_profile_picture")) }
+            return completion(photo)
+        }
+    }
+    
     // Read (search for) a specific user
-    func searchFor(email: String, completion: @escaping resultCompletionWithObject) {
+    func searchFor(email: String, completion: @escaping resultCompletionWith<User>) {
         // Fetch the data from the cloud
         db.collection(UserStrings.recordType)
             .whereField(UserStrings.emailKey, isEqualTo: email)
@@ -157,6 +183,41 @@ class UserController {
         }
     }
     
+    // Update a user with a new profile photo
+    func savePhotoToCloud(_ photo: UIImage, completion: @escaping resultCompletion) {
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Convert the image to data
+        guard let data = photo.compressTo(1) else { return completion(.failure(.badPhotoFile)) }
+        
+        // Create a name for the file in the cloud using the user's id
+        let photoRef = storage.reference().child("images/\(currentUser.uuid).jpg")
+            
+        photoRef.putData(data, metadata: nil) { [weak self] (metadata, error) in
+            
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            // Save the link to the profile picture
+            currentUser.profilePhotoURL = "images/\(currentUser.uuid).jpg"
+            currentUser.photo = photo
+            self?.saveChanges(to: currentUser, completion: { (result) in
+                switch result {
+                case .success(_):
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            })
+        }
+
+    }
+    
     // Delete a user
     func deleteCurrentUser(completion: @escaping resultCompletion) {
         guard let currentUser = currentUser, let documentID = currentUser.documentID
@@ -175,10 +236,24 @@ class UserController {
                 
                 let group = DispatchGroup()
                 
+                // If the user had a profile photo, delete that
+                if let profilePhotoURL = currentUser.profilePhotoURL {
+                    group.enter()
+                    UserController.shared.deleteProfilePhoto(with: profilePhotoURL) { (error) in
+                        if let error = error {
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(.fsError(error)))
+                        }
+                        group.leave()
+                    }
+                }
+                
                 // Remove all friends, delete all outstanding friend requests, votes, and voting session invitations associated with the user
                 if let friends = self.friends {
                     for friend in friends {
                         group.enter()
+                        print("entered group for friend")
                         FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
                             switch result {
                             case .success(_):
@@ -188,40 +263,65 @@ class UserController {
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 return completion(.failure(error))
                             }
+                            print("leaving group for friend")
                             group.leave()
                         }
                     }
                 }
                 group.enter()
+                print("entered group for friend request")
                 FriendRequestController.shared.deleteAll { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
+                    print("leaving group for friend request")
                     group.leave()
                 }
                 group.enter()
+                print("entered group for votes")
                 VotingSessionController.shared.deleteAllVotes { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
+                    print("leaving group for votes")
                     group.leave()
                 }
                 group.enter()
+                print("entered group for voting invites")
                 VotingSessionController.shared.deleteAllVotingInvites { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
+                    print("leaving group for voting invites")
                     group.leave()
                 }
                 
                 // Return the success
-                group.notify(queue: .main) {  return completion(.success(true)) }
+                group.notify(queue: .main) { print("returning");  return completion(.success(true)) }
+        }
+    }
+    
+    // Delete a user's profile photo
+    func deleteProfilePhoto(with url: String, completion: @escaping (Error?) -> Void) {
+        // Get the reference to the photo
+        let photoRef = storage.reference().child(url)
+        
+        // Delete the photo from the cloud
+        photoRef.delete { (error) in
+            
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(error)
+            }
+            
+            return completion(nil)
         }
     }
     

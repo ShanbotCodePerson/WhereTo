@@ -42,7 +42,7 @@
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg">
                                         <rect key="frame" x="0.0" y="51.5" width="331" height="39.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX">
                                         <rect key="frame" x="0.0" y="103" width="331" height="39.5"/>
@@ -70,6 +70,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="PoY-01-yID" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.3" id="2Vm-lC-4Ep"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="PoY-01-yID" secondAttribute="bottom" constant="30" id="3bH-5O-q39"/>
@@ -80,6 +81,9 @@
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="rMa-ng-W41"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="D8J-2r-lUg" appends="YES" id="UPG-Au-4gi"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="confirmPasswordTextField" destination="Zni-Kw-RXd" id="J2b-o9-dIa"/>
@@ -92,6 +96,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="D8J-2r-lUg">
+                    <connections>
+                        <action selector="screenTapped:" destination="BYZ-38-t0r" id="kXO-QM-fOb"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
         </scene>

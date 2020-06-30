@@ -23,10 +23,6 @@ class RestaurantSearchViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
-    @IBOutlet weak var ratingButton: UIButton!
-    @IBOutlet weak var dietaryButton: UIButton!
-    @IBOutlet weak var openNowButton: UIButton!
-    
     
     // MARK: - LifeCycles
     override func viewDidLoad() {
@@ -71,16 +67,7 @@ class RestaurantSearchViewController: UIViewController {
             }
         }
     }
-    @IBAction func ratingButtonTapped(_ sender: Any) {
-    }
-    
-    @IBAction func dietaryButtonTapped(_ sender: Any) {
-    }
-    
-    @IBAction func openNowButtonTapped(_ sender: Any) {
-    }
-    
-    
+
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.

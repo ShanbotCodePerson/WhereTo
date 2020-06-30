@@ -102,24 +102,30 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="89"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fAw-16-Gfk">
-                                            <rect key="frame" x="10" y="14.5" width="60" height="60"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="60" id="96G-ud-HIO"/>
-                                                <constraint firstAttribute="width" secondItem="fAw-16-Gfk" secondAttribute="height" multiplier="1:1" id="uqs-Us-axn"/>
-                                            </constraints>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(name)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCc-aE-X6K">
-                                            <rect key="frame" x="75" y="14" width="58" height="21.5"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="uJK-mw-GWj">
+                                            <rect key="frame" x="10.5" y="4.5" width="393" height="80"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fAw-16-Gfk">
+                                                    <rect key="frame" x="0.0" y="15" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="96G-ud-HIO"/>
+                                                        <constraint firstAttribute="width" secondItem="fAw-16-Gfk" secondAttribute="height" multiplier="1:1" id="uqs-Us-axn"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(name)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCc-aE-X6K">
+                                                    <rect key="frame" x="55" y="29.5" width="338" height="21.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="fAw-16-Gfk" firstAttribute="centerY" secondItem="Bg3-Mg-Cqr" secondAttribute="centerY" id="LUU-Cl-tuz"/>
-                                        <constraint firstItem="fAw-16-Gfk" firstAttribute="leading" secondItem="Bg3-Mg-Cqr" secondAttribute="leading" constant="10" id="o3o-la-fBS"/>
+                                        <constraint firstItem="uJK-mw-GWj" firstAttribute="width" secondItem="Bg3-Mg-Cqr" secondAttribute="width" multiplier="0.95" id="2Ik-ZA-cdK"/>
+                                        <constraint firstItem="uJK-mw-GWj" firstAttribute="centerY" secondItem="Bg3-Mg-Cqr" secondAttribute="centerY" id="5gP-7S-FRd"/>
+                                        <constraint firstItem="uJK-mw-GWj" firstAttribute="height" secondItem="Bg3-Mg-Cqr" secondAttribute="height" multiplier="0.9" id="84H-YJ-9nE"/>
+                                        <constraint firstItem="uJK-mw-GWj" firstAttribute="centerX" secondItem="Bg3-Mg-Cqr" secondAttribute="centerX" id="z4i-y6-Q6v"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
