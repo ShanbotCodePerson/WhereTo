@@ -203,6 +203,7 @@ class UserController {
             
             // Save the link to the profile picture
             currentUser.profilePhotoURL = "images/\(currentUser.uuid).jpg"
+            currentUser.photo = photo
             self?.saveChanges(to: currentUser, completion: { (result) in
                 switch result {
                 case .success(_):
@@ -218,7 +219,6 @@ class UserController {
     }
     
     // Delete a user
-    // FIXME: - this doesn't quite work
     func deleteCurrentUser(completion: @escaping resultCompletion) {
         guard let currentUser = currentUser, let documentID = currentUser.documentID
             else { return completion(.failure(.noUserFound)) }
@@ -236,10 +236,24 @@ class UserController {
                 
                 let group = DispatchGroup()
                 
+                // If the user had a profile photo, delete that
+                if let profilePhotoURL = currentUser.profilePhotoURL {
+                    group.enter()
+                    UserController.shared.deleteProfilePhoto(with: profilePhotoURL) { (error) in
+                        if let error = error {
+                            // Print and return the error
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            return completion(.failure(.fsError(error)))
+                        }
+                        group.leave()
+                    }
+                }
+                
                 // Remove all friends, delete all outstanding friend requests, votes, and voting session invitations associated with the user
                 if let friends = self.friends {
                     for friend in friends {
                         group.enter()
+                        print("entered group for friend")
                         FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
                             switch result {
                             case .success(_):
@@ -249,40 +263,65 @@ class UserController {
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 return completion(.failure(error))
                             }
+                            print("leaving group for friend")
                             group.leave()
                         }
                     }
                 }
                 group.enter()
+                print("entered group for friend request")
                 FriendRequestController.shared.deleteAll { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
+                    print("leaving group for friend request")
                     group.leave()
                 }
                 group.enter()
+                print("entered group for votes")
                 VotingSessionController.shared.deleteAllVotes { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
+                    print("leaving group for votes")
                     group.leave()
                 }
                 group.enter()
+                print("entered group for voting invites")
                 VotingSessionController.shared.deleteAllVotingInvites { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
+                    print("leaving group for voting invites")
                     group.leave()
                 }
                 
                 // Return the success
-                group.notify(queue: .main) {  return completion(.success(true)) }
+                group.notify(queue: .main) { print("returning");  return completion(.success(true)) }
+        }
+    }
+    
+    // Delete a user's profile photo
+    func deleteProfilePhoto(with url: String, completion: @escaping (Error?) -> Void) {
+        // Get the reference to the photo
+        let photoRef = storage.reference().child(url)
+        
+        // Delete the photo from the cloud
+        photoRef.delete { (error) in
+            
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(error)
+            }
+            
+            return completion(nil)
         }
     }
     

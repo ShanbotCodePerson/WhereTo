@@ -51,6 +51,9 @@ class FriendRequestController {
         // Remove the friend from the user's list of friends
         currentUser.friends.removeAll(where: { $0 == user.uuid })
         
+        // Remove the friend from the source of truth
+        UserController.shared.friends?.removeAll(where: { $0.uuid == user.uuid })
+        
         // Don't try to save the changes to the user if this is part of deleting the user
         if userBeingDeleted { return completion(.success(true)) }
         
@@ -173,9 +176,13 @@ class FriendRequestController {
     func deleteAll(completion: @escaping (WhereToError?) -> Void) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.noUserFound) }
         
+        let group = DispatchGroup()
+        
         // Fetch all outstanding friend requests sent by the user
+        group.enter()
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.fromIDKey, isEqualTo: currentUser.uuid)
+            .whereField(FriendRequestStrings.statusKey, isLessThan: FriendRequest.Status.removingFriend.rawValue)
             .getDocuments(completion: { [weak self] (results, error) in
                 
                 if let error = error {
@@ -192,10 +199,11 @@ class FriendRequestController {
                     self?.db.collection(FriendRequestStrings.recordType).document($0.documentID).delete()
                 }
                 
-                return completion(nil)
+                group.leave()
             })
         
         // Fetch all outstanding friend requests sent to the user
+        group.enter()
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.uuid)
             .getDocuments(completion: { [weak self] (results, error) in
@@ -214,8 +222,10 @@ class FriendRequestController {
                     self?.db.collection(FriendRequestStrings.recordType).document($0.documentID).delete()
                 }
                 
-                return completion(nil)
+                group.leave()
             })
+        
+        group.notify(queue: .main) { return completion(nil) }
     }
     
     // MARK: - Set Up Notifications
