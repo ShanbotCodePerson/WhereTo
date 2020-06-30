@@ -24,6 +24,7 @@ class FriendTableViewCell: UITableViewCell {
     func setUpViews() {
         guard let friend = friend else { return }
         
+        profileImageView.image = friend.photo
         nameLabel.text = friend.name
     }
 }

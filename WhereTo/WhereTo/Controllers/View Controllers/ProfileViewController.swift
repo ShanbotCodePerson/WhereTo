@@ -38,6 +38,7 @@ class ProfileViewController: UIViewController {
     func setUpViews() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
+        profileImageView.image = currentUser.photo
         nameLabel.text = currentUser.name
         emailLabel.text = currentUser.email
         

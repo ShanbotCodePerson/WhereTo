@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UIImage
 
 // MARK: - String Constants
 
@@ -32,6 +33,7 @@ class User {
     let email: String
     var name: String
     var profilePhotoURL: String?
+    var photo: UIImage?
     var dietaryRestrictions: [DietaryRestriction]
     var friends: [String]                       // uuid's of other users
     var blockedUsers: [String]                  // uuid's of other users

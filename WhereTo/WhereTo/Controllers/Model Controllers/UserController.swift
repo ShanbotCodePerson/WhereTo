@@ -8,6 +8,7 @@
 
 import Foundation
 import Firebase
+import FirebaseStorage
 
 class UserController {
     
@@ -23,8 +24,9 @@ class UserController {
     // MARK: - Properties
     
     let db = Firestore.firestore()
+    let storage = Storage.storage()
     typealias resultCompletion = (Result<Bool, WhereToError>) -> Void
-    typealias resultCompletionWithObject = (Result<User, WhereToError>) -> Void
+    typealias resultCompletionWith<T> = (Result<T, WhereToError>) -> Void
     
     // MARK: - CRUD Methods
     
@@ -79,8 +81,32 @@ class UserController {
         }
     }
     
+    // Read (fetch) a user's profile photo
+    func fetchUsersProfilePhoto(user: User, completion: @escaping resultCompletionWith<UIImage>) {
+        // If the user doesn't have a photo, use the default one
+        guard let profilePhotoURL = user.profilePhotoURL else {  return completion(.success(#imageLiteral(resourceName: "default_profile_picture"))) }
+        
+        // Get the reference to the profile photo
+        let photoRef = storage.reference().child(profilePhotoURL)
+        
+        // Download the photo from the cloud
+        photoRef.getData(maxSize: 1 * 1024 * 1024) { (data, error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            // Convert the data to an image and return it
+            guard let data = data,
+                let photo = UIImage(data: data)
+                else { return completion(.failure(.couldNotUnwrap)) }
+            return completion(.success(photo))
+        }
+    }
+    
     // Read (search for) a specific user
-    func searchFor(email: String, completion: @escaping resultCompletionWithObject) {
+    func searchFor(email: String, completion: @escaping resultCompletionWith<User>) {
         // Fetch the data from the cloud
         db.collection(UserStrings.recordType)
             .whereField(UserStrings.emailKey, isEqualTo: email)
@@ -155,6 +181,40 @@ class UserController {
                 // Return the success
                 return completion(.success(true))
         }
+    }
+    
+    // Update a user with a new profile photo
+    func savePhotoToCloud(photo: UIImage, completion: @escaping resultCompletion) {
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
+        
+        // Convert the image to data
+        guard let data = photo.jpegData(compressionQuality: 0.5) else { return completion(.failure(.badPhotoFile)) }
+        
+        // Create a name for the file in the cloud using the user's id
+        let photoRef = storage.reference().child("images/\(currentUser.uuid).jpg")
+            
+        photoRef.putData(data, metadata: nil) { [weak self] (metadata, error) in
+            
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(.fsError(error)))
+            }
+            
+            // Save the link to the profile picture
+            currentUser.profilePhotoURL = "images/\(currentUser.uuid).jpg"
+            self?.saveChanges(to: currentUser, completion: { (result) in
+                switch result {
+                case .success(_):
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            })
+        }
+
     }
     
     // Delete a user
