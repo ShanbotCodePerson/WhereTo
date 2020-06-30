@@ -122,6 +122,17 @@ class SavedRestaurantsTableViewController: UITableViewController {
             //            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard segmentedControl.selectedSegmentIndex == 0,
+            let restaurant = RestaurantController.shared.favoriteRestaurants?[indexPath.row]
+            else { return }
+           
+           // Present an alert controller asking the user if they want to open the restaurant in maps
+           presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
+               self.launchMapWith(restaurant: restaurant)
+           }
+       }
 }
 
 // MARK: - SavedButtonDelegate

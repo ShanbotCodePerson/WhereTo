@@ -81,15 +81,15 @@ extension UIViewController {
     }
     
     // Present an alert with simple confirm or cancel buttons
-    func presentChoiceAlert(title: String, message: String, cancelText: String = "Cancel", confirmText: String = "Confirm", completion: @escaping () -> Void) {
+    func presentChoiceAlert(title: String, message: String, cancelText: String = "Cancel", confirmText: String = "Confirm", cancelCompletion: @escaping () -> Void = {}, confirmCompletion: @escaping () -> Void) {
         // Create the alert controller
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the cancel button to the alert
-        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel))
+        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: { (_) in cancelCompletion() }))
         
         // Add the confirm button to the alert
-        alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: { (_) in completion() }))
+        alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: { (_) in confirmCompletion() }))
         
         // Present the alert
         present(alertController, animated: true)
@@ -164,7 +164,7 @@ extension UIViewController {
                     switch result {
                     case .success(_):
                         // Offer the user a chance to block that person
-                        self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friendRequest.fromName) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", completion: {
+                        self?.presentChoiceAlert(title: "Block?", message: "Would you like to block \(friendRequest.fromName) from sending you friend requests in the future?", cancelText: "No", confirmText: "Yes, block", confirmCompletion: {
                             
                             // Add the friend's ID to the user's list of blocked people
                             currentUser.blockedUsers.append(friendRequest.fromID)
@@ -341,8 +341,6 @@ extension UIViewController {
         
         // Set up the observer to listen for voting session result notifications
         NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: votingSessionResult, object: nil)
-        
-        print("got here to \(#function) and should have set up all notification observers")
     }
     
     @objc func showNewFriendRequest(_ sender: NSNotification) {
@@ -356,7 +354,6 @@ extension UIViewController {
     }
     
     @objc func showVotingSessionInvitation(_ sender: NSNotification) {
-        print("got here to \(#function) and \(sender.object)")
         guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
         DispatchQueue.main.async {
             self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in

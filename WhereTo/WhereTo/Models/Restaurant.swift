@@ -16,6 +16,7 @@ struct Restaurant: Codable {
     let name: String
     let coordinates: [String : Float]
     let categories: [[String : String]]
+    var categoryNames: [String] { Array(categories.compactMap({ $0.values.first })) }
     let rating: Float?
    
     enum CodingKeys: String, CodingKey {

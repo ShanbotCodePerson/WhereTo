@@ -232,7 +232,6 @@ class FriendRequestController {
     
     func subscribeToFriendRequestNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
-        print("got here to \(#function)")
         
         // Set up a listener to be alerted of any adding-type friend requests with the current user as the recipient
         db.collection(FriendRequestStrings.recordType)
@@ -254,8 +253,6 @@ class FriendRequestController {
                     return friendRequest
                 }
                 
-                print("got here to \(#function) and there are \(newFriendRequests.count) new friend requests")
-                
                 for friendRequest in newFriendRequests {
                     // Send a local notification to present an alert
                     NotificationCenter.default.post(name: newFriendRequest, object: friendRequest)
@@ -266,8 +263,6 @@ class FriendRequestController {
     
     func subscribeToFriendRequestResponseNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
-        
-        print("got here to \(#function)")
         
         // Set up a listener to be alerted of changes to friend requests with the current user as the sender
         db.collection(FriendRequestStrings.recordType)
@@ -288,8 +283,6 @@ class FriendRequestController {
                     friendRequest.documentID = document.documentID
                     return friendRequest
                 }
-                
-                print("got here to \(#function) and there are \(newResponses.count) friend request responses")
                 
                 // If the request was accepted, add the friends to the user's list of friends
                 currentUser.friends.append(contentsOf: newResponses.filter({ $0.status == .accepted }).map({ $0.toID }))
@@ -324,8 +317,6 @@ class FriendRequestController {
     func subscribeToRemovingFriendNotifications() {
         guard let currentUser = UserController.shared.currentUser else { return }
         
-        print("got here to \(#function)")
-        
         // Set up a listener to be alerted of any removing-type friend requests with the current user as the recipient
         db.collection(FriendRequestStrings.recordType)
             .whereField(FriendRequestStrings.toIDKey, isEqualTo: currentUser.uuid)
@@ -346,8 +337,6 @@ class FriendRequestController {
                     return friendRequest
                 }
                 let friendsIDs = friendsRemoving.compactMap { $0.fromID }
-                
-                print("got here to \(#function) and there are \(friendsIDs.count) friends removing")
                 
                 // Remove the friends from the users list of friends
                 currentUser.friends.removeAll(where: { friendsIDs.contains($0) })
