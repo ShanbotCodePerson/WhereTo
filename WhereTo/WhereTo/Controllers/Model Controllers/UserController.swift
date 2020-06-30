@@ -184,7 +184,7 @@ class UserController {
     }
     
     // Update a user with a new profile photo
-    func savePhotoToCloud(photo: UIImage, completion: @escaping resultCompletion) {
+    func savePhotoToCloud(_ photo: UIImage, completion: @escaping resultCompletion) {
         guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Convert the image to data
