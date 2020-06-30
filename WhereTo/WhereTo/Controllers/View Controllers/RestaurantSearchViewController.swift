@@ -23,6 +23,7 @@ class RestaurantSearchViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
+    @IBOutlet weak var restaurantTableView: UITableView!
     
     // MARK: - LifeCycles
     override func viewDidLoad() {
@@ -36,7 +37,18 @@ class RestaurantSearchViewController: UIViewController {
         locationManager.delegate = self
         nameTextField.delegate = self
         addressTextField.delegate = self
+        restaurantTableView.delegate = self
+        restaurantTableView.dataSource = self
+        restaurantTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
+         restaurantTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
+    
+    func reloadView() -> Void {
+        DispatchQueue.main.async {
+            self.restaurantTableView.reloadData()
+        }
+    }
+    
     // MARK: - Actions
     @IBAction func searchButtonTapped(_ sender: Any) {
         // TODO: Fix error that happens in RestaurantTableViewCell
@@ -50,6 +62,7 @@ class RestaurantSearchViewController: UIViewController {
                 switch result {
                 case .success(let restaurants):
                     self.restaurants = restaurants
+                    self.reloadView()
                     
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -64,6 +77,7 @@ class RestaurantSearchViewController: UIViewController {
                 switch result {
                 case .success(let restaurants):
                     self.restaurants = restaurants
+                    self.reloadView()
                     
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -72,12 +86,7 @@ class RestaurantSearchViewController: UIViewController {
             }
         }
     }
-        
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
+
 }
 
 // MARK: - Extensions
@@ -89,4 +98,20 @@ extension RestaurantSearchViewController: UITextFieldDelegate {
         
         return true
     }
+}
+
+extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return restaurants.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
+        
+        cell.restaurant = restaurants[indexPath.row]
+        
+        return cell
+    }
+    
+    
 }
