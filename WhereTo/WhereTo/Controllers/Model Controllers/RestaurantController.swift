@@ -23,7 +23,6 @@ struct yelpStrings {
     static let longitudeKey = "longitude"
     static let latitudeKey = "latitude"
     static let openNowKey = "open_now"
-    static let openNowValue = "true"
 }
 
 class RestaurantController {
@@ -49,10 +48,18 @@ class RestaurantController {
     // MARK: - CRUD Methods
     
     // Read (fetch) a list of restaurants from the API based on location
-    func fetchRestaurantsByLocation(location: CLLocation, completion: @escaping resultCompletionWith<[Restaurant]?>) {
+    func fetchRestaurantsByLocation(location: CLLocation, isOpen: Bool = false, dietaryRestrictions: [String]? = [], completion: @escaping resultCompletionWith<[Restaurant]?>) {
+        
+        var categoriesQuery = ""
+        
+        if let restriction = dietaryRestrictions {
+            for value in restriction {
+                categoriesQuery += "&\(yelpStrings.categoriesKey)=\(value)"
+            }
+        }
         
         // 1 - URL setup
-        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)&\(yelpStrings.openNowKey)=\(yelpStrings.openNowValue)")!, timeoutInterval: Double.infinity)
+        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)&\(yelpStrings.openNowKey)=\(isOpen)\(categoriesQuery)")!, timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
          
@@ -128,7 +135,7 @@ class RestaurantController {
         
         for id in restaurantIDs {
             group.enter()
-            
+          
             fetchRestaurantByID(id) { (result) in
                 switch result {
                 case .success(let restaurant):
