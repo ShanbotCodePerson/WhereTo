@@ -41,9 +41,11 @@ class RestaurantController {
     
     // MARK: - Properties
     
+    let locationManager = CLLocationManager()
     let db = Firestore.firestore()
     typealias resultCompletion = (Result<Bool, WhereToError>) -> Void
     typealias resultCompletionWith<T> = (Result<T, WhereToError>) -> Void
+    
     
     // MARK: - CRUD Methods
     
@@ -203,7 +205,7 @@ class RestaurantController {
     }
     
     // fetch restaurants with user input name and optional address
-    func fetchRestaurantsByName(name: String, address: String?, currentLocation: CLLocation?, completion: @escaping resultCompletionWith<[Restaurant]?>) {
+    func fetchRestaurantsByName(name: String, address: String? = nil, currentLocation: CLLocation? = nil, completion: @escaping resultCompletionWith<[Restaurant]>) {
         
         var urlString = ""
         
@@ -214,6 +216,8 @@ class RestaurantController {
             urlString = "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.termKey)=\(name)&\(yelpStrings.locationKey)=\(address)"
         } else {
             guard let currentLocation = currentLocation else { return }
+            // Get current location
+            
             // request by currentLocation
             urlString =  "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(currentLocation.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(currentLocation.coordinate.longitude)&\(yelpStrings.termKey)=\(name)"
         }
