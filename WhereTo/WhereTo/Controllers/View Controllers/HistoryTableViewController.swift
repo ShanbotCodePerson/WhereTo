@@ -21,14 +21,16 @@ class HistoryTableViewController: UITableViewController {
         // Set up the tableview cells
         tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
-        // Set up the observers to listen for changes in the data
-        // FIXME: - need a notification just for updating history
-//        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
+        // Set up the observer to listen for changes in the data
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
+        
+        // Set up the observer to listen for notifications telling any view to display an alert
+        setUpNotificationObservers()
     }
     
     // MARK: - Respond to Notifications
     
-   @objc func refreshData() {
+    @objc func refreshData() {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -78,6 +80,15 @@ class HistoryTableViewController: UITableViewController {
             // TODO: - enable swipe to delete
             // Delete the row from the data source
 //            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return }
+        
+        // Present an alert controller asking the user if they want to open the restaurant in maps
+        presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
+            self.launchMapWith(restaurant: restaurant)
         }
     }
 }

@@ -29,8 +29,8 @@ class UserController {
     // MARK: - CRUD Methods
     
     // Create a new user
-    func newUser(with email: String, completion: @escaping resultCompletion) {
-        let user = User(email: email)
+    func newUser(with email: String, name: String?, completion: @escaping resultCompletion) {
+        let user = User(email: email, name: (name ?? email.components(separatedBy: "@").first) ?? email)
         
         // Save the user object to the cloud and save the documentID for editing purposes
         let reference: DocumentReference = db.collection(UserStrings.recordType).addDocument(data: user.asDictionary()) { (error) in
@@ -52,7 +52,7 @@ class UserController {
     
     // Read (fetch) the current user
     func fetchCurrentUser(completion: @escaping resultCompletion) {
-        guard let user = Auth.auth().currentUser, let email = user.email else { return }
+        guard let user = Auth.auth().currentUser, let email = user.email else { return completion(.failure(.noUserFound)) }
         
         db.collection(UserStrings.recordType)
             .whereField(UserStrings.emailKey, isEqualTo: email)
@@ -65,7 +65,10 @@ class UserController {
                 }
                 
                 // Unwrap the data
-                guard let document = results?.documents.first else { return completion(.failure(.couldNotUnwrap)) }
+                guard let documents = results?.documents,
+                    documents.count > 0
+                    else { return completion(.failure(.noUserFound)) }
+                guard let document = documents.first else { return completion(.failure(.couldNotUnwrap)) }
                 let currentUser = User(dictionary: document.data())
                 currentUser?.documentID = document.documentID
                 
@@ -172,7 +175,23 @@ class UserController {
                 
                 let group = DispatchGroup()
                 
-                // Delete all friend requests, votes, and voting session invitations associated with the user
+                // Remove all friends, delete all outstanding friend requests, votes, and voting session invitations associated with the user
+                if let friends = self.friends {
+                    for friend in friends {
+                        group.enter()
+                        FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
+                            switch result {
+                            case .success(_):
+                                print("successfully removed friend")
+                            case .failure(let error):
+                                // Print and return the error
+                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                                return completion(.failure(error))
+                            }
+                            group.leave()
+                        }
+                    }
+                }
                 group.enter()
                 FriendRequestController.shared.deleteAll { (error) in
                     if let error = error {

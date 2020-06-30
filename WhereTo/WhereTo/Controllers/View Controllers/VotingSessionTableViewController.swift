@@ -25,6 +25,9 @@ class VotingSessionTableViewController: UITableViewController {
         
         // Load the vote data
         loadData()
+        
+        // Set up the observer to listen for notifications telling any view to display an alert
+        setUpNotificationObservers()
     }
     
     // MARK: - Set Up UI
@@ -122,7 +125,7 @@ class VotingSessionTableViewController: UITableViewController {
                     // Update the cell
                     cell.vote = (self?.votes.count ?? 1) - 1
                     self?.tableView.reloadData()
-                
+                    
                     // If the max number of votes have been cast, show an alert and return to the main menu
                     if self?.votes.count == votingSession.votesEach {
                         self?.presentAlert(title: "Voting Completed!", message: "Thank you for your votes! The winning restaurant will be announced once all votes are cast!", completion: { self?.transitionToStoryboard(named: .TabViewHome) })
