@@ -9,7 +9,8 @@
 import UIKit
 
 protocol RestaurantTableViewCellSavedButtonDelegate: class {
-    func saveRestaurantButton(for cell: RestaurantTableViewCell)
+    func favoriteRestaurantButton(for cell: RestaurantTableViewCell)
+    func blacklistRestaurantButton(for cell: RestaurantTableViewCell)
 }
 
 class RestaurantTableViewCell: UITableViewCell {
@@ -17,9 +18,12 @@ class RestaurantTableViewCell: UITableViewCell {
     // MARK: - Outlets
     
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var categoriesLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
-    @IBOutlet weak var isSavedButton: UIButton!
+    @IBOutlet weak var isFavoriteButton: UIButton!
+    @IBOutlet weak var isBlacklistedButton: UIButton!
     @IBOutlet weak var voteStatusImage: UIImageView!
+    @IBOutlet weak var imageContainerView: UIView!
     
     // MARK: - Properties
     
@@ -36,11 +40,22 @@ class RestaurantTableViewCell: UITableViewCell {
         nameLabel.text = restaurant.name
         if let rating = restaurant.rating { ratingLabel.text = "Rating: \(rating)" }
         voteStatusImage.isHidden = true
+        imageContainerView.isHidden = true
+        
+        // Check if the restaurant is blacklisted or favorited, and format it accordingly
+        if RestaurantController.shared.favoriteRestaurants?.contains(restaurant) ?? false {
+            isFavoriteButton.isSelected = true
+            isBlacklistedButton.isHidden = true
+        } else if RestaurantController.shared.blacklistedRestaurants?.contains(restaurant) ?? false {
+            isBlacklistedButton.isSelected = true
+            isFavoriteButton.isHidden = true
+        }
     }
     
     func formatWithVote() {
         guard let vote = vote else { return }
         
+        imageContainerView.isHidden = false
         voteStatusImage.isHidden = false
         voteStatusImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
         // TODO: - change color of image, or of entire cell, based on ranking?
@@ -48,7 +63,27 @@ class RestaurantTableViewCell: UITableViewCell {
     
     // MARK: - Actions
     
-    @IBAction func saveButtonTapped(_ sender: UIButton) {
-        delegate?.saveRestaurantButton(for: self)
+    @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        // Update the UI
+        if isFavoriteButton.isSelected {
+            isBlacklistedButton.isHidden = true
+        } else {
+            isBlacklistedButton.isHidden = false
+        }
+        
+        // Handle the action in the delegate
+        delegate?.favoriteRestaurantButton(for: self)
+    }
+    
+    @IBAction func blacklistedButtonTapped(_ sender: UIButton) {
+        // Update the UI
+        if isBlacklistedButton.isSelected {
+            isFavoriteButton.isHidden = true
+        } else {
+            isFavoriteButton.isHidden = false
+        }
+        
+        // Handle the action in the delegate
+        delegate?.blacklistRestaurantButton(for: self)
     }
 }

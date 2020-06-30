@@ -96,7 +96,6 @@ class InviteFriendsTableViewController: UITableViewController {
                 switch result {
                 case .success(_):
                     // Reload the tableview
-                    print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
                     self?.refreshData()
                 case .failure(let error):
                     // Print and display the error
@@ -235,6 +234,9 @@ class InviteFriendsTableViewController: UITableViewController {
                     
                     // Add the restaurant to the user's list of previous restaurants
                     currentUser.previousRestaurants.append(restaurant.restaurantID)
+                    
+                    // Add the restaurant to the source of truth
+                    RestaurantController.shared.previousRestaurants?.append(restaurant)
                     
                     // Save the changes to the user
                     UserController.shared.saveChanges(to: currentUser) { (result) in

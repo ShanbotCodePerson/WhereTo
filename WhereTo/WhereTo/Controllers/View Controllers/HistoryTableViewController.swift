@@ -31,6 +31,7 @@ class HistoryTableViewController: UITableViewController {
     // MARK: - Respond to Notifications
     
     @objc func refreshData() {
+        print("got here to \(#function)")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -69,7 +70,7 @@ class HistoryTableViewController: UITableViewController {
         
         if let currentUser = UserController.shared.currentUser {
             if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
-                cell.isSavedButton.isSelected = true
+                cell.isFavoriteButton.isSelected = true
             }
         }
         return cell
@@ -96,7 +97,7 @@ class HistoryTableViewController: UITableViewController {
 // MARK: - Extension:SavedButtonDelegate
 extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
-    func saveRestaurantButton(for cell: RestaurantTableViewCell) {
+    func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         
         guard let restaurantID = cell.restaurant?.restaurantID else { return }
         guard let currentUser = UserController.shared.currentUser else { return }
@@ -106,7 +107,7 @@ extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate
             UserController.shared.saveChanges(to: currentUser) { (result) in
                 switch result {
                 case .success(_):
-                    cell.isSavedButton.isSelected = false
+                    cell.isFavoriteButton.isSelected = false
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
@@ -118,12 +119,16 @@ extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate
             UserController.shared.saveChanges(to: currentUser) { (result) in
                 switch result {
                 case .success(_):
-                    cell.isSavedButton.isSelected = true
+                    cell.isFavoriteButton.isSelected = true
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
                 }
             }
         }
+    }
+    
+    func blacklistRestaurantButton(for cell: RestaurantTableViewCell) {
+        // TODO: - fill this out
     }
 }

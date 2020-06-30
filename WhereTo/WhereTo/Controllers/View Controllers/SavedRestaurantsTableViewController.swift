@@ -110,7 +110,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
         
         cell.restaurant = restaurant
         cell.delegate = self
-        cell.isSavedButton.isSelected = true
+        cell.isFavoriteButton.isSelected = true
         
         return cell
     }
@@ -138,7 +138,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
 // MARK: - SavedButtonDelegate
 extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
-    func saveRestaurantButton(for cell: RestaurantTableViewCell) {
+    func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         
         guard let restaurantID = cell.restaurant?.restaurantID else { return }
         guard let currentUser = UserController.shared.currentUser else { return }
@@ -151,7 +151,7 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                     UserController.shared.saveChanges(to: currentUser) { (result) in
                         switch result {
                         case .success(_):
-                            cell.isSavedButton.isSelected = false
+                            cell.isFavoriteButton.isSelected = false
                             self.tableView.reloadData()
                         case .failure(let error):
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -169,12 +169,16 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
             UserController.shared.saveChanges(to: currentUser) { (result) in
                 switch result {
                 case .success(_):
-                    cell.isSavedButton.isSelected = true
+                    cell.isFavoriteButton.isSelected = true
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
                 }
             }
         }
+    }
+    
+    func blacklistRestaurantButton(for cell: RestaurantTableViewCell) {
+        // TODO: - fill this out
     }
 }
