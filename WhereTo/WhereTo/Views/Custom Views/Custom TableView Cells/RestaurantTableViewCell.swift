@@ -37,18 +37,31 @@ class RestaurantTableViewCell: UITableViewCell {
     func setUpViews() {
         guard let restaurant = restaurant else { return }
         
+        // Fill in the basic information about the restaurant
         nameLabel.text = restaurant.name
-        if let rating = restaurant.rating { ratingLabel.text = "Rating: \(rating)" }
-        voteStatusImage.isHidden = true
-        imageContainerView.isHidden = true
+        categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
+        if let rating = restaurant.rating { ratingLabel.text = "\(rating) Stars" }
+        
+        // Establish the defaults for the buttons
+        isFavoriteButton.isHidden = false
+        isFavoriteButton.isSelected = false
+        isBlacklistedButton.isHidden = false
+        isBlacklistedButton.isSelected = false
+        isFavoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+        isFavoriteButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
+        isBlacklistedButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        isBlacklistedButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .selected)
         
         // Check if the restaurant is blacklisted or favorited, and format it accordingly
-        if RestaurantController.shared.favoriteRestaurants?.contains(restaurant) ?? false {
+        guard let currentUser = UserController.shared.currentUser else { return }
+        if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             isFavoriteButton.isSelected = true
             isBlacklistedButton.isHidden = true
-        } else if RestaurantController.shared.blacklistedRestaurants?.contains(restaurant) ?? false {
+            isBlacklistedButton.isSelected = false
+        } else if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             isBlacklistedButton.isSelected = true
             isFavoriteButton.isHidden = true
+            isFavoriteButton.isSelected = false
         }
     }
     
@@ -56,7 +69,6 @@ class RestaurantTableViewCell: UITableViewCell {
         guard let vote = vote else { return }
         
         imageContainerView.isHidden = false
-        voteStatusImage.isHidden = false
         voteStatusImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
         // TODO: - change color of image, or of entire cell, based on ranking?
     }
@@ -64,11 +76,18 @@ class RestaurantTableViewCell: UITableViewCell {
     // MARK: - Actions
     
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
+        guard let restaurant = restaurant, let currentUser = UserController.shared.currentUser else { return }
+        
         // Update the UI
-        if isFavoriteButton.isSelected {
-            isBlacklistedButton.isHidden = true
-        } else {
+        if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
+            // Deselect the favorites button and show the blacklist button
+            isFavoriteButton.isSelected = false
             isBlacklistedButton.isHidden = false
+        } else {
+            // Select the favorites button and deselect and hide the blacklist button
+            isFavoriteButton.isSelected = true
+            isBlacklistedButton.isSelected = false
+            isBlacklistedButton.isHidden = true
         }
         
         // Handle the action in the delegate
@@ -76,11 +95,17 @@ class RestaurantTableViewCell: UITableViewCell {
     }
     
     @IBAction func blacklistedButtonTapped(_ sender: UIButton) {
+        guard let restaurant = restaurant, let currentUser = UserController.shared.currentUser else { return }
+        
         // Update the UI
-        if isBlacklistedButton.isSelected {
-            isFavoriteButton.isHidden = true
-        } else {
+        if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
+            // Deselect the blacklist button and show the favorite button
+            isBlacklistedButton.isSelected = false
             isFavoriteButton.isHidden = false
+        } else {
+            // Select the blacklist button and hide the favorite button
+            isBlacklistedButton.isSelected = true
+            isFavoriteButton.isHidden = true
         }
         
         // Handle the action in the delegate

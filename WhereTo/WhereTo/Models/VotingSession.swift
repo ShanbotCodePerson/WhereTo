@@ -14,7 +14,7 @@ import CoreLocation.CLLocation
 struct VotingSessionStrings {
     static let recordType = "votingSession"
     static let votesEachKey = "votesEach"
-    static let useDietaryRestrictionsKey = "useDietaryRestrictions"
+    static let dietaryRestrictionsKey = "dietaryRestrictions"
     static let latitudeKey = "latitude"
     static let longitudeKey = "longitude"
     static let restaurantsKey = "restaurants"
@@ -28,8 +28,7 @@ class VotingSession {
     
     var users: [User]?                  // Not saved to cloud - fetched dynamically
     let votesEach: Int
-//    var useDietaryRestrictions: Bool  // FIXME: - probably don't need this
-//    var isOpenAt: Int?
+    var dietaryRestrictions: [String]
     let location: CLLocation
     var restaurantIDs: [String]         // Saved to cloud as string list of restaurant id's
     var restaurants: [Restaurant]?      // Not saved to cloud - fetched dynamically
@@ -40,14 +39,14 @@ class VotingSession {
     // MARK: - Initializers
     
     init(votesEach: Int,
-//         useDietaryRestrictions: Bool,
+         dietaryRestrictions: [String] = [],
          location: CLLocation,
          restaurantIDs: [String],
          outcomeID: String? = nil,
          uuid: String = UUID().uuidString) {
         
         self.votesEach = votesEach
-//        self.useDietaryRestrictions = useDietaryRestrictions
+        self.dietaryRestrictions = dietaryRestrictions
         self.location = location
         self.restaurantIDs = restaurantIDs
         self.outcomeID = outcomeID
@@ -56,7 +55,7 @@ class VotingSession {
     
     convenience init?(dictionary: [String : Any], completion: @escaping (VotingSession?) -> Void = { _ in }) {
         guard let votesEach = dictionary[VotingSessionStrings.votesEachKey] as? Int,
-//            let useDietaryRestrictions = dictionary[VotingSessionStrings.useDietaryRestrictionsKey] as? Bool,
+            let dietaryRestrictions = dictionary[VotingSessionStrings.dietaryRestrictionsKey] as? [String],
             let latitude = dictionary[VotingSessionStrings.latitudeKey] as? Double,
             let longitude = dictionary[VotingSessionStrings.longitudeKey] as? Double,
             let restaurantIDs = dictionary[VotingSessionStrings.restaurantsKey] as? [String],
@@ -66,7 +65,7 @@ class VotingSession {
         let location = CLLocation(latitude: latitude, longitude: longitude)
         
         self.init(votesEach: votesEach,
-//                  useDietaryRestrictions: useDietaryRestrictions,
+                  dietaryRestrictions: dietaryRestrictions,
                   location: location,
                   restaurantIDs: restaurantIDs,
                   outcomeID: outcomeID,
@@ -89,7 +88,7 @@ class VotingSession {
         
         // Fetch the restaurant objects
         group.enter()
-        RestaurantController.shared.fetchRestaurantsByLocation(location: location) { [weak self] (result) in
+        RestaurantController.shared.fetchRestaurantsByLocation(location: location, dietaryRestrictions: dietaryRestrictions) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
                 guard let restaurantIDs = self?.restaurantIDs else { return }
@@ -110,7 +109,7 @@ class VotingSession {
     
     func asDictionary() -> [String : Any] {
         [VotingSessionStrings.votesEachKey : votesEach,
-//         VotingSessionStrings.useDietaryRestrictionsKey : useDietaryRestrictions,
+         VotingSessionStrings.dietaryRestrictionsKey : dietaryRestrictions,
          VotingSessionStrings.latitudeKey : location.coordinate.latitude,
          VotingSessionStrings.longitudeKey : location.coordinate.longitude,
          VotingSessionStrings.restaurantsKey : restaurantIDs,
