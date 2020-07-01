@@ -34,7 +34,7 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
-        self.present(initialVC, animated: false)
+        present(initialVC, animated: false)
     }
     
     func transitionToVotingSessionPage(with votingSession: VotingSession) {
@@ -51,7 +51,7 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
-        self.present(initialVC, animated: false)
+        present(initialVC, animated: false)
     }
 }
     
@@ -203,7 +203,6 @@ extension UIViewController {
                         self?.presentAlert(title: "Added Friend", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                         
                         // Send a notification for the list of friends to be updated
-                        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
                         NotificationCenter.default.post(Notification(name: updateFriendsList))
                     case .failure(let error):
                         // Print and display the error
@@ -237,13 +236,13 @@ extension UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
-                        print("Successfully refused invitation")
+                        return completion(nil)
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.presentErrorAlert(error)
+                        return completion(nil)
                     }
-                    return completion(nil)
                 }
             }
         }
@@ -254,8 +253,7 @@ extension UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let votingSession):
-                        print("Successfully accepted invitation")
-                        return completion(votingSession) // FIXME: - get respond function to return voting session
+                        return completion(votingSession)
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -454,13 +452,13 @@ extension UIViewController {
         // Create the cancel button
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
-        let currentLocationAction = UIAlertAction(title: "Search Current Location", style: .default) { [weak self] (_) in
+        let currentLocationAction = UIAlertAction(title: "Search Current Location", style: .default) { (_) in
             // Get the text from text field
             guard let name = alertController.textFields?.first?.text, !name.isEmpty else { return }
             completion(.success([name]))
         }
         
-        let enteredLocationAction = UIAlertAction(title: "Search Entered Address", style: .default) { [weak self] (_) in
+        let enteredLocationAction = UIAlertAction(title: "Search Entered Address", style: .default) { (_) in
             // Get the text from the text field
             guard let address = alertController.textFields?[1].text, !address.isEmpty,
                 let name = alertController.textFields?.first?.text, !name.isEmpty

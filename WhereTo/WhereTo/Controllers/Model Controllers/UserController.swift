@@ -131,7 +131,7 @@ class UserController {
     
     // Read (fetch) the user's friends
     func fetchUsersFriends(completion: @escaping resultCompletion) {
-        guard let currentUser = self.currentUser else { return completion(.failure(.noUserFound)) }
+        guard let currentUser = currentUser else { return completion(.failure(.noUserFound)) }
         
         // Handle the edge case where the user has no friends
         if currentUser.friends.count == 0 {
@@ -193,6 +193,7 @@ class UserController {
         // Create a name for the file in the cloud using the user's id
         let photoRef = storage.reference().child("images/\(currentUser.uuid).jpg")
             
+        // Save the data to the cloud
         photoRef.putData(data, metadata: nil) { [weak self] (metadata, error) in
             
             if let error = error {
@@ -215,7 +216,6 @@ class UserController {
                 }
             })
         }
-
     }
     
     // Delete a user
@@ -226,7 +226,7 @@ class UserController {
         // Delete the data from the cloud
         db.collection(UserStrings.recordType)
             .document(documentID)
-            .delete() { (error) in
+            .delete() { [weak self] (error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -250,10 +250,9 @@ class UserController {
                 }
                 
                 // Remove all friends, delete all outstanding friend requests, votes, and voting session invitations associated with the user
-                if let friends = self.friends {
+                if let friends = self?.friends {
                     for friend in friends {
                         group.enter()
-                        print("entered group for friend")
                         FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
                             switch result {
                             case .success(_):
@@ -263,47 +262,40 @@ class UserController {
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 return completion(.failure(error))
                             }
-                            print("leaving group for friend")
                             group.leave()
                         }
                     }
                 }
                 group.enter()
-                print("entered group for friend request")
                 FriendRequestController.shared.deleteAll { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
-                    print("leaving group for friend request")
                     group.leave()
                 }
                 group.enter()
-                print("entered group for votes")
                 VotingSessionController.shared.deleteAllVotes { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
-                    print("leaving group for votes")
                     group.leave()
                 }
                 group.enter()
-                print("entered group for voting invites")
                 VotingSessionController.shared.deleteAllVotingInvites { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
-                    print("leaving group for voting invites")
                     group.leave()
                 }
                 
                 // Return the success
-                group.notify(queue: .main) { print("returning");  return completion(.success(true)) }
+                group.notify(queue: .main) { return completion(.success(true)) }
         }
     }
     

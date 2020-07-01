@@ -22,14 +22,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                     <items>
                                         <navigationItem title="Vote on Your Top Picks!" id="bS1-Ap-bRe">
-                                            <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="j8T-pP-x2H">
+                                            <barButtonItem key="leftBarButtonItem" title="Close" id="j8T-pP-x2H">
                                                 <connections>
                                                     <action selector="cancelButtonTapped:" destination="TtE-Ee-fPX" id="T1f-xt-aKT"/>
-                                                </connections>
-                                            </barButtonItem>
-                                            <barButtonItem key="rightBarButtonItem" systemItem="done" id="k85-eu-hgO">
-                                                <connections>
-                                                    <action selector="doneButtonTapped:" destination="TtE-Ee-fPX" id="028-hm-3ed"/>
                                                 </connections>
                                             </barButtonItem>
                                         </navigationItem>

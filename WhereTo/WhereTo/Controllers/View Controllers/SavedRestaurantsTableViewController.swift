@@ -24,7 +24,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.locationManager.delegate = self
+        locationManager.delegate = self
         
         // Load the data if it hasn't been loaded already
         loadAllData()
@@ -86,7 +86,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
     }
     
     @IBAction func segmentedControlTapped(_ sender: Any) {
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     // MARK: - Table view data source

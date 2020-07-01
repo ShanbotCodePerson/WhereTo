@@ -121,7 +121,6 @@ class FriendRequestController {
                         switch result {
                         case .success(_):
                             // Send a local notification to update the tableview as necessary
-                            print("got here to \(#function) and there are \(UserController.shared.friends?.count) friends")
                             NotificationCenter.default.post(Notification(name: updateFriendsList))
                         case .failure(let error):
                             // Print and return the error

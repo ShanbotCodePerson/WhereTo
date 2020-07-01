@@ -44,9 +44,7 @@ class RestaurantSearchViewController: UIViewController {
     }
     
     func reloadView() -> Void {
-        DispatchQueue.main.async {
-            self.restaurantTableView.reloadData()
-        }
+        DispatchQueue.main.async { self.restaurantTableView.reloadData() }
     }
     
     // MARK: - Actions
@@ -58,11 +56,11 @@ class RestaurantSearchViewController: UIViewController {
         
         if address != "" {
             
-            RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { (result) in
+            RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { [weak self] (result) in
                 switch result {
                 case .success(let restaurants):
-                    self.restaurants = restaurants
-                    self.reloadView()
+                    self?.restaurants = restaurants
+                    self?.reloadView()
                     
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -73,11 +71,11 @@ class RestaurantSearchViewController: UIViewController {
             fetchCurrentLocation(locationManager)
             let currentLocation = locationManager.location
             
-            RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { (result) in
+            RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { [weak self] (result) in
                 switch result {
                 case .success(let restaurants):
-                    self.restaurants = restaurants
-                    self.reloadView()
+                    self?.restaurants = restaurants
+                    self?.reloadView()
                     
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -116,7 +114,7 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
 
 // MARK: - SavedButtonDelegate
 
-extension RestaurantTableViewCellSavedButtonDelegate: RestaurantTableViewCellSavedButtonDelegate {
+extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         guard let currentUser = UserController.shared.currentUser,
