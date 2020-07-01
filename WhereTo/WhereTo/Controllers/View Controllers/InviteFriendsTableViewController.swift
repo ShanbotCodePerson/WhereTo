@@ -81,7 +81,6 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
-//        print("got here to \(#function) and there are \(String(describing: UserController.shared.friends?.count)) friends")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
@@ -321,7 +320,6 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        print("got here to \(#function) and \(String(describing: UserController.shared.friends?.count))")
         return UserController.shared.friends?.count ?? 0
     }
 

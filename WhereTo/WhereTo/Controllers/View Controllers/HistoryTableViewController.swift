@@ -31,7 +31,6 @@ class HistoryTableViewController: UITableViewController {
     // MARK: - Respond to Notifications
     
     @objc func refreshData() {
-        print("got here to \(#function)")
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     

@@ -342,7 +342,6 @@ class VotingSessionController {
     
     // Update a voting session with an outcome
     func saveOutcome(of votingSession: VotingSession, outcomeID: String) {
-        print("got here to \(#function) and \(String(describing: votingSession.documentID))")
         guard let documentID = votingSession.documentID else { return }
         
         // Add the outcome to the voting session
@@ -538,7 +537,6 @@ class VotingSessionController {
                 
                 // Send a local notification to present an alert for each invitation
                 for invitation in newInvitations {
-                    print("got here to \(#function) and \(invitation) and now sending notification")
                     NotificationCenter.default.post(Notification(name: newVotingSessionInvitation, object: invitation))
                     // FIXME: - need to figure out how this works when there are multiple invitations
                 }
@@ -620,15 +618,7 @@ class VotingSessionController {
                         currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession?.uuid })
                         
                         // Save the changes to the user
-                        UserController.shared.saveChanges(to: currentUser) { (result) in
-                            switch result {
-                            case .success(_):
-                                // TODO: - fill this out better
-                                print("Saved")
-                            case .failure(let error):
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            }
-                        }
+                        UserController.shared.saveChanges(to: currentUser) { (_) in }
                     }
                 })
                 
@@ -642,7 +632,6 @@ class VotingSessionController {
         guard let currentUser = UserController.shared.currentUser,
             currentUser.activeVotingSessions.count > 0
             else { return }
-        print("got here to \(#function)")
         
         db.collection(VoteStrings.recordType)
             .whereField(VoteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
@@ -653,8 +642,6 @@ class VotingSessionController {
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return
                 }
-                
-                print("got here to \(#function) and have \(String(describing: snapshots?.documents.count)) documents")
                 
                 // Unwrap the data
                 guard let snapshots = snapshots else { return }
@@ -814,7 +801,6 @@ class VotingSessionController {
                             self?.delete(votingSession, completion: { (result) in
                                 switch result {
                                 case .success(_):
-                                    print("successfully deleted voting session and votes from cloud")
                                     return
                                 case .failure(let error):
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

@@ -253,7 +253,6 @@ class UserController {
                 if let friends = self.friends {
                     for friend in friends {
                         group.enter()
-                        print("entered group for friend")
                         FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
                             switch result {
                             case .success(_):
@@ -263,47 +262,40 @@ class UserController {
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 return completion(.failure(error))
                             }
-                            print("leaving group for friend")
                             group.leave()
                         }
                     }
                 }
                 group.enter()
-                print("entered group for friend request")
                 FriendRequestController.shared.deleteAll { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
-                    print("leaving group for friend request")
                     group.leave()
                 }
                 group.enter()
-                print("entered group for votes")
                 VotingSessionController.shared.deleteAllVotes { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
-                    print("leaving group for votes")
                     group.leave()
                 }
                 group.enter()
-                print("entered group for voting invites")
                 VotingSessionController.shared.deleteAllVotingInvites { (error) in
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         return completion(.failure(error))
                     }
-                    print("leaving group for voting invites")
                     group.leave()
                 }
                 
                 // Return the success
-                group.notify(queue: .main) { print("returning");  return completion(.success(true)) }
+                group.notify(queue: .main) { return completion(.success(true)) }
         }
     }
     
