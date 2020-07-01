@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIButton {
-    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .darkGray, backgroundColor: UIColor = .white, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
+    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .border, backgroundColor: UIColor = .white, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
         
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)

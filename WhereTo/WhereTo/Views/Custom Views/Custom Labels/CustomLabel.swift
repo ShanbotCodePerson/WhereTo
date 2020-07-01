@@ -9,7 +9,7 @@
 import UIKit
 
 extension UILabel {
-    func setUpViews(cornerRadius: CGFloat = 8, textColor: UIColor = .black, fontSize: CGFloat = 20, fontName: String = FontNames.mainFont) {
+    func setUpViews(textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: String = FontNames.mainFont) {
         
         numberOfLines = 0
         self.textColor = textColor
