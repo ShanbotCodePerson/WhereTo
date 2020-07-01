@@ -12,6 +12,7 @@ class FriendTableViewCell: UITableViewCell {
 
     // MARK: - Outlets
     
+    @IBOutlet weak var containerView: TableViewCellBackground!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -35,5 +36,16 @@ class FriendTableViewCell: UITableViewCell {
         nameLabel.textAlignment = .left
         profileImageView.image = friend.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = friend.name
+    }
+    
+    // MARK: - Selected State
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        selectionStyle = .none
+        
+        // Change the colors when the cell is selected
+        if selected { containerView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.8) }
+        else { containerView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.8) }
     }
 }

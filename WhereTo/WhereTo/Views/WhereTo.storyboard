@@ -106,6 +106,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
+                                            <outlet property="containerView" destination="fp6-Tv-wKw" id="12o-HB-4Dn"/>
                                             <outlet property="nameLabel" destination="gCc-aE-X6K" id="BT2-jx-qBK"/>
                                             <outlet property="profileImageView" destination="fAw-16-Gfk" id="51S-W5-zu2"/>
                                         </connections>
