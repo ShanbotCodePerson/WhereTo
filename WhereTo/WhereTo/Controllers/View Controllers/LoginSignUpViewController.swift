@@ -20,6 +20,7 @@ class LoginSignUpViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var keyboardHeightLayoutConstraint: NSLayoutConstraint!
     
     // MARK: - Properties
     
@@ -30,8 +31,43 @@ class LoginSignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set up the text field delegates
+        emailTextField.delegate = self
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+        
         // Try to log the user in automatically
         autoLogin()
+        
+        // Add an observer for when the keyboard appears or disappears
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    // MARK: - Respond to Notification
+    
+    // Move the text fields out of the way if the keyboard is going to block them
+    @objc func keyboardNotification(_ sender: NSNotification) {
+        guard let userInfo = sender.userInfo else { return }
+        
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        let endFrameY = endFrame?.origin.y ?? 0
+        let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+        let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
+        let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+        let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
+        if endFrameY >= UIScreen.main.bounds.size.height {
+            // Turn off the keyboard height constraint
+            keyboardHeightLayoutConstraint.isActive = false
+        } else {
+            if let endFrame = endFrame, endFrame.size.height > (view.frame.size.height / 2) {
+                // Calculate the correct height to shift the text fields up by and turn it on
+                keyboardHeightLayoutConstraint.constant = endFrame.size.height
+                keyboardHeightLayoutConstraint.isActive = true
+            }
+        }
+        
+        UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
     }
     
     // MARK: - Actions
@@ -249,5 +285,59 @@ class LoginSignUpViewController: UIViewController {
     // Go to the main app screen
     func goToMainApp() {
         transitionToStoryboard(named: .TabViewHome, direction: .fromRight)
+    }
+}
+
+// MARK: - TextField Delegate
+
+extension LoginSignUpViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if isSigningUp {
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+                // If there's another text field, move the editing view to that text field
+                nextField.becomeFirstResponder()
+            } else {
+                // Otherwise, remove the keyboard and try to sign up
+                textField.resignFirstResponder()
+                
+                // Make sure there is valid text in the email and password fields
+                guard let email = emailTextField.text, !email.isEmpty else {
+                    presentAlert(title: "Invalid Email", message: "Email cannot be blank")
+                    return true
+                }
+                guard let password = passwordTextField.text, !password.isEmpty else {
+                    presentAlert(title: "Invalid Password", message: "Password cannot be blank")
+                    return true
+                }
+                
+                // Try to sign up the user
+                signUp(with: email, password: password)
+            }
+        }
+            // Increment different in the login view where there are fewer text fields
+        else {
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 3) as? UITextField {
+                nextField.becomeFirstResponder()
+            } else {
+                // Otherwise, remove the keyboard and try to login
+                textField.resignFirstResponder()
+                
+                // Make sure there is valid text in the email and password fields
+                guard let email = emailTextField.text, !email.isEmpty else {
+                    presentAlert(title: "Invalid Email", message: "Email cannot be blank")
+                    return true
+                }
+                guard let password = passwordTextField.text, !password.isEmpty else {
+                    presentAlert(title: "Invalid Password", message: "Password cannot be blank")
+                    return true
+                }
+                
+                // Try to sign up the user
+                login(with: email, password: password)
+            }
+        }
+        
+        return true
     }
 }
