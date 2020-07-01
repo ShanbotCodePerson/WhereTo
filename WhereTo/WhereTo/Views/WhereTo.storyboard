@@ -198,6 +198,7 @@
             <point key="canvasLocation" x="325" y="929"/>
         </scene>
     </scenes>
+    <color key="tintColor" name="navBarButtonTint"/>
     <resources>
         <image name="house.fill" catalog="system" width="128" height="106"/>
         <namedColor name="background">

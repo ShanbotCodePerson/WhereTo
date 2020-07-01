@@ -92,6 +92,7 @@
             <point key="canvasLocation" x="234.78260869565219" y="928.79464285714278"/>
         </scene>
     </scenes>
+    <color key="tintColor" name="navBarButtonTint"/>
     <resources>
         <namedColor name="background">
             <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -75,6 +75,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Eq9-7h-sRL" secondAttribute="height" multiplier="1:1" id="1qZ-1i-HUf"/>
                                         </constraints>
+                                        <color key="tintColor" name="navBarButtonTint"/>
                                         <state key="normal" image="star" catalog="system"/>
                                         <state key="selected" image="star.fill" catalog="system"/>
                                         <connections>
@@ -86,6 +87,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="1MW-9f-aIu" secondAttribute="height" multiplier="1:1" id="uln-9I-Bod"/>
                                         </constraints>
+                                        <color key="tintColor" name="navBarButtonTint"/>
                                         <state key="normal" image="xmark.circle" catalog="system"/>
                                         <state key="selected" image="star.fill" catalog="system"/>
                                         <connections>
@@ -128,6 +130,9 @@
         <image name="xmark.circle" catalog="system" width="128" height="121"/>
         <namedColor name="background">
             <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBarButtonTint">
+            <color red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

@@ -49,9 +49,23 @@ class RestaurantSearchViewController: UIViewController {
     
     // MARK: - Actions
     
+    @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
+        // Close the keyboard
+        nameTextField.resignFirstResponder()
+        addressTextField.resignFirstResponder()
+    }
+    
     @IBAction func searchButtonTapped(_ sender: Any) {
+        search()
+    }
+    
+    // A helper method to actually execute the search
+    func search() {
         guard let name = nameTextField.text, !name.isEmpty,
-            let address = addressTextField.text else { return }
+            let address = addressTextField.text else {
+                presentAlert(title: "No Name Entered", message: "You must enter a name of a restaurant to search for")
+                return
+        }
         
         if address != "" {
             view.activityStartAnimating()
@@ -93,20 +107,9 @@ class RestaurantSearchViewController: UIViewController {
             }
         }
     }
-
 }
 
-// MARK: - Extensions
-
-extension RestaurantSearchViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        textField.resignFirstResponder()
-        
-        return true
-    }
-}
+// MARK: - TableView Methods
 
 extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -121,6 +124,35 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
         cell.delegate = self
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("got here to \(#function) and \(indexPath.row)")
+        let restaurant = restaurants[indexPath.row]
+        
+        // Present an alert controller asking the user if they want to open the restaurant in maps
+        presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
+            self.launchMapWith(restaurant: restaurant)
+        }
+    }
+}
+
+// MARK: - TextField Delegate
+
+extension RestaurantSearchViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        // Try to move to the next field
+        if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+            nextField.becomeFirstResponder()
+        } else {
+            // Otherwise, close the keyboard and try to search
+            textField.resignFirstResponder()
+            search()
+        }
+        
+        return true
     }
 }
 

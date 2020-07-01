@@ -207,6 +207,7 @@ class RestaurantController {
         baseURL.appendPathComponent(yelpStrings.searchPath)
         
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
+//        let typeQuery = URLQueryItem(name: yelpStrings)
         let nameQuery = URLQueryItem(name: yelpStrings.termKey, value: name)
         
         // 1 - URL setup
