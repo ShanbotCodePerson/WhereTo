@@ -137,7 +137,7 @@ class LoginSignUpViewController: UIViewController {
         if let user = Auth.auth().currentUser {
             // If the user's email account has not yet been verified, don't sign in
             guard user.isEmailVerified else { return }
-            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+            view.activityStartAnimating()
             UserController.shared.fetchCurrentUser { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
@@ -207,7 +207,7 @@ class LoginSignUpViewController: UIViewController {
         // TODO: - display loading icon
         
         // Create the user and send the notification email
-        self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+        view.activityStartAnimating()
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
             guard authResult?.user != nil, error == nil else {
                 // If the error is that the user name already exists, try to log in to that account
@@ -236,7 +236,7 @@ class LoginSignUpViewController: UIViewController {
     
     // If the user already exists, log them in
     func login(with email: String, password: String) {
-        self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+        view.activityStartAnimating()
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
             if let error = error {
                 // Print and display the error
@@ -280,7 +280,7 @@ class LoginSignUpViewController: UIViewController {
     
     // Once a user has verified their email, finish completing their account
     func setUpUser(with email: String) {
-        self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+        view.activityStartAnimating()
         UserController.shared.newUser(with: email, name: usernameTextField.text) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {

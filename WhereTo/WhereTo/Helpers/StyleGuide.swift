@@ -22,9 +22,12 @@ extension UIView {
     }
 }
 
-//extension UIColor {
-//    static let background = UIColor(named: "background")!
-//}
+extension UIColor {
+    static let background = UIColor(named: "background")!
+    static let navBar = UIColor(named: "navBar")!
+    static let navBarText = UIColor(named: "navBarText")!
+    static let navBarButtonTint = UIColor(named: "navBarButtonTint")!
+}
 
 struct FontNames {
     static let mainFont = ""

@@ -15,17 +15,17 @@ class HistoryTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Load the data if it hasn't been loaded already
-        loadData()
-        
-        // Set up the tableview cells
-        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        // Set up the UI
+        setUpViews()
         
         // Set up the observer to listen for changes in the data
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
+        
+        // Load the data if it hasn't been loaded already
+        loadData()
     }
     
     // MARK: - Respond to Notifications
@@ -34,11 +34,20 @@ class HistoryTableViewController: UITableViewController {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Set up the UI
+    
+    func setUpViews() {
+        // Hide the extra section markers at the bottom of the tableview
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
+        
+        // Set up the tableview cells
+        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+    }
     
     func loadData() {
         if RestaurantController.shared.previousRestaurants == nil {
-            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+            view.activityStartAnimating()
             RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {

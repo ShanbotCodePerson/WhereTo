@@ -476,19 +476,18 @@ extension UIViewController {
 
 // MARK: - Extension:UIView-Activity indicator
 extension UIView {
-    func activityStartAnimating(activityColor: UIColor, backgroundColor: UIColor) {
+    func activityStartAnimating() {
         DispatchQueue.main.async {
             let backgroundView = UIView()
             backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-            backgroundView.backgroundColor = backgroundColor
+            backgroundView.backgroundColor = UIColor(white: 0, alpha: 0.15)
             backgroundView.tag = 475647
             
-            var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
-            activityIndicator = UIActivityIndicatorView(frame: CGRect.init(x: 0, y: 0, width: 80, height: 80))
+            let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
             activityIndicator.center = self.center
             activityIndicator.hidesWhenStopped = true
-            activityIndicator.style = UIActivityIndicatorView.Style.medium
-            activityIndicator.color = activityColor
+            activityIndicator.style = .large
+            activityIndicator.color = .darkGray
             activityIndicator.startAnimating()
             self.isUserInteractionEnabled = false
             

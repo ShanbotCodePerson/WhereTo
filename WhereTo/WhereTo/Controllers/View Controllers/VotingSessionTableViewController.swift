@@ -10,6 +10,10 @@ import UIKit
 
 class VotingSessionTableViewController: UITableViewController {
     
+    // MARK: - Outlets
+    
+    @IBOutlet weak var votingSessionDescriptionLabel: UILabel!
+    
     // MARK: - Properties
     
     var votingSession: VotingSession?
@@ -33,14 +37,17 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        // Hide the extra section markers at the bottom of the tableview
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
+        
+        // Set up the tableview cells
         tableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
         tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
-        
-        //        guard let votingSession = votingSession else { return }
-        
-        // TODO: - fill out description at top of page?
-        // TODO: - refresh tableview?
+        // Fill out the description of the voting session
+        guard let votingSession = votingSession, let users = votingSession.users else { return }
+        votingSessionDescriptionLabel.text = "Vote on your top \(votingSession.votesEach) places to eat with \(users.map({ $0.name }).joined(separator: ", ")) near \("LOCATION")"
     }
     
     func loadData() {
