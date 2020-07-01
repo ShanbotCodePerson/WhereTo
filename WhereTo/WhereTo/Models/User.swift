@@ -133,12 +133,12 @@ class User {
          UserStrings.nameKey : name,
          UserStrings.profilePhotoURLKey: profilePhotoURL as Any,
          UserStrings.dietaryRestrictionsKey : dietaryRestrictions.map({ $0.rawValue }),
-         UserStrings.friendsKey : friends,
+         UserStrings.friendsKey : Array(Set(friends)),
          UserStrings.blockedUsersKey : blockedUsers,
-         UserStrings.favoriteRestaurantsKey : favoriteRestaurants,
-         UserStrings.blacklistedRestaurantsKey : blacklistedRestaurants,
-         UserStrings.previousRestaurantsKey : previousRestaurants,
-         UserStrings.activeVotingSessionsKey : activeVotingSessions,
+         UserStrings.favoriteRestaurantsKey : Array(Set(favoriteRestaurants)),
+         UserStrings.blacklistedRestaurantsKey : Array(Set(blacklistedRestaurants)),
+         UserStrings.previousRestaurantsKey : Array(Set(previousRestaurants)),
+         UserStrings.activeVotingSessionsKey : Array(Set(activeVotingSessions)),
          UserStrings.uuidKey : uuid]
     }
 }

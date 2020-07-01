@@ -170,11 +170,11 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
             }
         }
         else {
-            // Add the restaurant from the user's list of favorite restaurants
-            currentUser.favoriteRestaurants.append(restaurant.restaurantID)
+            // Add the restaurant from the user's list of favorite restaurants (making sure to avoid duplicates)
+            currentUser.favoriteRestaurants.uniqueAppend(restaurant.restaurantID)
             
-            // Add the restaurant to the source of truth
-            RestaurantController.shared.favoriteRestaurants?.append(restaurant)
+            // Add the restaurant to the source of truth (making sure to avoid duplicates)
+            RestaurantController.shared.favoriteRestaurants?.uniqueAppend(restaurant)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
@@ -229,11 +229,11 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
             }
         }
         else {
-            // Add the restaurant from the user's list of blacklisted restaurants
-            currentUser.blacklistedRestaurants.append(restaurant.restaurantID)
+            // Add the restaurant from the user's list of blacklisted restaurants (making sure to avoid duplicates)
+            currentUser.blacklistedRestaurants.uniqueAppend(restaurant.restaurantID)
             
-            // Add the restaurant to the source of truth
-            RestaurantController.shared.blacklistedRestaurants?.append(restaurant)
+            // Add the restaurant to the source of truth (making sure to avoid duplicates)
+            RestaurantController.shared.blacklistedRestaurants?.uniqueAppend(restaurant)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
