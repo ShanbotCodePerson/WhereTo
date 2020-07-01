@@ -555,6 +555,23 @@ extension UIViewController: CLLocationManagerDelegate {
         }
     }
     
+    func lookUpAddressFromLocation(location: CLLocation, completionHandler: @escaping (CLPlacemark?) -> Void ) {
+        
+        let geocoder = CLGeocoder()
+                
+        // Look up the location and pass it to the completion handler
+        geocoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) in
+            if error == nil {
+                let firstLocation = placemarks?[0]
+                completionHandler(firstLocation)
+            }
+               else {
+                // An error occurred during geocoding.
+                completionHandler(nil)
+            }
+        })
+    }
+    
     func fetchCurrentLocation(_ locationManager: CLLocationManager) {
         // retrieve authorization status
         let status = CLLocationManager.authorizationStatus()
