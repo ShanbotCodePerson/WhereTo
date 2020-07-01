@@ -79,12 +79,8 @@ class RestaurantController {
             do {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
+                let restaurants = businesses.map { $0 }
                 
-                var restaurants: [Restaurant] = []
-                
-                for restaurant in businesses {
-                    restaurants.append(restaurant)
-                }
                 return completion(.success(restaurants))
                 
             } catch {
@@ -226,6 +222,7 @@ class RestaurantController {
         var request = URLRequest(url: finalURL)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
+        
         // 2 - Data task
         URLSession.shared.dataTask(with: request) { data, _, error in
           
@@ -241,12 +238,8 @@ class RestaurantController {
             do {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
+                let restaurants = businesses.map { $0 }
                 
-                var restaurants: [Restaurant] = []
-                
-                for restaurant in businesses {
-                    restaurants.append(restaurant)
-                }
                 return completion(.success(restaurants))
                 
             } catch {

@@ -76,6 +76,11 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
+        
+        // Check to see if there are still active voting sessions, and if not, hide the active voting session button
+        if VotingSessionController.shared.votingSessions?.count ?? 0 > 0 {
+            viewActiveVotingSessionsButton.isHidden = false
+        } else { viewActiveVotingSessionsButton.isHidden = true }
     }
     
     // MARK: - Receive Notifications
@@ -231,11 +236,11 @@ class InviteFriendsTableViewController: UITableViewController {
                     // Present the alert with the restaurant
                     self?.presentRandomRestaurantAlert(restaurant)
                     
-                    // Add the restaurant to the user's list of previous restaurants
-                    currentUser.previousRestaurants.append(restaurant.restaurantID)
+                    // Add the restaurant to the user's list of previous restaurants (making sure to avoid duplicates)
+                    currentUser.previousRestaurants.uniqueAppend(restaurant.restaurantID)
                     
-                    // Add the restaurant to the source of truth
-                    RestaurantController.shared.previousRestaurants?.append(restaurant)
+                    // Add the restaurant to the source of truth (making sure to avoid duplicates)
+                    RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant)
                     
                     // Save the changes to the user
                     UserController.shared.saveChanges(to: currentUser) { (result) in
