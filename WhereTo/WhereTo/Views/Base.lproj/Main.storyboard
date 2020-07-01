@@ -39,22 +39,22 @@
                                             </button>
                                         </subviews>
                                     </stackView>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg">
+                                    <textField opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg">
                                         <rect key="frame" x="0.0" y="51.5" width="331" height="39.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX">
+                                    <textField opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX">
                                         <rect key="frame" x="0.0" y="103" width="331" height="39.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM">
+                                    <textField opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM">
                                         <rect key="frame" x="0.0" y="154.5" width="331" height="39.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm password..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zni-Kw-RXd">
+                                    <textField opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm password..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zni-Kw-RXd">
                                         <rect key="frame" x="0.0" y="206" width="331" height="39.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
@@ -75,12 +75,18 @@
                             <constraint firstItem="PoY-01-yID" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.3" id="2Vm-lC-4Ep"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="PoY-01-yID" secondAttribute="bottom" constant="30" id="3bH-5O-q39"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="trailing" secondItem="PoY-01-yID" secondAttribute="trailing" id="5NQ-tS-a9y"/>
-                            <constraint firstItem="PoY-01-yID" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" id="NZ8-fl-MIr"/>
+                            <constraint firstItem="PoY-01-yID" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" priority="999" id="NZ8-fl-MIr"/>
                             <constraint firstItem="PoY-01-yID" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="RTd-JP-13d"/>
                             <constraint firstItem="PoY-01-yID" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="fGE-NH-Rly"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="rMa-ng-W41"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="PoY-01-yID" secondAttribute="bottom" id="yjX-0Z-53l"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="yjX-0Z-53l"/>
+                            </mask>
+                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="D8J-2r-lUg" appends="YES" id="UPG-Au-4gi"/>
                         </connections>
@@ -89,6 +95,7 @@
                         <outlet property="confirmPasswordTextField" destination="Zni-Kw-RXd" id="J2b-o9-dIa"/>
                         <outlet property="doneButton" destination="kAt-O7-sUA" id="RRH-5A-ypb"/>
                         <outlet property="emailTextField" destination="6Kw-Xj-2zg" id="1ys-82-WUJ"/>
+                        <outlet property="keyboardHeightLayoutConstraint" destination="yjX-0Z-53l" id="6dr-hs-wHw"/>
                         <outlet property="loginToggleButton" destination="rxX-WX-BNX" id="FYB-s0-Lrb"/>
                         <outlet property="passwordTextField" destination="r46-jI-bPM" id="liG-oI-qei"/>
                         <outlet property="signUpToggleButton" destination="a6d-Mo-mfe" id="4DX-t3-TxB"/>
