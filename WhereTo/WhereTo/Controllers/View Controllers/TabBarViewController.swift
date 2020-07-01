@@ -14,7 +14,7 @@ class TabBarViewController: UITabBarController {
         super.viewDidLoad()
 
         // Set the default tab
-        self.selectedIndex = 0
+        self.selectedIndex = 1
         
         // Set the colors
         setColors()

@@ -67,10 +67,22 @@ class NeutralButton: ButtonWithBackground {
     }
 }
 
-class EditButton: ButtonWithBackground {
+class EditButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 16, borderWidth: 0, backgroundColor: .white, backgroundOpacity: 0.6, textColor: .background)
+        setUpViews(cornerRadius: 16, borderWidth: 0, backgroundColor: .white, backgroundOpacity: 0.6, textColor: .darkGray)
+    }
+    
+    override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return addInsets(to: super.sizeThatFits(size))
+    }
+    
+    private func addInsets(to size: CGSize) -> CGSize {
+        let width = size.width + 12
+        let height = size.height + 2
+        return CGSize(width: width, height: height)
     }
 }
 

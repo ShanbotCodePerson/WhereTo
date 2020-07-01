@@ -11,6 +11,7 @@
 		401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */; };
 		401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 401715B224A3E977002D86E0 /* VotingSession.storyboard */; };
 		401715B524A41A57002D86E0 /* VotingSessionInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B424A41A56002D86E0 /* VotingSessionInvite.swift */; };
+		401E38B224AD4B8800E83241 /* TableViewCellBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401E38B124AD4B8800E83241 /* TableViewCellBackground.swift */; };
 		408D8A2824ACE35700238674 /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A2724ACE35700238674 /* StyleGuide.swift */; };
 		408D8A3024ACE76000238674 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A2F24ACE76000238674 /* CustomImageView.swift */; };
 		408D8A3224ACE77100238674 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3124ACE77100238674 /* CustomTextField.swift */; };
@@ -61,6 +62,7 @@
 		401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionsTableViewController.swift; sourceTree = "<group>"; };
 		401715B224A3E977002D86E0 /* VotingSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VotingSession.storyboard; sourceTree = "<group>"; };
 		401715B424A41A56002D86E0 /* VotingSessionInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionInvite.swift; sourceTree = "<group>"; };
+		401E38B124AD4B8800E83241 /* TableViewCellBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellBackground.swift; sourceTree = "<group>"; };
 		408D8A2724ACE35700238674 /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = "<group>"; };
 		408D8A2F24ACE76000238674 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		408D8A3124ACE77100238674 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
@@ -197,10 +199,10 @@
 				40B2583424A115D30090495C /* AppDelegate.swift */,
 				40B2583624A115D30090495C /* SceneDelegate.swift */,
 				40B2583D24A115D80090495C /* Assets.xcassets */,
+				786B5F2524ACF39200A3445F /* Colors.xcassets */,
 				40B2583F24A115D80090495C /* LaunchScreen.storyboard */,
 				40B2584224A115D80090495C /* Info.plist */,
 				40B2588324A15CA20090495C /* GoogleService-Info.plist */,
-				786B5F2524ACF39200A3445F /* Colors.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -300,6 +302,7 @@
 				40B2589924A251C90090495C /* FriendTableViewCell.swift */,
 				40B2589524A251BE0090495C /* RestaurantTableViewCell.swift */,
 				40B2589624A251BE0090495C /* RestaurantTableViewCell.xib */,
+				401E38B124AD4B8800E83241 /* TableViewCellBackground.swift */,
 			);
 			path = "Custom TableView Cells";
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				40B258A824A253610090495C /* HistoryViewController.swift in Sources */,
 				40B2587C24A143910090495C /* UserController.swift in Sources */,
 				40B2588A24A16EF20090495C /* VotingSession.swift in Sources */,
+				401E38B224AD4B8800E83241 /* TableViewCellBackground.swift in Sources */,
 				40B2588024A154800090495C /* LoginSignUpViewController.swift in Sources */,
 				40B258A424A253440090495C /* ProfileViewController.swift in Sources */,
 				401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */,
