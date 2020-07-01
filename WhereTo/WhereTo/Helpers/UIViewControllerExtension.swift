@@ -34,7 +34,7 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
-        self.present(initialVC, animated: false)
+        present(initialVC, animated: false)
     }
     
     func transitionToVotingSessionPage(with votingSession: VotingSession) {
@@ -51,7 +51,7 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
-        self.present(initialVC, animated: false)
+        present(initialVC, animated: false)
     }
 }
     
@@ -452,13 +452,13 @@ extension UIViewController {
         // Create the cancel button
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
-        let currentLocationAction = UIAlertAction(title: "Search Current Location", style: .default) { [weak self] (_) in
+        let currentLocationAction = UIAlertAction(title: "Search Current Location", style: .default) { (_) in
             // Get the text from text field
             guard let name = alertController.textFields?.first?.text, !name.isEmpty else { return }
             completion(.success([name]))
         }
         
-        let enteredLocationAction = UIAlertAction(title: "Search Entered Address", style: .default) { [weak self] (_) in
+        let enteredLocationAction = UIAlertAction(title: "Search Entered Address", style: .default) { (_) in
             // Get the text from the text field
             guard let address = alertController.textFields?[1].text, !address.isEmpty,
                 let name = alertController.textFields?.first?.text, !name.isEmpty

@@ -12,7 +12,7 @@ class ActiveSessionsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.tableFooterView = UIView()
+        tableView.tableFooterView = UIView()
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()

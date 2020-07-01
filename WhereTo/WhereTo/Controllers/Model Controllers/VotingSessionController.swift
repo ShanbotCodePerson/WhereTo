@@ -691,7 +691,7 @@ class VotingSessionController {
         }
         
         // Fetch all the votes associated with the voting session
-        fetchVotes(in: votingSession) { (result) in
+        fetchVotes(in: votingSession) { [weak self] (result) in
             switch result {
             case .success(let votes):
                 // Calculate the number of votes needed to reach an outcome
@@ -722,10 +722,10 @@ class VotingSessionController {
                     guard let outcomeID = winningRestaurant.keys.first else { return }
                     
                     // Save the changes to the voting session
-                    self.saveOutcome(of: votingSession, outcomeID: outcomeID)
+                    self?.saveOutcome(of: votingSession, outcomeID: outcomeID)
                     
                     // Handle the finish
-                    self.handleFinishedSession(votingSession)
+                    self?.handleFinishedSession(votingSession)
                 } else {
                     // In case of a tie, use the restaurant with the higher value of votes
                     let highestVoteValue = winningRestaurant.values.map({ $0.valueOfVotes }).max(by: { $1 > $0 })
@@ -737,19 +737,19 @@ class VotingSessionController {
                         guard let outcomeID = winningRestaurant.keys.first else { return }
                         
                         // Save the changes to the voting session
-                        self.saveOutcome(of: votingSession, outcomeID: outcomeID)
+                        self?.saveOutcome(of: votingSession, outcomeID: outcomeID)
                         
                         // Handle the finish
-                        self.handleFinishedSession(votingSession)
+                        self?.handleFinishedSession(votingSession)
                     } else {
                         // If that is still a tie, choose based on alphabetical order
                         guard let outcomeID = winningRestaurant.keys.sorted().first else { return }
                         
                         // Save the changes to the voting session
-                        self.saveOutcome(of: votingSession, outcomeID: outcomeID)
+                        self?.saveOutcome(of: votingSession, outcomeID: outcomeID)
                         
                         // Handle the finish
-                        self.handleFinishedSession(votingSession)
+                        self?.handleFinishedSession(votingSession)
                     }
                 }
             case .failure(let error):

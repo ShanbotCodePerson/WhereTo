@@ -70,14 +70,8 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
-        // TODO: - leave the voting session early?
-        
         // Return to the main view of the app
         transitionToStoryboard(named: .TabViewHome)
-    }
-    
-    @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {
-        // TODO: - should we even have this? what should it do?
     }
     
     // MARK: - Table view data source

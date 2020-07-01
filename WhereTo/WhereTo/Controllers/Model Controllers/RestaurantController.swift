@@ -171,7 +171,7 @@ class RestaurantController {
         request.httpMethod = yelpStrings.methodValue
         
         // 2 - Data task
-        URLSession.shared.dataTask(with: request) { data, _, error in
+        URLSession.shared.dataTask(with: request) { [weak self] (data, _, error) in
             
             // 3 - Error Handling
             if let error = error {
@@ -188,7 +188,7 @@ class RestaurantController {
                     if let errorCode = (error as? NSDictionary)?["code"] as? String, errorCode == "TOO_MANY_REQUESTS_PER_SECOND" {
                         // Wait a tiny bit then try the request again
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            self.fetchRestaurantByID(restaurantID, completion: completion)
+                            self?.fetchRestaurantByID(restaurantID, completion: completion)
                         }
                     }
                 }
