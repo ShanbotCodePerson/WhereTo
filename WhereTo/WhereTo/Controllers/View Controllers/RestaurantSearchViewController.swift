@@ -49,10 +49,8 @@ class RestaurantSearchViewController: UIViewController {
     
     // MARK: - Actions
     @IBAction func searchButtonTapped(_ sender: Any) {
-        // TODO: Fix error that happens in RestaurantTableViewCell
         guard let name = nameTextField.text, !name.isEmpty,
-        let address = addressTextField.text else { return }
-        
+            let address = addressTextField.text else { return }
         
         if address != "" {
             self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
