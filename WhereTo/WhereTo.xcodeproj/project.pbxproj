@@ -11,6 +11,12 @@
 		401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */; };
 		401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 401715B224A3E977002D86E0 /* VotingSession.storyboard */; };
 		401715B524A41A57002D86E0 /* VotingSessionInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B424A41A56002D86E0 /* VotingSessionInvite.swift */; };
+		408D8A2824ACE35700238674 /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A2724ACE35700238674 /* StyleGuide.swift */; };
+		408D8A2A24ACE39200238674 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408D8A2924ACE39200238674 /* Colors.xcassets */; };
+		408D8A3024ACE76000238674 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A2F24ACE76000238674 /* CustomImageView.swift */; };
+		408D8A3224ACE77100238674 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3124ACE77100238674 /* CustomTextField.swift */; };
+		408D8A3424ACE78200238674 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3324ACE78200238674 /* CustomButton.swift */; };
+		408D8A3624ACE79000238674 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3524ACE79000238674 /* CustomLabel.swift */; };
 		40B2583524A115D30090495C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583424A115D30090495C /* AppDelegate.swift */; };
 		40B2583724A115D30090495C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583624A115D30090495C /* SceneDelegate.swift */; };
 		40B2583C24A115D30090495C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583A24A115D30090495C /* Main.storyboard */; };
@@ -53,6 +59,12 @@
 		401715B024A3E92C002D86E0 /* ActiveSessionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSessionsTableViewController.swift; sourceTree = "<group>"; };
 		401715B224A3E977002D86E0 /* VotingSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VotingSession.storyboard; sourceTree = "<group>"; };
 		401715B424A41A56002D86E0 /* VotingSessionInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionInvite.swift; sourceTree = "<group>"; };
+		408D8A2724ACE35700238674 /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = "<group>"; };
+		408D8A2924ACE39200238674 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		408D8A2F24ACE76000238674 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
+		408D8A3124ACE77100238674 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		408D8A3324ACE78200238674 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		408D8A3524ACE79000238674 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		40B2583124A115D30090495C /* WhereTo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereTo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B2583424A115D30090495C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40B2583624A115D30090495C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -113,6 +125,38 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		408D8A2B24ACE71A00238674 /* Custom ImageView */ = {
+			isa = PBXGroup;
+			children = (
+				408D8A2F24ACE76000238674 /* CustomImageView.swift */,
+			);
+			path = "Custom ImageView";
+			sourceTree = "<group>";
+		};
+		408D8A2C24ACE72000238674 /* Custom TextField */ = {
+			isa = PBXGroup;
+			children = (
+				408D8A3124ACE77100238674 /* CustomTextField.swift */,
+			);
+			path = "Custom TextField";
+			sourceTree = "<group>";
+		};
+		408D8A2D24ACE72800238674 /* Custom Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				408D8A3324ACE78200238674 /* CustomButton.swift */,
+			);
+			path = "Custom Buttons";
+			sourceTree = "<group>";
+		};
+		408D8A2E24ACE73100238674 /* Custom Labels */ = {
+			isa = PBXGroup;
+			children = (
+				408D8A3524ACE79000238674 /* CustomLabel.swift */,
+			);
+			path = "Custom Labels";
+			sourceTree = "<group>";
+		};
 		40B2582824A115D30090495C = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +193,7 @@
 				40B2583424A115D30090495C /* AppDelegate.swift */,
 				40B2583624A115D30090495C /* SceneDelegate.swift */,
 				40B2583D24A115D80090495C /* Assets.xcassets */,
+				408D8A2924ACE39200238674 /* Colors.xcassets */,
 				40B2583F24A115D80090495C /* LaunchScreen.storyboard */,
 				40B2584224A115D80090495C /* Info.plist */,
 				40B2588324A15CA20090495C /* GoogleService-Info.plist */,
@@ -159,6 +204,7 @@
 		40B2585124A119A80090495C /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				408D8A2724ACE35700238674 /* StyleGuide.swift */,
 				40B2587D24A1528D0090495C /* WhereToError.swift */,
 				40B2587724A12C5B0090495C /* UIViewControllerExtension.swift */,
 				4005A19D24AB91B300BE556F /* UIImageExtension.swift */,
@@ -208,6 +254,10 @@
 			isa = PBXGroup;
 			children = (
 				40B2589424A2519B0090495C /* Custom TableView Cells */,
+				408D8A2E24ACE73100238674 /* Custom Labels */,
+				408D8A2D24ACE72800238674 /* Custom Buttons */,
+				408D8A2C24ACE72000238674 /* Custom TextField */,
+				408D8A2B24ACE71A00238674 /* Custom ImageView */,
 			);
 			path = "Custom Views";
 			sourceTree = "<group>";
@@ -318,6 +368,7 @@
 			files = (
 				40B2584124A115D80090495C /* LaunchScreen.storyboard in Resources */,
 				401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */,
+				408D8A2A24ACE39200238674 /* Colors.xcassets in Resources */,
 				40B2583E24A115D80090495C /* Assets.xcassets in Resources */,
 				78508DB224A296BD00A525FF /* Profile.storyboard in Resources */,
 				40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */,
@@ -380,8 +431,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				408D8A3224ACE77100238674 /* CustomTextField.swift in Sources */,
+				408D8A3624ACE79000238674 /* CustomLabel.swift in Sources */,
 				40B258A624A253560090495C /* InviteFriendsTableViewController.swift in Sources */,
+				408D8A3024ACE76000238674 /* CustomImageView.swift in Sources */,
 				40B2587A24A13D870090495C /* User.swift in Sources */,
+				408D8A3424ACE78200238674 /* CustomButton.swift in Sources */,
 				40B2583524A115D30090495C /* AppDelegate.swift in Sources */,
 				40B258A824A253610090495C /* HistoryTableViewController.swift in Sources */,
 				40B2587C24A143910090495C /* UserController.swift in Sources */,
@@ -392,6 +447,7 @@
 				40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */,
 				40B2587E24A1528D0090495C /* WhereToError.swift in Sources */,
 				40B2589324A16F1F0090495C /* VotingSessionController.swift in Sources */,
+				408D8A2824ACE35700238674 /* StyleGuide.swift in Sources */,
 				7830709524AAA6A4001876C5 /* RestaurantSearchViewController.swift in Sources */,
 				40B2583724A115D30090495C /* SceneDelegate.swift in Sources */,
 				40B258AC24A2537E0090495C /* VotingSessionTableViewController.swift in Sources */,
