@@ -88,6 +88,7 @@ class LoginSignUpViewController: UIViewController {
             self.loginToggleButton.setTitleColor(.systemGray4, for: .normal)
             
             self.usernameTextField.isHidden = false
+            self.passwordTextField.returnKeyType = .next
             self.confirmPasswordTextField.isHidden = false
             
             self.doneButton.setTitle("Sign Up", for: .normal)
@@ -106,6 +107,7 @@ class LoginSignUpViewController: UIViewController {
             self.loginToggleButton.setTitleColor(.systemBlue, for: .normal)
             
             self.usernameTextField.isHidden = true
+            self.passwordTextField.returnKeyType = .done
             self.confirmPasswordTextField.isHidden = true
             
             self.doneButton.setTitle("Login", for: .normal)
