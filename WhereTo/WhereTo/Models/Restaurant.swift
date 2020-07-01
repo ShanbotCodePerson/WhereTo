@@ -18,9 +18,28 @@ struct Restaurant: Codable, Hashable {
     let categories: [[String : String]]
     var categoryNames: [String] { Array(categories.compactMap({ ($0 as? NSDictionary)?["title"] as? String })) }
     let rating: Float?
+    let location: Location
+    //let photos: [String]
+    
+    struct Location: Codable, Hashable, Equatable {
+        let address1: String
+        let city: String
+        let zip: String
+        let country: String
+        let state: String
+        let displayAddress: [String]
+        
+        enum CodingKeys: String, CodingKey {
+            case address1, city, country, state, zip = "zip_code", displayAddress = "display_address"
+        }
+        
+        static func == (lhs: Location, rhs: Location) -> Bool {
+            return (lhs.address1 == rhs.address1)
+        }
+    }
    
     enum CodingKeys: String, CodingKey {
-        case name, coordinates, categories, rating, restaurantID = "id"
+        case name, coordinates, categories, rating, location, restaurantID = "id"
     }
 }
 
