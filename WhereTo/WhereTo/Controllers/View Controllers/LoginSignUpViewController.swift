@@ -88,6 +88,7 @@ class LoginSignUpViewController: UIViewController {
             self.loginToggleButton.setTitleColor(.systemGray4, for: .normal)
             
             self.usernameTextField.isHidden = false
+            self.passwordTextField.returnKeyType = .next
             self.confirmPasswordTextField.isHidden = false
             
             self.doneButton.setTitle("Sign Up", for: .normal)
@@ -106,6 +107,7 @@ class LoginSignUpViewController: UIViewController {
             self.loginToggleButton.setTitleColor(.systemBlue, for: .normal)
             
             self.usernameTextField.isHidden = true
+            self.passwordTextField.returnKeyType = .done
             self.confirmPasswordTextField.isHidden = true
             
             self.doneButton.setTitle("Login", for: .normal)
@@ -317,7 +319,7 @@ extension LoginSignUpViewController: UITextFieldDelegate {
         }
             // Increment different in the login view where there are fewer text fields
         else {
-            if let nextField = textField.superview?.viewWithTag(textField.tag + 3) as? UITextField {
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 2) as? UITextField {
                 nextField.becomeFirstResponder()
             } else {
                 // Otherwise, remove the keyboard and try to login
