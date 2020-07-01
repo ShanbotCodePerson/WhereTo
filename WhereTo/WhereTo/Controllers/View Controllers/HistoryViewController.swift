@@ -1,5 +1,5 @@
 //
-//  HistoryTableViewController.swift
+//  HistoryViewController.swift
 //  WhereTo
 //
 //  Created by Shannon Draeker on 6/23/20.
@@ -8,8 +8,12 @@
 
 import UIKit
 
-class HistoryTableViewController: UITableViewController {
-
+class HistoryViewController: UIViewController {
+    
+    // MARK: - Outlets
+    
+    @IBOutlet weak var restaurantsTableView: UITableView!
+    
     // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
@@ -31,18 +35,21 @@ class HistoryTableViewController: UITableViewController {
     // MARK: - Respond to Notifications
     
     @objc func refreshData() {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { self.restaurantsTableView.reloadData() }
     }
     
     // MARK: - Set up the UI
     
     func setUpViews() {
         // Hide the extra section markers at the bottom of the tableview
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        restaurantsTableView.tableFooterView = UIView()
+        restaurantsTableView.backgroundColor = .background
         
-        // Set up the tableview cells
-        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        // Set up the tableview
+        restaurantsTableView.delegate = self
+        restaurantsTableView.dataSource = self
+        restaurantsTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
+        restaurantsTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
     func loadData() {
@@ -53,7 +60,7 @@ class HistoryTableViewController: UITableViewController {
                     switch result {
                     case .success(_):
                         // Reload the tableview
-                        self?.tableView.reloadData()
+                        self?.refreshData()
                         self?.view.activityStopAnimating()
                     case .failure(let error):
                         // Print and display the error
@@ -65,32 +72,37 @@ class HistoryTableViewController: UITableViewController {
             }
         }
     }
+}
 
+// MARK: - TableView Methods
+
+extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+    
     // MARK: - TableView Methods
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return RestaurantController.shared.previousRestaurants?.count ?? 0
     }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
-
+        
         guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return cell }
         cell.restaurant = restaurant
         cell.delegate = self
         
         return cell
     }
-   
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // TODO: - enable swipe to delete
             // Delete the row from the data source
-//            tableView.deleteRows(at: [indexPath], with: .fade)
+            //            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return }
         
         // Present an alert controller asking the user if they want to open the restaurant in maps
@@ -100,8 +112,9 @@ class HistoryTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Extension:SavedButtonDelegate
-extension HistoryTableViewController: RestaurantTableViewCellSavedButtonDelegate {
+// MARK: - SavedButtonDelegate
+
+extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         guard let currentUser = UserController.shared.currentUser,

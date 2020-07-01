@@ -33,7 +33,7 @@ class RestaurantSearchViewController: UIViewController {
     
     // MARK: - Helper Methods
     
-    func setUpDelegates() -> Void {
+    func setUpDelegates() {
         locationManager.delegate = self
         nameTextField.delegate = self
         addressTextField.delegate = self
@@ -43,7 +43,7 @@ class RestaurantSearchViewController: UIViewController {
         restaurantTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
-    func reloadView() -> Void {
+    func reloadView() {
         DispatchQueue.main.async { self.restaurantTableView.reloadData() }
     }
     
@@ -127,6 +127,10 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Close the keyboard
+        nameTextField.resignFirstResponder()
+        addressTextField.resignFirstResponder()
+        
         print("got here to \(#function) and \(indexPath.row)")
         let restaurant = restaurants[indexPath.row]
         

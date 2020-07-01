@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Profile-->
+        <!--Profile View Controller-->
         <scene sceneID="4BI-Yq-EcJ">
             <objects>
                 <viewController id="aUj-2G-47z" customClass="ProfileViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
@@ -214,7 +214,7 @@
                             <outletCollection property="gestureRecognizers" destination="Lra-4W-bMv" appends="YES" id="jxX-UI-YMh"/>
                         </connections>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" selectedImage="person.fill" id="Za0-SD-zPk"/>
+                    <tabBarItem key="tabBarItem" title="" image="person.fill" catalog="system" selectedImage="person.fill" id="Za0-SD-zPk"/>
                     <connections>
                         <outlet property="addRestrictionButton" destination="OWm-tv-Ce7" id="8lf-wC-dCH"/>
                         <outlet property="dietaryRestrictionsPickerView" destination="aLy-XK-YbU" id="IUV-Ev-Vx9"/>
@@ -238,13 +238,13 @@
     <resources>
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <namedColor name="background">
-            <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBar">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarButtonTint">
-            <color red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarText">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -1,107 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="TtE-Ee-fPX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Voting Session Table View Controller-->
-        <scene sceneID="kt5-1i-PD0">
+        <!--Voting Session View Controller-->
+        <scene sceneID="fLh-s7-8lN">
             <objects>
-                <tableViewController id="TtE-Ee-fPX" customClass="VotingSessionTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="DlA-pk-wjW">
+                <viewController id="k4S-20-TxE" customClass="VotingSessionViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="U8V-zr-nuN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="navBar"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="jfB-9f-cwI">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="122"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-ex-7DX">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
-                                    <color key="barTintColor" name="navBar"/>
-                                    <textAttributes key="titleTextAttributes">
-                                        <color key="textColor" name="navBarText"/>
-                                    </textAttributes>
-                                    <items>
-                                        <navigationItem title="Vote on Your Top Choices!" id="bS1-Ap-bRe">
-                                            <barButtonItem key="leftBarButtonItem" title="Close" id="j8T-pP-x2H">
-                                                <color key="tintColor" name="navBarButtonTint"/>
-                                                <connections>
-                                                    <action selector="cancelButtonTapped:" destination="TtE-Ee-fPX" id="T1f-xt-aKT"/>
-                                                </connections>
-                                            </barButtonItem>
-                                        </navigationItem>
-                                    </items>
-                                </navigationBar>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-mM-sE6">
-                                    <rect key="frame" x="0.0" y="52" width="414" height="70"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(partipants, location, number of votes)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EiE-3U-7du" customClass="DefaultLabel" customModule="WhereTo" customModuleProvider="target">
-                                            <rect key="frame" x="10.5" y="3.5" width="393" height="63"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" name="background"/>
-                                    <constraints>
-                                        <constraint firstItem="EiE-3U-7du" firstAttribute="centerY" secondItem="JLe-mM-sE6" secondAttribute="centerY" id="1TI-RR-csy"/>
-                                        <constraint firstAttribute="height" constant="70" id="4ee-pf-gzL"/>
-                                        <constraint firstItem="EiE-3U-7du" firstAttribute="height" secondItem="JLe-mM-sE6" secondAttribute="height" multiplier="0.9" id="8zb-aN-87c"/>
-                                        <constraint firstItem="EiE-3U-7du" firstAttribute="centerX" secondItem="JLe-mM-sE6" secondAttribute="centerX" id="SiR-nr-fFv"/>
-                                        <constraint firstItem="EiE-3U-7du" firstAttribute="width" secondItem="JLe-mM-sE6" secondAttribute="width" multiplier="0.95" id="iEr-sY-yOG"/>
-                                    </constraints>
-                                </view>
-                            </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            <constraints>
-                                <constraint firstItem="NTP-ex-7DX" firstAttribute="top" secondItem="jfB-9f-cwI" secondAttribute="top" id="5Op-Dw-cgt"/>
-                                <constraint firstAttribute="bottom" secondItem="JLe-mM-sE6" secondAttribute="bottom" id="5f6-AD-Cmo"/>
-                                <constraint firstItem="NTP-ex-7DX" firstAttribute="leading" secondItem="jfB-9f-cwI" secondAttribute="leading" id="9EJ-0s-fwt"/>
-                                <constraint firstAttribute="trailing" secondItem="JLe-mM-sE6" secondAttribute="trailing" id="9Ot-iJ-8Tx"/>
-                                <constraint firstItem="JLe-mM-sE6" firstAttribute="leading" secondItem="jfB-9f-cwI" secondAttribute="leading" id="aiX-yS-g2P"/>
-                                <constraint firstAttribute="trailing" secondItem="NTP-ex-7DX" secondAttribute="trailing" id="coO-O8-Zt8"/>
-                                <constraint firstItem="JLe-mM-sE6" firstAttribute="top" secondItem="NTP-ex-7DX" secondAttribute="bottom" id="d2I-3R-HSg"/>
-                            </constraints>
-                        </view>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="restaurantCell" id="VdF-5H-kdw" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="150" width="414" height="43.5"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VdF-5H-kdw" id="zrp-Gh-fiT">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="TtE-Ee-fPX" id="Jhu-Tj-qrL"/>
-                            <outlet property="delegate" destination="TtE-Ee-fPX" id="RR4-aJ-QbE"/>
-                        </connections>
-                    </tableView>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NTP-ex-7DX">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <color key="barTintColor" name="navBar"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" name="navBarText"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Vote on Your Top Choices!" id="bS1-Ap-bRe">
+                                        <barButtonItem key="leftBarButtonItem" title="Close" id="j8T-pP-x2H">
+                                            <color key="tintColor" name="navBarButtonTint"/>
+                                            <connections>
+                                                <action selector="closeButtonTapped:" destination="k4S-20-TxE" id="nqb-91-tPF"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gki-23-HkF">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <color key="backgroundColor" name="navBar"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(partipants, location, number of votes)" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EiE-3U-7du" customClass="DefaultLabel" customModule="WhereTo" customModuleProvider="target">
+                                <rect key="frame" x="10.5" y="100" width="393" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="UFi-Xl-vj3">
+                                <rect key="frame" x="0.0" y="132.5" width="414" height="729.5"/>
+                                <color key="backgroundColor" name="background"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="restaurantCell" id="VdF-5H-kdw" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VdF-5H-kdw" id="zrp-Gh-fiT">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="Gki-23-HkF" firstAttribute="top" secondItem="U8V-zr-nuN" secondAttribute="top" id="5kh-Oe-vQ0"/>
+                            <constraint firstItem="NTP-ex-7DX" firstAttribute="trailing" secondItem="Wq5-Zv-wLb" secondAttribute="trailing" id="F9V-EK-Aam"/>
+                            <constraint firstAttribute="trailing" secondItem="Gki-23-HkF" secondAttribute="trailing" id="H9g-7F-YLX"/>
+                            <constraint firstItem="UFi-Xl-vj3" firstAttribute="top" secondItem="EiE-3U-7du" secondAttribute="bottom" constant="12" id="Rwm-Qg-gT9"/>
+                            <constraint firstItem="NTP-ex-7DX" firstAttribute="top" secondItem="Wq5-Zv-wLb" secondAttribute="top" id="SZR-8U-hxI"/>
+                            <constraint firstItem="UFi-Xl-vj3" firstAttribute="leading" secondItem="Wq5-Zv-wLb" secondAttribute="leading" id="WLV-1f-9D5"/>
+                            <constraint firstItem="EiE-3U-7du" firstAttribute="width" secondItem="U8V-zr-nuN" secondAttribute="width" multiplier="0.95" id="XKK-5W-6u5"/>
+                            <constraint firstItem="Wq5-Zv-wLb" firstAttribute="trailing" secondItem="UFi-Xl-vj3" secondAttribute="trailing" id="gVi-eu-58K"/>
+                            <constraint firstItem="EiE-3U-7du" firstAttribute="centerX" secondItem="U8V-zr-nuN" secondAttribute="centerX" id="ikz-4z-bEm"/>
+                            <constraint firstItem="Wq5-Zv-wLb" firstAttribute="bottom" secondItem="UFi-Xl-vj3" secondAttribute="bottom" id="iop-zi-9tN"/>
+                            <constraint firstItem="EiE-3U-7du" firstAttribute="top" secondItem="NTP-ex-7DX" secondAttribute="bottom" constant="12" id="msw-s4-oJB"/>
+                            <constraint firstItem="Gki-23-HkF" firstAttribute="leading" secondItem="U8V-zr-nuN" secondAttribute="leading" id="nf2-ao-f7t"/>
+                            <constraint firstItem="NTP-ex-7DX" firstAttribute="leading" secondItem="Wq5-Zv-wLb" secondAttribute="leading" id="tjR-v5-exH"/>
+                            <constraint firstItem="NTP-ex-7DX" firstAttribute="top" secondItem="Gki-23-HkF" secondAttribute="bottom" id="uq6-8i-P9k"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Wq5-Zv-wLb"/>
+                    </view>
                     <connections>
-                        <outlet property="votingSessionDescriptionLabel" destination="EiE-3U-7du" id="Ndr-Ub-S97"/>
+                        <outlet property="restaurantsTableView" destination="UFi-Xl-vj3" id="nW2-c5-OOU"/>
+                        <outlet property="votingSessionDescriptionLabel" destination="EiE-3U-7du" id="5iU-mP-LLf"/>
                     </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2YX-TG-Y3x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MDy-pe-XIm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="234.78260869565219" y="928.79464285714278"/>
+            <point key="canvasLocation" x="1095.6521739130435" y="928.79464285714278"/>
         </scene>
     </scenes>
     <color key="tintColor" name="navBarButtonTint"/>
     <resources>
         <namedColor name="background">
-            <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.83700001239776611" green="0.83700001239776611" blue="0.83700001239776611" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBar">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarButtonTint">
-            <color red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarText">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

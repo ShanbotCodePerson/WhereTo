@@ -1,5 +1,5 @@
 //
-//  InviteFriendsTableViewController.swift
+//  WhereToViewController.swift
 //  WhereTo
 //
 //  Created by Shannon Draeker on 6/23/20.
@@ -9,10 +9,11 @@
 import UIKit
 import CoreLocation
 
-class InviteFriendsTableViewController: UITableViewController {
+class WhereToViewController: UIViewController {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var friendsTableView: UITableView!
     @IBOutlet weak var viewActiveVotingSessionsButton: NeutralButton!
     @IBOutlet weak var voteButton: GoButton!
     
@@ -21,7 +22,7 @@ class InviteFriendsTableViewController: UITableViewController {
     var locationManager = CLLocationManager()
     
     // MARK: - Lifecycle Methods
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -87,7 +88,7 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { self.friendsTableView.reloadData() }
     }
     
     // MARK: - Set Up UI
@@ -98,6 +99,11 @@ class InviteFriendsTableViewController: UITableViewController {
         
         // Set up the CLLocationManager's delegate
         locationManager.delegate = self
+        
+        // Set up the tableview
+        friendsTableView.delegate = self
+        friendsTableView.dataSource = self
+        friendsTableView.tableFooterView = UIView()
     }
     
     func loadAllData() {
@@ -273,7 +279,7 @@ class InviteFriendsTableViewController: UITableViewController {
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
         // Get the selected friends
-        guard let indexPaths = tableView.indexPathsForSelectedRows else { return }
+        guard let indexPaths = friendsTableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.friends?[$0.row] }
         
         // Get the current location or allow the user to choose a location
@@ -288,10 +294,10 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let location):
                     // Allow the user to choose to filter results by dietary restrictions
                     self?.presentChoiceAlert(title: "Filter By Diet?", message: "Filter the restaurants by the group's dietary restrictions?", cancelText: "No", confirmText: "Yes", cancelCompletion: {
-                            self?.startVotingSession(with: friends, at: location, filterByDiet: false)
-                        }, confirmCompletion: {
-                            self?.startVotingSession(with: friends, at: location, filterByDiet: true )
-                        })
+                        self?.startVotingSession(with: friends, at: location, filterByDiet: false)
+                    }, confirmCompletion: {
+                        self?.startVotingSession(with: friends, at: location, filterByDiet: true )
+                    })
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -329,17 +335,20 @@ class InviteFriendsTableViewController: UITableViewController {
             }
         }
     }
-    
-    // MARK: - Table view data source
+}
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+// MARK: - TableView Methods
+
+extension WhereToViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // If there are no friends, display one row with a notice to tell them to add friends
         return max(UserController.shared.friends?.count ?? 0, 1)
     }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendTableViewCell else { return UITableViewCell() }
-
+        
         // If there are no friends, display one row with a notice to tell them to add friends
         guard let friends = UserController.shared.friends, friends.count > 0 else {
             cell.friend = nil
@@ -350,7 +359,7 @@ class InviteFriendsTableViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             guard let currentUser = UserController.shared.currentUser,
                 let friend = UserController.shared.friends?[indexPath.row]
@@ -402,12 +411,12 @@ class InviteFriendsTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Enable the vote button
-        voteButton.activate()
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Enable the vote button, unless the row selected was the notice that there are no friends
+        if UserController.shared.friends?.count ?? 0 > 0 { voteButton.activate() }
     }
     
-    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         // If there are now no friends selected, then disable the vote button
         if tableView.indexPathsForSelectedRows?.count == 0 { voteButton.deactivate() }
     }

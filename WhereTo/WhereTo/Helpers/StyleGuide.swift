@@ -31,6 +31,7 @@ extension UIColor {
     static let navBar = UIColor(named: "navBar")!
     static let navBarText = UIColor(named: "navBarText")!
     static let navBarButtonTint = UIColor(named: "navBarButtonTint")!
+    static let tabBarUnselected = UIColor(named: "tabBarUnselected")!
     static let textViewBackground = UIColor(named: "textViewBackground")!
     static let border = UIColor(named: "border")!
     static let mainText = UIColor(named: "mainText")!

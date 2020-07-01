@@ -1,5 +1,5 @@
 //
-//  SavedRestaurantsTableViewController.swift
+//  SavedRestaurantsViewController.swift
 //  WhereTo
 //
 //  Created by Shannon Draeker on 6/23/20.
@@ -9,15 +9,16 @@
 import UIKit
 import CoreLocation
 
-class SavedRestaurantsTableViewController: UITableViewController {
-    
-    // MARK: - Properties
-    
-    let locationManager = CLLocationManager()
+class SavedRestaurantsViewController: UIViewController {
     
     // MARK: - Outlets
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var restaurantsTableView: UITableView!
+    
+    // MARK: - Properties
+    
+    let locationManager = CLLocationManager()
     
     // MARK: - Lifecycle Methods
     
@@ -40,21 +41,24 @@ class SavedRestaurantsTableViewController: UITableViewController {
     // MARK: - Respond to Notifications
     
     @objc func refreshData() {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { self.restaurantsTableView.reloadData() }
     }
     
     // MARK: - Set Up UI
     
     func setUpViews() {
         // Hide the extra section markers at the bottom of the tableview
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        restaurantsTableView.tableFooterView = UIView()
+        restaurantsTableView.backgroundColor = .background
         
         // Set up the location managers delegate
         locationManager.delegate = self
         
-        // Set up the tableview cells
-        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        // Set up the tableview
+        restaurantsTableView.delegate = self
+        restaurantsTableView.dataSource = self
+        restaurantsTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
+        restaurantsTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
     func loadAllData() {
@@ -65,7 +69,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
                     switch result {
                     case .success(_):
                         // Refresh the tableview
-                        self?.tableView.reloadData()
+                        self?.refreshData()
                         self?.view.activityStopAnimating()
                     case .failure(let error):
                         // Print and display the error
@@ -82,7 +86,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
                     switch result {
                     case .success(_):
                         // Refresh the tableview
-                        self?.tableView.reloadData()
+                        self?.refreshData()
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -95,23 +99,23 @@ class SavedRestaurantsTableViewController: UITableViewController {
     
     // MARK: - Actions
     
-    @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
-    }
-    
     @IBAction func segmentedControlTapped(_ sender: Any) {
-        tableView.reloadData()
+        self.refreshData()
     }
+}
+
+// MARK: - TableView Methods
+
+extension SavedRestaurantsViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if segmentedControl.selectedSegmentIndex == 0 {
             return RestaurantController.shared.favoriteRestaurants?.count ?? 0
         }
         return RestaurantController.shared.blacklistedRestaurants?.count ?? 0
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
         
         var restaurant: Restaurant?
@@ -123,12 +127,11 @@ class SavedRestaurantsTableViewController: UITableViewController {
         
         cell.restaurant = restaurant
         cell.delegate = self
-        cell.isFavoriteButton.isSelected = true
         
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // TODO: - enable swipe to delete
             // Delete the row from the data source
@@ -136,21 +139,21 @@ class SavedRestaurantsTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard segmentedControl.selectedSegmentIndex == 0,
             let restaurant = RestaurantController.shared.favoriteRestaurants?[indexPath.row]
             else { return }
-           
-           // Present an alert controller asking the user if they want to open the restaurant in maps
-           presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
-               self.launchMapWith(restaurant: restaurant)
-           }
-       }
+        
+        // Present an alert controller asking the user if they want to open the restaurant in maps
+        presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
+            self.launchMapWith(restaurant: restaurant)
+        }
+    }
 }
 
 // MARK: - SavedButtonDelegate
 
-extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
+extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         guard let currentUser = UserController.shared.currentUser,
