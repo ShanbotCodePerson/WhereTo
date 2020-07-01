@@ -109,6 +109,7 @@ extension RestaurantSearchViewController: UITextFieldDelegate {
 }
 
 extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return restaurants.count
     }
@@ -117,6 +118,7 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
         
         cell.restaurant = restaurants[indexPath.row]
+        cell.delegate = self
         
         return cell
     }

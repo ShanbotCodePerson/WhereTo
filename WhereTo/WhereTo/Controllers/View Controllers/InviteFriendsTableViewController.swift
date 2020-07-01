@@ -11,13 +11,14 @@ import CoreLocation
 
 class InviteFriendsTableViewController: UITableViewController {
     
+    // MARK: - Outlets
+    
+    @IBOutlet weak var viewActiveVotingSessionsButton: NeutralButton!
+    @IBOutlet weak var voteButton: GoButton!
+    
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
-        
-    // MARK: - Outlets
-    
-    @IBOutlet weak var viewActiveVotingSessionsButton: GoButton!
     
     // MARK: - Lifecycle Methods
 
@@ -78,9 +79,9 @@ class InviteFriendsTableViewController: UITableViewController {
         }
         
         // Check to see if there are still active voting sessions, and if not, hide the active voting session button
-//        if VotingSessionController.shared.votingSessions?.count ?? 0 > 0 {
-//            viewActiveVotingSessionsButton.isHidden = false
-//        } else { viewActiveVotingSessionsButton.isHidden = true }
+        if VotingSessionController.shared.votingSessions?.count ?? 0 > 0 {
+            viewActiveVotingSessionsButton.isHidden = false
+        } else { viewActiveVotingSessionsButton.isHidden = true }
     }
     
     // MARK: - Receive Notifications
@@ -92,9 +93,8 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Set Up UI
     
     func setUpViews() {
-        // Hide the extra section markers at the bottom of the tableview
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        // The vote button should start off as disabled until the user selects at least one friend
+        voteButton.deactivate()
         
         // Set up the CLLocationManager's delegate
         locationManager.delegate = self
@@ -125,9 +125,7 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let votingSessions):
                     if votingSessions.count == 0 {
                         // Don't allow the user to go to the page displaying all the voting sessions if there aren't any
-                        // FIXME: - why is the button nil all of a sudden??
-//                        self?.viewActiveVotingSessionsButton.isHidden = true
-                        // TODO: - make sure to enable this button as appropriate later
+                        self?.viewActiveVotingSessionsButton.isHidden = true
                     }
                 case .failure(let error):
                     // Print and display the error
@@ -335,14 +333,19 @@ class InviteFriendsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserController.shared.friends?.count ?? 0
+        // If there are no friends, display one row with a notice to tell them to add friends
+        return max(UserController.shared.friends?.count ?? 0, 1)
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendTableViewCell else { return UITableViewCell() }
 
-        guard let friend = UserController.shared.friends?[indexPath.row] else { return cell }
-        cell.friend = friend
+        // If there are no friends, display one row with a notice to tell them to add friends
+        guard let friends = UserController.shared.friends, friends.count > 0 else {
+            cell.friend = nil
+            return cell
+        }
+        cell.friend = friends[indexPath.row]
         
         return cell
     }
@@ -397,5 +400,15 @@ class InviteFriendsTableViewController: UITableViewController {
                 }
             }
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Enable the vote button
+        voteButton.activate()
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        // If there are now no friends selected, then disable the vote button
+        if tableView.indexPathsForSelectedRows?.count == 0 { voteButton.deactivate() }
     }
 }

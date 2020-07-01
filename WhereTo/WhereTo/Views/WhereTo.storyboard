@@ -73,17 +73,20 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="5Sp-Yd-wa6">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <rect key="frame" x="20.5" y="7" width="373" height="30"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JqS-fU-8xa" customClass="NeutralButton" customModule="WhereTo" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="7" width="349" height="30"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="290" height="30"/>
                                             <state key="normal" title="View Active Voting Sessions"/>
                                             <connections>
                                                 <segue destination="rWr-rK-Y5U" kind="show" id="f7s-uv-yno"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zpe-fH-99n" customClass="GoButton" customModule="WhereTo" customModuleProvider="target">
-                                            <rect key="frame" x="357" y="7" width="57" height="30"/>
+                                            <rect key="frame" x="298" y="0.0" width="75" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="75" id="KJx-rQ-XPO"/>
+                                            </constraints>
                                             <state key="normal" title="Vote!"/>
                                             <connections>
                                                 <action selector="voteButtonTapped:" destination="Ckr-BU-2er" eventType="touchUpInside" id="N1u-kG-xex"/>
@@ -94,10 +97,9 @@
                             </subviews>
                             <color key="backgroundColor" name="background"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="5Sp-Yd-wa6" secondAttribute="trailing" id="bkG-bG-no2"/>
-                                <constraint firstAttribute="bottom" secondItem="5Sp-Yd-wa6" secondAttribute="bottom" id="es2-Zv-Ezw"/>
-                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="top" secondItem="xtO-sn-LRy" secondAttribute="top" id="fyH-Kz-ZOG"/>
-                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="leading" secondItem="xtO-sn-LRy" secondAttribute="leading" id="z1J-jE-OUG"/>
+                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="width" secondItem="xtO-sn-LRy" secondAttribute="width" multiplier="0.9" id="9Of-Ko-7hN"/>
+                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="centerY" secondItem="xtO-sn-LRy" secondAttribute="centerY" id="bPw-xm-hw0"/>
+                                <constraint firstItem="5Sp-Yd-wa6" firstAttribute="centerX" secondItem="xtO-sn-LRy" secondAttribute="centerX" id="j1g-TL-KKT"/>
                             </constraints>
                         </view>
                         <prototypes>
@@ -148,7 +150,8 @@
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Where To?" image="house.fill" catalog="system" selectedImage="house.fill" id="hN4-NP-z9y"/>
                     <connections>
-                        <outlet property="viewActiveVotingSessionsButton" destination="JqS-fU-8xa" id="xuq-Fn-XrP"/>
+                        <outlet property="viewActiveVotingSessionsButton" destination="JqS-fU-8xa" id="MfD-mN-WKn"/>
+                        <outlet property="voteButton" destination="zpe-fH-99n" id="4oP-az-MeV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qrL-fw-Hax" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
