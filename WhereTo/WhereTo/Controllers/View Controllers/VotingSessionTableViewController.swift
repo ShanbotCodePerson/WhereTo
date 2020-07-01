@@ -54,7 +54,6 @@ class VotingSessionTableViewController: UITableViewController {
                 switch result {
                 case .success(let votes):
                     // Save the data
-                    print("got here to \(#function) and there are \(votes.count) votes")
                     self?.votes = votes.filter { $0.userID == currentUser.uuid }
                     
                     // Update the tableview
@@ -71,20 +70,13 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Actions
     
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
-        // TODO: - leave the voting session early?
-        
         // Return to the main view of the app
         transitionToStoryboard(named: .TabViewHome)
-    }
-    
-    @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {
-        // TODO: - should we even have this? what should it do?
     }
     
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        print("got here to \(#function) and there are \(votingSession?.restaurants?.count ?? 0) rows")
         return votingSession?.restaurants?.count ?? 0
     }
     
@@ -92,7 +84,6 @@ class VotingSessionTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
         
         guard let restaurant = votingSession?.restaurants?[indexPath.row] else { return cell }
-//        print("got here to \(#function) and restaurant is \(restaurant)")
         cell.restaurant = restaurant
         cell.delegate = self
         if let voteIndex = votes.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) {
