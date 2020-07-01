@@ -11,27 +11,27 @@ import CoreLocation
 
 class RestaurantSearchViewController: UIViewController {
     
-    // MARK: - Singleton
-    
-    static let shared = RestaurantSearchViewController()
-
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
     var restaurants: [Restaurant] = []
     
     // MARK: - Outlets
+    
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
     @IBOutlet weak var restaurantTableView: UITableView!
     
     // MARK: - LifeCycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        restaurantTableView.tableFooterView = UIView()
+        restaurantTableView.backgroundColor = .background
         setUpDelegates()
     }
     
-    // MARK: - Helpers
+    // MARK: - Helper Methods
     
     func setUpDelegates() -> Void {
         locationManager.delegate = self
@@ -40,7 +40,7 @@ class RestaurantSearchViewController: UIViewController {
         restaurantTableView.delegate = self
         restaurantTableView.dataSource = self
         restaurantTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
-         restaurantTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        restaurantTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
     func reloadView() -> Void {
@@ -48,40 +48,47 @@ class RestaurantSearchViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
     @IBAction func searchButtonTapped(_ sender: Any) {
         guard let name = nameTextField.text, !name.isEmpty,
             let address = addressTextField.text else { return }
         
         if address != "" {
-            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+            view.activityStartAnimating()
             RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { [weak self] (result) in
-                switch result {
-                case .success(let restaurants):
-                    self?.restaurants = restaurants
-                    self?.reloadView()
-                    self?.view.activityStopAnimating()
-                    
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.view.activityStopAnimating()
-                    return
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let restaurants):
+                        self?.restaurants = restaurants
+                        self?.reloadView()
+                        self?.view.activityStopAnimating()
+                        
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        self?.view.activityStopAnimating()
+                        return
+                    }
                 }
             }
         } else {
             fetchCurrentLocation(locationManager)
             let currentLocation = locationManager.location
-            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+            view.activityStartAnimating()
             RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { [weak self] (result) in
-                switch result {
-                case .success(let restaurants):
-                    self?.restaurants = restaurants
-                    self?.reloadView()
-                    self?.view.activityStopAnimating()
-                    
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.view.activityStopAnimating()
-                    return
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let restaurants):
+                        self?.restaurants = restaurants
+                        self?.reloadView()
+                        self?.view.activityStopAnimating()
+                        
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        self?.view.activityStopAnimating()
+                        return
+                    }
                 }
             }
         }
@@ -90,6 +97,7 @@ class RestaurantSearchViewController: UIViewController {
 }
 
 // MARK: - Extensions
+
 extension RestaurantSearchViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

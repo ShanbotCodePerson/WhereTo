@@ -231,9 +231,9 @@
 				40B2588124A156460090495C /* TabViewHome.storyboard */,
 				78508DB724A2987900A525FF /* WhereTo.storyboard */,
 				401715B224A3E977002D86E0 /* VotingSession.storyboard */,
+				78508DB324A296DB00A525FF /* History.storyboard */,
 				78508DB524A296FA00A525FF /* Favorites.storyboard */,
 				7830709624AACD24001876C5 /* SearchViewController.storyboard */,
-				78508DB324A296DB00A525FF /* History.storyboard */,
 				78508DB124A296BD00A525FF /* Profile.storyboard */,
 				40B2585524A119B50090495C /* Custom Views */,
 			);

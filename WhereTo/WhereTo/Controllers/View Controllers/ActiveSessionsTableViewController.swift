@@ -12,10 +12,20 @@ class ActiveSessionsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView()
+        
+        // Set up the UI
+        setUpViews()
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
+    }
+    
+    // MARK: - Set Up UI
+    
+    func setUpViews() {
+        // Hide the extra section markers at the bottom of the tableview
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
     }
 
     // MARK: - TableView Methods
@@ -31,7 +41,7 @@ class ActiveSessionsTableViewController: UITableViewController {
             let users = votingSession.users
             else { return cell }
         cell.textLabel?.text = "Choose a place to eat with \(users.map({ $0.name }).joined(separator: ", "))!" // TODO: - format better, have "and" before last name, describe location name and time?
-        cell.detailTextLabel?.text = "Currently waiting for ..." // TODO: - fill this part out better
+//        cell.detailTextLabel?.text = "Currently waiting for ..." // TODO: - fill this part out better
 
         return cell
     }

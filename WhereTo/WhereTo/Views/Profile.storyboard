@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JOj-An-PZS">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JOj-An-PZS" customClass="ProfileImageView" customModule="WhereTo" customModuleProvider="target">
                                 <rect key="frame" x="107" y="109" width="200" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="JOj-An-PZS" secondAttribute="height" multiplier="1:1" id="Ste-PO-1Ad"/>
@@ -95,7 +96,7 @@
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6Wi-XS-Ah3">
                                 <rect key="frame" x="15" y="520.5" width="384" height="256.5"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="dietaryRestrictionCell" textLabel="afN-At-nta" style="IBUITableViewCellStyleDefault" id="okp-QW-uUo">
                                         <rect key="frame" x="0.0" y="28" width="384" height="44"/>
@@ -116,11 +117,15 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Tn-Qv-lSR">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Tn-Qv-lSR">
                                 <rect key="frame" x="0.0" y="44" width="414" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="6wy-jN-5KU"/>
                                 </constraints>
+                                <color key="barTintColor" name="navBar"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" name="navBarText"/>
+                                </textAttributes>
                                 <items>
                                     <navigationItem title="Profile" id="fuV-yp-gJe"/>
                                 </items>
@@ -135,18 +140,18 @@
                                     <action selector="editImageButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="Mov-mo-VpL"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="XxP-jM-2dn">
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="XxP-jM-2dn">
                                 <rect key="frame" x="15" y="817" width="384" height="30"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGA-Gb-ZjC">
-                                        <rect key="frame" x="0.0" y="0.0" width="192" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGA-Gb-ZjC" customClass="DeleteButton" customModule="WhereTo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="186" height="30"/>
                                         <state key="normal" title="Delete Account"/>
                                         <connections>
                                             <action selector="deleteAccountButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="3bh-1I-qmT"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZHn-Id-s6l">
-                                        <rect key="frame" x="192" y="0.0" width="192" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZHn-Id-s6l" customClass="NeutralButton" customModule="WhereTo" customModuleProvider="target">
+                                        <rect key="frame" x="198" y="0.0" width="186" height="30"/>
                                         <state key="normal" title="Sign Out"/>
                                         <connections>
                                             <action selector="signOutButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="2Ai-1J-ZR6"/>
@@ -158,8 +163,12 @@
                                 <rect key="frame" x="0.0" y="646" width="414" height="216"/>
                                 <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </pickerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mnm-Fu-JDZ">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <color key="backgroundColor" name="navBar"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" name="background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="ioX-up-gc8" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" constant="45" id="0rZ-oC-iXL"/>
@@ -179,16 +188,20 @@
                             <constraint firstItem="XxP-jM-2dn" firstAttribute="top" secondItem="6Wi-XS-Ah3" secondAttribute="bottom" constant="40" id="Hmf-A3-G2D"/>
                             <constraint firstItem="JOj-An-PZS" firstAttribute="top" secondItem="2Tn-Qv-lSR" secondAttribute="bottom" constant="20" id="IM6-UZ-cDa"/>
                             <constraint firstItem="aLy-XK-YbU" firstAttribute="trailing" secondItem="K02-n0-dkk" secondAttribute="trailing" id="ITz-m7-ouJ"/>
+                            <constraint firstItem="2Tn-Qv-lSR" firstAttribute="top" secondItem="Mnm-Fu-JDZ" secondAttribute="bottom" id="KL1-Ah-EPe"/>
                             <constraint firstItem="tfs-Yb-MtR" firstAttribute="centerX" secondItem="JOj-An-PZS" secondAttribute="centerX" id="VPZ-vj-Qfc"/>
                             <constraint firstItem="BiE-DP-P33" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" constant="15" id="Vx4-2w-qCJ"/>
+                            <constraint firstItem="Mnm-Fu-JDZ" firstAttribute="trailing" secondItem="K02-n0-dkk" secondAttribute="trailing" id="Wpg-l4-d7e"/>
                             <constraint firstItem="K02-n0-dkk" firstAttribute="trailing" secondItem="6Wi-XS-Ah3" secondAttribute="trailing" constant="15" id="Wps-BM-Al3"/>
                             <constraint firstItem="K02-n0-dkk" firstAttribute="trailing" secondItem="XxP-jM-2dn" secondAttribute="trailing" constant="15" id="bLc-6g-7tb"/>
                             <constraint firstItem="6Wi-XS-Ah3" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" constant="15" id="baI-5U-NvR"/>
+                            <constraint firstItem="Mnm-Fu-JDZ" firstAttribute="leading" secondItem="oOf-62-Jhc" secondAttribute="leading" id="bbB-W2-YgQ"/>
                             <constraint firstItem="AIf-gl-RtG" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" constant="15" id="e7S-Lo-DSp"/>
                             <constraint firstItem="aLy-XK-YbU" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" id="iKH-Qg-Rbr"/>
                             <constraint firstItem="BiE-DP-P33" firstAttribute="top" secondItem="ioX-up-gc8" secondAttribute="bottom" constant="40" id="jk3-r5-N6t"/>
                             <constraint firstItem="JOj-An-PZS" firstAttribute="centerX" secondItem="K02-n0-dkk" secondAttribute="centerX" id="m2X-HD-yov"/>
                             <constraint firstItem="FsT-eY-lai" firstAttribute="width" secondItem="JOj-An-PZS" secondAttribute="width" id="nCl-Rs-760"/>
+                            <constraint firstItem="Mnm-Fu-JDZ" firstAttribute="top" secondItem="oOf-62-Jhc" secondAttribute="top" id="pJ1-S7-fXr"/>
                             <constraint firstItem="AIf-gl-RtG" firstAttribute="top" secondItem="BiE-DP-P33" secondAttribute="bottom" constant="40" id="rko-DU-G99"/>
                             <constraint firstItem="2Tn-Qv-lSR" firstAttribute="top" secondItem="oOf-62-Jhc" secondAttribute="topMargin" id="rwW-WC-cf3"/>
                             <constraint firstItem="ioX-up-gc8" firstAttribute="top" secondItem="JOj-An-PZS" secondAttribute="bottom" constant="10" id="t9Z-vP-3wX"/>
@@ -221,5 +234,14 @@
     </scenes>
     <resources>
         <image name="person.fill" catalog="system" width="128" height="120"/>
+        <namedColor name="background">
+            <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBar">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBarText">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

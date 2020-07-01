@@ -17,15 +17,15 @@ class InviteFriendsTableViewController: UITableViewController {
         
     // MARK: - Outlets
     
-    @IBOutlet weak var viewActiveVotingSessionsButton: UIButton!
+    @IBOutlet weak var viewActiveVotingSessionsButton: GoButton!
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // set InviteFriendsTableViewController as delegate of CLLocationManager
-        locationManager.delegate = self
+        // Set up the UI
+        setUpViews()
         
         // Set up the observers to listen for notifications telling this particular view to update
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
@@ -78,9 +78,9 @@ class InviteFriendsTableViewController: UITableViewController {
         }
         
         // Check to see if there are still active voting sessions, and if not, hide the active voting session button
-        if VotingSessionController.shared.votingSessions?.count ?? 0 > 0 {
-            viewActiveVotingSessionsButton.isHidden = false
-        } else { viewActiveVotingSessionsButton.isHidden = true }
+//        if VotingSessionController.shared.votingSessions?.count ?? 0 > 0 {
+//            viewActiveVotingSessionsButton.isHidden = false
+//        } else { viewActiveVotingSessionsButton.isHidden = true }
     }
     
     // MARK: - Receive Notifications
@@ -90,6 +90,15 @@ class InviteFriendsTableViewController: UITableViewController {
     }
     
     // MARK: - Set Up UI
+    
+    func setUpViews() {
+        // Hide the extra section markers at the bottom of the tableview
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
+        
+        // Set up the CLLocationManager's delegate
+        locationManager.delegate = self
+    }
     
     func loadAllData() {
         guard UserController.shared.friends == nil else { return }
@@ -116,7 +125,8 @@ class InviteFriendsTableViewController: UITableViewController {
                 case .success(let votingSessions):
                     if votingSessions.count == 0 {
                         // Don't allow the user to go to the page displaying all the voting sessions if there aren't any
-                        self?.viewActiveVotingSessionsButton.isHidden = true
+                        // FIXME: - why is the button nil all of a sudden??
+//                        self?.viewActiveVotingSessionsButton.isHidden = true
                         // TODO: - make sure to enable this button as appropriate later
                     }
                 case .failure(let error):
