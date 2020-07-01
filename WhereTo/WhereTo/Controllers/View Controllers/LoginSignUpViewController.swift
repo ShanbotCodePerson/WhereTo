@@ -317,7 +317,7 @@ extension LoginSignUpViewController: UITextFieldDelegate {
         }
             // Increment different in the login view where there are fewer text fields
         else {
-            if let nextField = textField.superview?.viewWithTag(textField.tag + 3) as? UITextField {
+            if let nextField = textField.superview?.viewWithTag(textField.tag + 2) as? UITextField {
                 nextField.becomeFirstResponder()
             } else {
                 // Otherwise, remove the keyboard and try to login
