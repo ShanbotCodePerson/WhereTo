@@ -9,14 +9,14 @@
 import UIKit
 
 extension UIButton {
-    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .border, backgroundColor: UIColor = .white, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
+    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .border, backgroundColor: UIColor = .white, backgroundOpacity: CGFloat = 1, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: FontNames = .mainFont) {
         
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
-        self.backgroundColor = backgroundColor
+        self.backgroundColor = backgroundColor.withAlphaComponent(backgroundOpacity)
         setTitleColor(textColor, for: .normal)
         self.tintColor = tintColor
-        titleLabel?.font = UIFont(name: fontName, size: fontSize)
+        titleLabel?.font = UIFont(name: fontName.rawValue, size: fontSize)
     }
     
     func deactivate() {
@@ -32,30 +32,45 @@ extension UIButton {
     }
 }
 
-class GoButton: UIButton {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        setUpViews(backgroundColor: .systemGreen)
+class ButtonWithBackground: UIButton {
+    override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return addInsets(to: super.sizeThatFits(size))
+    }
+    
+    private func addInsets(to size: CGSize) -> CGSize {
+        let width = size.width + 12
+        let height = size.height + 6
+        return CGSize(width: width, height: height)
     }
 }
 
-class DeleteButton: UIButton {
+class GoButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .systemRed)
+        setUpViews(backgroundColor: .systemGreen, fontName: .boldFont)
     }
 }
 
-class NeutralButton: UIButton {
+class DeleteButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .gray)
+        setUpViews(backgroundColor: .systemRed, fontName: .boldFont)
     }
 }
 
-class EditButton: UIButton {
+class NeutralButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
+        setUpViews(backgroundColor: .gray, fontName: .boldFont)
+    }
+}
+
+class EditButton: ButtonWithBackground {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(cornerRadius: 16, borderWidth: 0, backgroundColor: .white, backgroundOpacity: 0.6, textColor: .background)
     }
 }
 

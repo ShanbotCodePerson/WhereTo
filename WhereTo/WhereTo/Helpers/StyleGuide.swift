@@ -41,6 +41,7 @@ extension UIColor {
 
 // MARK: - Font Names
 
-struct FontNames {
-    static let mainFont = ""
+enum FontNames: String {
+    case mainFont = "Arial-Regular"
+    case boldFont = "Arial-Bold"
 }

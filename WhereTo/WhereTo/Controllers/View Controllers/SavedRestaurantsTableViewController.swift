@@ -149,6 +149,7 @@ class SavedRestaurantsTableViewController: UITableViewController {
 }
 
 // MARK: - SavedButtonDelegate
+
 extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {

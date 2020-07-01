@@ -63,7 +63,8 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAt-O7-sUA" customClass="GoButton" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="318.5" y="515" width="54" height="30"/>
+                                <rect key="frame" x="311.5" y="515" width="61" height="31"/>
+                                <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="17"/>
                                 <state key="normal" title="Sign Up"/>
                                 <connections>
                                     <action selector="doneButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jvr-YB-7kP"/>
