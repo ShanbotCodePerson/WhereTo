@@ -99,14 +99,16 @@ class LoginSignUpViewController: UIViewController {
         if let user = Auth.auth().currentUser {
             // If the user's email account has not yet been verified, don't sign in
             guard user.isEmailVerified else { return }
-            
+            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
             UserController.shared.fetchCurrentUser { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
                         self?.goToMainApp()
+                        self?.view.activityStopAnimating()
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.view.activityStopAnimating()
                     }
                 }
             }
@@ -167,11 +169,13 @@ class LoginSignUpViewController: UIViewController {
         // TODO: - display loading icon
         
         // Create the user and send the notification email
+        self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
             guard authResult?.user != nil, error == nil else {
                 // If the error is that the user name already exists, try to log in to that account
                 // Print and display the error
                 print("Error in \(#function) : \(error!.localizedDescription) \n---\n \(error!)")
+                self?.view.activityStopAnimating()
                 DispatchQueue.main.async { self?.presentErrorAlert(error!) }
                 return
             }
@@ -182,6 +186,7 @@ class LoginSignUpViewController: UIViewController {
                 if let error = error {
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.activityStopAnimating()
                     DispatchQueue.main.async { self?.presentErrorAlert(error) }
                 }
                 
@@ -193,10 +198,12 @@ class LoginSignUpViewController: UIViewController {
     
     // If the user already exists, log them in
     func login(with email: String, password: String) {
+        self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
             if let error = error {
                 // Print and display the error
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                self?.view.activityStopAnimating()
                 DispatchQueue.main.async { self?.presentErrorAlert(error) }
                 return
             }
@@ -209,21 +216,25 @@ class LoginSignUpViewController: UIViewController {
                         switch result {
                         case .success(_):
                             // Navigate to the main screen of the app
+                            self?.view.activityStopAnimating()
                             self?.goToMainApp()
                         case .failure(let error):
                             // If the error is that the user doesn't exist yet, then create it
                             if case WhereToError.noUserFound = error {
                                 self?.setUpUser(with: email)
+                                self?.view.activityStopAnimating()
                                 return
                             }
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                            self?.view.activityStopAnimating()
                             self?.presentErrorAlert(error)
                         }
                     }
                 }
             } else {
                 // Present the alert asking the user to check their email
+                self?.view.activityStopAnimating()
                 self?.presentVerifyEmailAlert(with: email)
             }
         }
@@ -231,15 +242,18 @@ class LoginSignUpViewController: UIViewController {
     
     // Once a user has verified their email, finish completing their account
     func setUpUser(with email: String) {
+        self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
         UserController.shared.newUser(with: email, name: usernameTextField.text) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
+                    self?.view.activityStopAnimating()
                     // Navigate to the main screen of the app
                     self?.goToMainApp()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.activityStopAnimating()
                     self?.presentErrorAlert(error)
                 }
             }

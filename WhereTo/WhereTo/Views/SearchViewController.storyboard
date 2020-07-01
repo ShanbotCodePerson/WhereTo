@@ -16,10 +16,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWV-pJ-CoS">
-                                <rect key="frame" x="0.0" y="802" width="414" height="40"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="0.0" y="802" width="414" height="60"/>
+                                <color key="backgroundColor" red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="DeU-Hk-sG6"/>
+                                    <constraint firstAttribute="height" constant="60" id="DeU-Hk-sG6"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Search">
@@ -59,11 +59,11 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="FFK-ZQ-eJ8" firstAttribute="leading" secondItem="XrV-CK-aej" secondAttribute="leading" constant="10" id="Aj9-hP-tBS"/>
                             <constraint firstItem="CQr-Ic-2YK" firstAttribute="top" secondItem="FFK-ZQ-eJ8" secondAttribute="bottom" constant="10" id="BCH-CY-nBD"/>
-                            <constraint firstItem="XrV-CK-aej" firstAttribute="bottom" secondItem="WWV-pJ-CoS" secondAttribute="bottom" constant="20" id="Of0-57-1aj"/>
+                            <constraint firstItem="XrV-CK-aej" firstAttribute="bottom" secondItem="WWV-pJ-CoS" secondAttribute="bottom" id="Of0-57-1aj"/>
                             <constraint firstItem="XrV-CK-aej" firstAttribute="trailing" secondItem="CQr-Ic-2YK" secondAttribute="trailing" id="XhI-7q-BB1"/>
                             <constraint firstItem="WWV-pJ-CoS" firstAttribute="top" secondItem="CQr-Ic-2YK" secondAttribute="bottom" id="bgo-nb-g44"/>
                             <constraint firstItem="CQr-Ic-2YK" firstAttribute="leading" secondItem="XrV-CK-aej" secondAttribute="leading" id="ceq-Ee-5Gz"/>

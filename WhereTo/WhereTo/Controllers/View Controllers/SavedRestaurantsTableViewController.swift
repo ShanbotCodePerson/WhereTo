@@ -49,15 +49,18 @@ class SavedRestaurantsTableViewController: UITableViewController {
     
     func loadAllData() {
         if RestaurantController.shared.favoriteRestaurants == nil {
+            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
             RestaurantController.shared.fetchFavoriteRestaurants { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
                         // Refresh the tableview
                         self?.tableView.reloadData()
+                        self?.view.activityStopAnimating()
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.view.activityStopAnimating()
                         self?.presentErrorAlert(error)
                     }
                 }

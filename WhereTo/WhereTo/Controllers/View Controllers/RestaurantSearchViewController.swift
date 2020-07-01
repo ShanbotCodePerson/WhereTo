@@ -55,30 +55,34 @@ class RestaurantSearchViewController: UIViewController {
         
         
         if address != "" {
-            
+            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
             RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { [weak self] (result) in
                 switch result {
                 case .success(let restaurants):
                     self?.restaurants = restaurants
                     self?.reloadView()
+                    self?.view.activityStopAnimating()
                     
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.activityStopAnimating()
                     return
                 }
             }
         } else {
             fetchCurrentLocation(locationManager)
             let currentLocation = locationManager.location
-            
+            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
             RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { [weak self] (result) in
                 switch result {
                 case .success(let restaurants):
                     self?.restaurants = restaurants
                     self?.reloadView()
+                    self?.view.activityStopAnimating()
                     
                 case .failure(let error):
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    self?.view.activityStopAnimating()
                     return
                 }
             }

@@ -38,15 +38,18 @@ class HistoryTableViewController: UITableViewController {
     
     func loadData() {
         if RestaurantController.shared.previousRestaurants == nil {
+            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
             RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
                         // Reload the tableview
                         self?.tableView.reloadData()
+                        self?.view.activityStopAnimating()
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.view.activityStopAnimating()
                         self?.presentErrorAlert(error)
                     }
                 }
