@@ -135,7 +135,7 @@ class UserController {
         
         // Handle the edge case where the user has no friends
         if currentUser.friends.count == 0 {
-            friends = []
+            self.friends = []
             return completion(.success(true))
         }
         
@@ -326,7 +326,7 @@ class UserController {
         
         VotingSessionController.shared.subscribeToInvitationNotifications()
         VotingSessionController.shared.subscribeToInvitationResponseNotifications()
-        VotingSessionController.shared.subscribeToSessionOverNotifications()
+//        VotingSessionController.shared.subscribeToSessionOverNotifications()
         VotingSessionController.shared.subscribeToVoteNotifications()
     }
 }

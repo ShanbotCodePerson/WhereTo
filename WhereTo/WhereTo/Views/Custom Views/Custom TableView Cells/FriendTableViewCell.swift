@@ -22,8 +22,17 @@ class FriendTableViewCell: UITableViewCell {
     // MARK: - Set Up UI
 
     func setUpViews() {
-        guard let friend = friend else { return }
+        // If the friend is nil, then display a notice to the user that they haven't added any friends
+        guard let friend = friend else {
+            profileImageView.isHidden = true
+            nameLabel.textAlignment = .center
+            nameLabel.text = "You have not yet added any friends - click the plus button in the top corner to add a friend"
+            return
+        }
         
+        // Otherwise, fill in the details of the friend
+        profileImageView.isHidden = false
+        nameLabel.textAlignment = .left
         profileImageView.image = friend.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = friend.name
     }

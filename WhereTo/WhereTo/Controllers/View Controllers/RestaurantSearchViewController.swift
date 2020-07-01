@@ -11,27 +11,27 @@ import CoreLocation
 
 class RestaurantSearchViewController: UIViewController {
     
-    // MARK: - Singleton
-    
-    static let shared = RestaurantSearchViewController()
-
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
     var restaurants: [Restaurant] = []
     
     // MARK: - Outlets
+    
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
     @IBOutlet weak var restaurantTableView: UITableView!
     
     // MARK: - LifeCycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        restaurantTableView.tableFooterView = UIView()
+        restaurantTableView.backgroundColor = .background
         setUpDelegates()
     }
     
-    // MARK: - Helpers
+    // MARK: - Helper Methods
     
     func setUpDelegates() -> Void {
         locationManager.delegate = self
@@ -40,7 +40,7 @@ class RestaurantSearchViewController: UIViewController {
         restaurantTableView.delegate = self
         restaurantTableView.dataSource = self
         restaurantTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
-         restaurantTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        restaurantTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
     func reloadView() -> Void {
@@ -48,61 +48,71 @@ class RestaurantSearchViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
+        // Close the keyboard
+        nameTextField.resignFirstResponder()
+        addressTextField.resignFirstResponder()
+    }
+    
     @IBAction func searchButtonTapped(_ sender: Any) {
-        // TODO: Fix error that happens in RestaurantTableViewCell
+        search()
+    }
+    
+    // A helper method to actually execute the search
+    func search() {
         guard let name = nameTextField.text, !name.isEmpty,
-        let address = addressTextField.text else { return }
-        
+            let address = addressTextField.text else {
+                presentAlert(title: "No Name Entered", message: "You must enter a name of a restaurant to search for")
+                return
+        }
         
         if address != "" {
-            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+            view.activityStartAnimating()
             RestaurantController.shared.fetchRestaurantsByName(name: name, address: address) { [weak self] (result) in
-                switch result {
-                case .success(let restaurants):
-                    self?.restaurants = restaurants
-                    self?.reloadView()
-                    self?.view.activityStopAnimating()
-                    
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.view.activityStopAnimating()
-                    return
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let restaurants):
+                        self?.restaurants = restaurants
+                        self?.reloadView()
+                        self?.view.activityStopAnimating()
+                        
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        self?.view.activityStopAnimating()
+                        return
+                    }
                 }
             }
         } else {
             fetchCurrentLocation(locationManager)
             let currentLocation = locationManager.location
-            self.view.activityStartAnimating(activityColor: UIColor.darkGray, backgroundColor: UIColor.clear)
+            view.activityStartAnimating()
             RestaurantController.shared.fetchRestaurantsByName(name: name, currentLocation: currentLocation) { [weak self] (result) in
-                switch result {
-                case .success(let restaurants):
-                    self?.restaurants = restaurants
-                    self?.reloadView()
-                    self?.view.activityStopAnimating()
-                    
-                case .failure(let error):
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.view.activityStopAnimating()
-                    return
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let restaurants):
+                        self?.restaurants = restaurants
+                        self?.reloadView()
+                        self?.view.activityStopAnimating()
+                        
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        self?.presentErrorAlert(error)
+                        self?.view.activityStopAnimating()
+                        return
+                    }
                 }
             }
         }
     }
-
 }
 
-// MARK: - Extensions
-extension RestaurantSearchViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        textField.resignFirstResponder()
-        
-        return true
-    }
-}
+// MARK: - TableView Methods
 
 extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return restaurants.count
     }
@@ -111,8 +121,38 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
         
         cell.restaurant = restaurants[indexPath.row]
+        cell.delegate = self
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("got here to \(#function) and \(indexPath.row)")
+        let restaurant = restaurants[indexPath.row]
+        
+        // Present an alert controller asking the user if they want to open the restaurant in maps
+        presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
+            self.launchMapWith(restaurant: restaurant)
+        }
+    }
+}
+
+// MARK: - TextField Delegate
+
+extension RestaurantSearchViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        // Try to move to the next field
+        if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+            nextField.becomeFirstResponder()
+        } else {
+            // Otherwise, close the keyboard and try to search
+            textField.resignFirstResponder()
+            search()
+        }
+        
+        return true
     }
 }
 
@@ -150,11 +190,11 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
             }
         }
         else {
-            // Add the restaurant from the user's list of favorite restaurants
-            currentUser.favoriteRestaurants.append(restaurant.restaurantID)
+            // Add the restaurant from the user's list of favorite restaurants (making sure to avoid duplicates)
+            currentUser.favoriteRestaurants.uniqueAppend(restaurant.restaurantID)
             
-            // Add the restaurant to the source of truth
-            RestaurantController.shared.favoriteRestaurants?.append(restaurant)
+            // Add the restaurant to the source of truth (making sure to avoid duplicates)
+            RestaurantController.shared.favoriteRestaurants?.uniqueAppend(restaurant)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
@@ -205,11 +245,11 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
             }
         }
         else {
-            // Add the restaurant from the user's list of blacklisted restaurants
-            currentUser.blacklistedRestaurants.append(restaurant.restaurantID)
+            // Add the restaurant from the user's list of blacklisted restaurants (making sure to avoid duplicates)
+            currentUser.blacklistedRestaurants.uniqueAppend(restaurant.restaurantID)
             
-            // Add the restaurant to the source of truth
-            RestaurantController.shared.blacklistedRestaurants?.append(restaurant)
+            // Add the restaurant to the source of truth (making sure to avoid duplicates)
+            RestaurantController.shared.blacklistedRestaurants?.uniqueAppend(restaurant)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in

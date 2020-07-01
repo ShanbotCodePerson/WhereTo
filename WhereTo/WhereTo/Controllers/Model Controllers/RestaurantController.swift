@@ -79,12 +79,8 @@ class RestaurantController {
             do {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
+                let restaurants = businesses.map { $0 }
                 
-                var restaurants: [Restaurant] = []
-                
-                for restaurant in businesses {
-                    restaurants.append(restaurant)
-                }
                 return completion(.success(restaurants))
                 
             } catch {
@@ -207,25 +203,39 @@ class RestaurantController {
     // fetch restaurants with user input name and optional address
     func fetchRestaurantsByName(name: String, address: String? = nil, currentLocation: CLLocation? = nil, completion: @escaping resultCompletionWith<[Restaurant]>) {
         
-        var urlString = ""
+        guard var baseURL = URL(string: yelpStrings.baseURLString) else { return completion(.failure(.invalidURL)) }
+        baseURL.appendPathComponent(yelpStrings.searchPath)
+        
+        var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
+//        let typeQuery = URLQueryItem(name: yelpStrings)
+        let nameQuery = URLQueryItem(name: yelpStrings.termKey, value: name)
         
         // 1 - URL setup
         if !(address?.isEmpty ?? true) {
             // request by address
-            guard let address = address else { return }
-            urlString = "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.termKey)=\(name)&\(yelpStrings.locationKey)=\(address)"
+            guard let address = address else { return completion(.failure(.noLocationForAddress)) }
+            
+            let locationQuery = URLQueryItem(name: yelpStrings.locationKey, value: address)
+           
+            components?.queryItems = [nameQuery, locationQuery]
         } else {
-            guard let currentLocation = currentLocation else { return }
+            guard let currentLocation = currentLocation else { return completion(.failure(.noLocationForAddress)) }
             // Get current location
             
+            let latitudeQuery = URLQueryItem(name: yelpStrings.latitudeKey, value: String(currentLocation.coordinate.latitude))
+            let longitudeQuery = URLQueryItem(name: yelpStrings.longitudeKey, value: String(currentLocation.coordinate.longitude))
+            
             // request by currentLocation
-            urlString =  "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(currentLocation.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(currentLocation.coordinate.longitude)&\(yelpStrings.termKey)=\(name)"
+            components?.queryItems = [nameQuery, latitudeQuery, longitudeQuery]
         }
     
-        guard let finalURL = URL(string: urlString) else { return }
+        guard let finalURL = components?.url else { return completion(.failure(.invalidURL)) }
+        
+        
         var request = URLRequest(url: finalURL)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
+        
         // 2 - Data task
         URLSession.shared.dataTask(with: request) { data, _, error in
           
@@ -241,12 +251,8 @@ class RestaurantController {
             do {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
+                let restaurants = businesses.map { $0 }
                 
-                var restaurants: [Restaurant] = []
-                
-                for restaurant in businesses {
-                    restaurants.append(restaurant)
-                }
                 return completion(.success(restaurants))
                 
             } catch {

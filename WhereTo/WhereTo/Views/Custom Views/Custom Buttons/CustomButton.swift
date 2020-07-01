@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIButton {
-    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 4, borderColor: UIColor = .darkGray, backgroundColor: UIColor = .white, textColor: UIColor = .darkGray, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
+    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .darkGray, backgroundColor: UIColor = .white, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: String = FontNames.mainFont) {
         
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
@@ -45,5 +45,13 @@ class DeleteButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews(backgroundColor: .systemRed)
+    }
+}
+
+class NeutralButton: UIButton {
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(backgroundColor: .gray)
     }
 }

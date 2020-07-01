@@ -10,6 +10,10 @@ import UIKit
 
 class VotingSessionTableViewController: UITableViewController {
     
+    // MARK: - Outlets
+    
+    @IBOutlet weak var votingSessionDescriptionLabel: UILabel!
+    
     // MARK: - Properties
     
     var votingSession: VotingSession?
@@ -33,14 +37,17 @@ class VotingSessionTableViewController: UITableViewController {
     // MARK: - Set Up UI
     
     func setUpViews() {
+        // Hide the extra section markers at the bottom of the tableview
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .background
+        
+        // Set up the tableview cells
         tableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
         tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
-        
-        //        guard let votingSession = votingSession else { return }
-        
-        // TODO: - fill out description at top of page?
-        // TODO: - refresh tableview?
+        // Fill out the description of the voting session
+        guard let votingSession = votingSession, let users = votingSession.users else { return }
+        votingSessionDescriptionLabel.text = "Vote on your top \(votingSession.votesEach) places to eat with \(users.map({ $0.name }).joined(separator: ", ")) near \("LOCATION")"
     }
     
     func loadData() {
@@ -166,11 +173,11 @@ extension VotingSessionTableViewController: RestaurantTableViewCellSavedButtonDe
             }
         }
         else {
-            // Add the restaurant from the user's list of favorite restaurants
-            currentUser.favoriteRestaurants.append(restaurant.restaurantID)
+            // Add the restaurant from the user's list of favorite restaurants (making sure to avoid duplicates)
+            currentUser.favoriteRestaurants.uniqueAppend(restaurant.restaurantID)
             
-            // Add the restaurant to the source of truth
-            RestaurantController.shared.favoriteRestaurants?.append(restaurant)
+            // Add the restaurant to the source of truth (making sure to avoid duplicates)
+            RestaurantController.shared.favoriteRestaurants?.uniqueAppend(restaurant)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
@@ -221,11 +228,11 @@ extension VotingSessionTableViewController: RestaurantTableViewCellSavedButtonDe
             }
         }
         else {
-            // Add the restaurant from the user's list of blacklisted restaurants
-            currentUser.blacklistedRestaurants.append(restaurant.restaurantID)
+            // Add the restaurant from the user's list of blacklisted restaurants (making sure to avoid duplicates)
+            currentUser.blacklistedRestaurants.uniqueAppend(restaurant.restaurantID)
             
-            // Add the restaurant to the source of truth
-            RestaurantController.shared.blacklistedRestaurants?.append(restaurant)
+            // Add the restaurant to the source of truth (making sure to avoid duplicates)
+            RestaurantController.shared.blacklistedRestaurants?.uniqueAppend(restaurant)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in

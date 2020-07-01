@@ -99,7 +99,7 @@ class VotingSessionController {
                     case .success(_):
                         // Make sure the user is subscribed to notifications related to sessions
                         self?.subscribeToInvitationResponseNotifications()
-                        self?.subscribeToSessionOverNotifications()
+//                        self?.subscribeToSessionOverNotifications()
                         self?.subscribeToVoteNotifications()
                     case .failure(let error):
                         // Print and return the error
@@ -290,7 +290,7 @@ class VotingSessionController {
             
             // Make sure the user is subscribed to notifications related to sessions
             subscribeToInvitationResponseNotifications()
-            subscribeToSessionOverNotifications()
+//            subscribeToSessionOverNotifications()
             subscribeToVoteNotifications()
             
             // Save the changes to the user
@@ -582,49 +582,51 @@ class VotingSessionController {
         }
     }
     
-    // FIXME: - need to handle this differently
-    // The voting session is over and has been deleted
-    func subscribeToSessionOverNotifications() {
-        guard let currentUser = UserController.shared.currentUser,
-            currentUser.activeVotingSessions.count > 0
-            else { return }
-        
-        // Set up a listener on all voting sessions the user is currently involved in
-        db.collection(VotingSessionStrings.recordType)
-            .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
-            .addSnapshotListener { [weak self] (snapshot, error) in
-                
-                if let error = error {
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return
-                }
-                
-                // Only pay attention to when the invitation is deleted
-                snapshot?.documentChanges.forEach({ (change) in
-                    if change.type == .removed {
-                        // If there was an outcome, add that restaurant the user's list of previous restaurants
-                        let votingSession = VotingSession(dictionary: change.document.data())
-                        if let outcome = votingSession?.outcomeID {
-                            currentUser.previousRestaurants.append(outcome)
-                            
-                            // TODO: - send a notification to update the previous restaurants table view, present alert with results and allowing user to open in map app
-                        }
-                        
-                        // Remove the voting session from the source of truth
-                        self?.votingSessions?.removeAll(where: { $0.uuid == votingSession?.uuid })
-                        
-                        // Remove the voting session from the user's list of active sessions
-                        currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession?.uuid })
-                        
-                        // Save the changes to the user
-                        UserController.shared.saveChanges(to: currentUser) { (_) in }
-                    }
-                })
-                
-                
-        }
-    }
+//    // The voting session is over and has been deleted
+//    func subscribeToSessionOverNotifications() {
+//        guard let currentUser = UserController.shared.currentUser,
+//            currentUser.activeVotingSessions.count > 0
+//            else { return }
+//
+//        // Set up a listener on all voting sessions the user is currently involved in
+//        db.collection(VotingSessionStrings.recordType)
+//            .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
+//            .addSnapshotListener { [weak self] (snapshot, error) in
+//
+//                if let error = error {
+//                    // Print and return the error
+//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+//                    return
+//                }
+//
+//                // Only pay attention to when the voting session is deleted
+//                snapshot?.documentChanges.forEach({ (change) in
+//                    if change.type == .removed {
+//                        // If there was an outcome, add that restaurant the user's list of previous restaurants
+//                        let votingSession = VotingSession(dictionary: change.document.data())
+//                        if let outcome = votingSession?.outcomeID {
+//                            // Only add the new restaurant if it's not a duplicate
+//                            var previousRestaurants = currentUser.previousRestaurants
+//                            previousRestaurants.append(outcome)
+//                            currentUser.previousRestaurants = Array(Set(previousRestaurants))
+//
+//                            // Send a notification to update the history view and present an alert with the result
+//                            NotificationCenter.default.post(Notification(name: updateHistoryList))
+//                            NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
+//                        }
+//
+//                        // Remove the voting session from the source of truth
+//                        self?.votingSessions?.removeAll(where: { $0.uuid == votingSession?.uuid })
+//
+//                        // Remove the voting session from the user's list of active sessions
+//                        currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession?.uuid })
+//
+//                        // Save the changes to the user
+//                        UserController.shared.saveChanges(to: currentUser) { (_) in }
+//                    }
+//                })
+//        }
+//    }
     
     // A vote has been submitted
     func subscribeToVoteNotifications() {
@@ -685,7 +687,6 @@ class VotingSessionController {
     func calculateOutcome(of votingSession: VotingSession) {
         
         // Check to see if the voting session already has an outcome
-        // FIXME: - probably don't need this
         if votingSession.outcomeID != nil {
             handleFinishedSession(votingSession)
         }
@@ -764,18 +765,16 @@ class VotingSessionController {
             let outcomeID = votingSession.outcomeID
             else { return }
         
-        // Add the outcome to the user's list of previous restaurants (making sure not to add a duplicate)
-        var usersPreviousRestaurants = currentUser.previousRestaurants
-        usersPreviousRestaurants.append(outcomeID)
-        currentUser.previousRestaurants = Array(Set(usersPreviousRestaurants))
+        // Add the outcome to the user's list of previous restaurants (making sure to avoid duplicates)
+        currentUser.previousRestaurants.uniqueAppend(outcomeID)
         
-        // Add the restaurant to the source of truth of previous restaurants in the restaurant controller
+        // Add the restaurant to the source of truth (making sure to avoid duplicates)
         guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
-        // FIXME: - need to get set of this list of restaurants
-        RestaurantController.shared.previousRestaurants?.append(restaurant)
+        RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant)
         
-        // Send a notification to update the tableview as necessary
+        // Send notifications to update the history view and present an alert with the result
         NotificationCenter.default.post(Notification(name: updateHistoryList))
+        NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
         
         // Remove the voting session from the user's list of active voting sessions
         currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession.uuid })

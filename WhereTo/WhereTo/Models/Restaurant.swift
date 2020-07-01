@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Restaurant: Codable {
+struct Restaurant: Codable, Hashable {
     
     // MARK: - Properties
     let restaurantID: String
