@@ -19,6 +19,7 @@ class RestaurantTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var categoriesLabel: UILabel!
+    @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var isFavoriteButton: UIButton!
     @IBOutlet weak var isBlacklistedButton: UIButton!
@@ -39,6 +40,7 @@ class RestaurantTableViewCell: UITableViewCell {
         
         // Fill in the basic information about the restaurant
         nameLabel.text = restaurant.name
+        addressLabel.text = (restaurant.location.address1 + ", " + restaurant.location.city)
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
         if let rating = restaurant.rating { ratingLabel.text = "\(rating) Stars" }
         

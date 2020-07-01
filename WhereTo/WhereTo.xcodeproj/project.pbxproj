@@ -12,7 +12,6 @@
 		401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 401715B224A3E977002D86E0 /* VotingSession.storyboard */; };
 		401715B524A41A57002D86E0 /* VotingSessionInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401715B424A41A56002D86E0 /* VotingSessionInvite.swift */; };
 		408D8A2824ACE35700238674 /* StyleGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A2724ACE35700238674 /* StyleGuide.swift */; };
-		408D8A2A24ACE39200238674 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 408D8A2924ACE39200238674 /* Colors.xcassets */; };
 		408D8A3024ACE76000238674 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A2F24ACE76000238674 /* CustomImageView.swift */; };
 		408D8A3224ACE77100238674 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3124ACE77100238674 /* CustomTextField.swift */; };
 		408D8A3424ACE78200238674 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3324ACE78200238674 /* CustomButton.swift */; };
@@ -51,6 +50,7 @@
 		78508DB424A296DB00A525FF /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB324A296DB00A525FF /* History.storyboard */; };
 		78508DB624A296FA00A525FF /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB524A296FA00A525FF /* Favorites.storyboard */; };
 		78508DB824A2987900A525FF /* WhereTo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB724A2987900A525FF /* WhereTo.storyboard */; };
+		786B5F2624ACF39200A3445F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 786B5F2524ACF39200A3445F /* Colors.xcassets */; };
 		BC8B5353175386317AFE3306 /* Pods_WhereTo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +61,6 @@
 		401715B224A3E977002D86E0 /* VotingSession.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VotingSession.storyboard; sourceTree = "<group>"; };
 		401715B424A41A56002D86E0 /* VotingSessionInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotingSessionInvite.swift; sourceTree = "<group>"; };
 		408D8A2724ACE35700238674 /* StyleGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleGuide.swift; sourceTree = "<group>"; };
-		408D8A2924ACE39200238674 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		408D8A2F24ACE76000238674 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		408D8A3124ACE77100238674 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		408D8A3324ACE78200238674 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
@@ -103,6 +102,7 @@
 		78508DB324A296DB00A525FF /* History.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = History.storyboard; sourceTree = "<group>"; };
 		78508DB524A296FA00A525FF /* Favorites.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
 		78508DB724A2987900A525FF /* WhereTo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WhereTo.storyboard; sourceTree = "<group>"; };
+		786B5F2524ACF39200A3445F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		F4A020CE53683948133E3F08 /* Pods-WhereTo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.release.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -195,10 +195,10 @@
 				40B2583424A115D30090495C /* AppDelegate.swift */,
 				40B2583624A115D30090495C /* SceneDelegate.swift */,
 				40B2583D24A115D80090495C /* Assets.xcassets */,
-				408D8A2924ACE39200238674 /* Colors.xcassets */,
 				40B2583F24A115D80090495C /* LaunchScreen.storyboard */,
 				40B2584224A115D80090495C /* Info.plist */,
 				40B2588324A15CA20090495C /* GoogleService-Info.plist */,
+				786B5F2524ACF39200A3445F /* Colors.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -371,7 +371,7 @@
 			files = (
 				40B2584124A115D80090495C /* LaunchScreen.storyboard in Resources */,
 				401715B324A3E977002D86E0 /* VotingSession.storyboard in Resources */,
-				408D8A2A24ACE39200238674 /* Colors.xcassets in Resources */,
+				786B5F2624ACF39200A3445F /* Colors.xcassets in Resources */,
 				40B2583E24A115D80090495C /* Assets.xcassets in Resources */,
 				78508DB224A296BD00A525FF /* Profile.storyboard in Resources */,
 				40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */,
@@ -610,7 +610,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HT2WKYL4R9;
+				DEVELOPMENT_TEAM = 6FR69MK7S5;
 				INFOPLIST_FILE = WhereTo/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -629,7 +629,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HT2WKYL4R9;
+				DEVELOPMENT_TEAM = 6FR69MK7S5;
 				INFOPLIST_FILE = WhereTo/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
