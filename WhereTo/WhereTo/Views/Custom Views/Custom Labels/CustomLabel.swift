@@ -17,10 +17,15 @@ extension UILabel {
     }
 }
 
-class CustomLabel: UILabel {
-
+class DefaultLabel: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews()
+    }
+}
+
+class HeaderLabel: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
     }
 }

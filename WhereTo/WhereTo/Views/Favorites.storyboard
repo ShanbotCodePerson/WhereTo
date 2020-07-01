@@ -46,6 +46,7 @@
                                         <segment title="Favorites"/>
                                         <segment title="Blacklisted"/>
                                     </segments>
+                                    <color key="selectedSegmentTintColor" name="navBar"/>
                                     <connections>
                                         <action selector="segmentedControlTapped:" destination="IfB-HV-Cbp" eventType="valueChanged" id="zY5-ky-tUf"/>
                                     </connections>

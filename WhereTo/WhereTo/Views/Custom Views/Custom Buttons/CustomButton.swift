@@ -33,7 +33,6 @@ extension UIButton {
 }
 
 class GoButton: UIButton {
-
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews(backgroundColor: .systemGreen)
@@ -41,7 +40,6 @@ class GoButton: UIButton {
 }
 
 class DeleteButton: UIButton {
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews(backgroundColor: .systemRed)
@@ -49,9 +47,26 @@ class DeleteButton: UIButton {
 }
 
 class NeutralButton: UIButton {
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews(backgroundColor: .gray)
+    }
+}
+
+class EditButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+}
+
+class SearchButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+}
+
+class ToggleButton: UIButton {
+    override func awakeFromNib() {
+        super.awakeFromNib()
     }
 }
