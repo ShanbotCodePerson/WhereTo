@@ -418,6 +418,6 @@ extension WhereToViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         // If there are now no friends selected, then disable the vote button
-        if tableView.indexPathsForSelectedRows?.count == 0 { voteButton.deactivate() }
+        if tableView.indexPathsForSelectedRows == nil { voteButton.deactivate() }
     }
 }
