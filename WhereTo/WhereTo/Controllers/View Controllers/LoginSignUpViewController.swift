@@ -31,7 +31,7 @@ class LoginSignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         // Set up the UI
         setUpViews()
         
@@ -40,6 +40,19 @@ class LoginSignUpViewController: UIViewController {
         
         // Add an observer for when the keyboard appears or disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    func assignbackground(){
+        let background = UIImage(named: "3.png")
+
+        var imageView : UIImageView!
+        imageView = UIImageView(frame: view.bounds)
+        imageView.contentMode =  UIView.ContentMode.scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.image = background
+        imageView.center = view.center
+        view.addSubview(imageView)
+        self.view.sendSubviewToBack(imageView)
     }
     
     // MARK: - Respond to Notification
@@ -72,7 +85,7 @@ class LoginSignUpViewController: UIViewController {
     
     func setUpViews() {
         containerView.addCornerRadius()
-        
+        assignbackground()
         // Set up the text field delegates
         emailTextField.delegate = self
         usernameTextField.delegate = self

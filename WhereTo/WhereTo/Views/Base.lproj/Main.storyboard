@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcm-mm-seE">
-                                <rect key="frame" x="41.5" y="219.5" width="331" height="286"/>
+                                <rect key="frame" x="41.5" y="305" width="331" height="286"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="PoY-01-yID">
                                         <rect key="frame" x="0.0" y="0.0" width="331" height="276"/>
@@ -53,12 +53,12 @@
                                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
                                             </textField>
                                             <textField opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="8" y="115" width="315" height="45.5"/>
+                                                <rect key="frame" x="8" y="115" width="315" height="46"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                             </textField>
                                             <textField opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="8" y="172.5" width="315" height="46"/>
+                                                <rect key="frame" x="8" y="173" width="315" height="45.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
                                             </textField>
@@ -86,24 +86,41 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAt-O7-sUA" customClass="GoButton" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="311.5" y="535.5" width="61" height="31"/>
+                                <rect key="frame" x="311.5" y="599" width="61" height="31"/>
                                 <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="17"/>
                                 <state key="normal" title="Sign Up"/>
                                 <connections>
                                     <action selector="doneButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jvr-YB-7kP"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-P0-0ur">
+                                <rect key="frame" x="20" y="164" width="374" height="47"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Where To?">
+                                        <attributes>
+                                            <color key="NSColor" red="1" green="0.41960784313725491" blue="0.20784313725490194" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="52" name="SignPainter-HouseScript"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" name="background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="30" id="ERg-wW-dlk"/>
+                            <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="8" id="ERg-wW-dlk"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="GKY-Mu-P4k"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="NO5-Nt-cHp"/>
+                            <constraint firstItem="yXI-P0-0ur" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="V6m-Ri-tdM"/>
+                            <constraint firstItem="yXI-P0-0ur" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="ZLw-cb-LhU"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="gKY-I2-kSx"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.35" id="kqZ-tC-RJU"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yXI-P0-0ur" secondAttribute="trailing" constant="20" id="r47-db-Oof"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="rMa-ng-W41"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="trailing" secondItem="kAt-O7-sUA" secondAttribute="trailing" id="rwx-2U-zTY"/>
-                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" priority="999" id="wSR-7B-DYM"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" constant="85.599999999999966" id="wSR-7B-DYM"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="377" id="yjX-0Z-53l"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -141,7 +158,7 @@
     <color key="tintColor" name="navBarButtonTint"/>
     <resources>
         <namedColor name="background">
-            <color red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBar">
             <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -150,7 +167,7 @@
             <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarFaded">
-            <color red="0.71706642916579066" green="0.79610012955548459" blue="0.92520621827411165" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.71372549019607845" green="0.79607843137254897" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>
