@@ -12,5 +12,6 @@ class TableViewCellBackground: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         addCornerRadius()
+        self.backgroundColor = UIColor.cellBackground.withAlphaComponent(0.8)
     }
 }

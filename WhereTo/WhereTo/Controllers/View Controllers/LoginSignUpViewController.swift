@@ -13,6 +13,7 @@ class LoginSignUpViewController: UIViewController {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var signUpToggleButton: UIButton!
     @IBOutlet weak var loginToggleButton: UIButton!
     @IBOutlet weak var emailTextField: UITextField!
@@ -31,14 +32,11 @@ class LoginSignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set up the text field delegates
-        emailTextField.delegate = self
-        usernameTextField.delegate = self
-        passwordTextField.delegate = self
-        confirmPasswordTextField.delegate = self
+        // Set up the UI
+        setUpViews()
         
         // Try to log the user in automatically
-        autoLogin()
+//        autoLogin()
         
         // Add an observer for when the keyboard appears or disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
@@ -70,6 +68,18 @@ class LoginSignUpViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: TimeInterval(0), options: animationCurve, animations: { self.view.layoutIfNeeded() }, completion: nil)
     }
     
+    // MARK: - Set Up UI
+    
+    func setUpViews() {
+        containerView.addCornerRadius()
+        
+        // Set up the text field delegates
+        emailTextField.delegate = self
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+    }
+    
     // MARK: - Actions
 
     @IBAction func screenTapped(_ sender: UITapGestureRecognizer) {
@@ -84,8 +94,10 @@ class LoginSignUpViewController: UIViewController {
         UIView.animate(withDuration: 0.2) {
             self.isSigningUp = true
             
-            self.signUpToggleButton.setTitleColor(.systemBlue, for: .normal)
-            self.loginToggleButton.setTitleColor(.systemGray4, for: .normal)
+            self.signUpToggleButton.setTitleColor(.white, for: .normal)
+            self.loginToggleButton.setTitleColor(.darkGray, for: .normal)
+            self.signUpToggleButton.backgroundColor = .navBar
+            self.loginToggleButton.backgroundColor = .navBarFaded
             
             self.usernameTextField.isHidden = false
             self.passwordTextField.returnKeyType = .next
@@ -103,8 +115,10 @@ class LoginSignUpViewController: UIViewController {
         UIView.animate(withDuration: 0.2) {
             self.isSigningUp = false
             
-            self.signUpToggleButton.setTitleColor(.systemGray4, for: .normal)
-            self.loginToggleButton.setTitleColor(.systemBlue, for: .normal)
+            self.signUpToggleButton.setTitleColor(.darkGray, for: .normal)
+            self.loginToggleButton.setTitleColor(.white, for: .normal)
+            self.signUpToggleButton.backgroundColor = .navBarFaded
+            self.loginToggleButton.backgroundColor = .navBar
             
             self.usernameTextField.isHidden = true
             self.passwordTextField.returnKeyType = .done

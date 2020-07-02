@@ -18,7 +18,7 @@ extension UIView {
         clipsToBounds = true
     }
     
-    func addBorder(width: CGFloat = 2, color: UIColor = .darkGray) {
+    func addBorder(width: CGFloat = 2, color: UIColor = .border) {
         layer.borderWidth = width
         layer.borderColor = color.cgColor
     }
@@ -29,12 +29,16 @@ extension UIView {
 extension UIColor {
     static let background = UIColor(named: "background")!
     static let navBar = UIColor(named: "navBar")!
+    static let navBarFaded = UIColor(named: "navBarFaded")!
     static let navBarText = UIColor(named: "navBarText")!
     static let navBarButtonTint = UIColor(named: "navBarButtonTint")!
     static let tabBarUnselected = UIColor(named: "tabBarUnselected")!
     static let textViewBackground = UIColor(named: "textViewBackground")!
+    static let cellBackground = UIColor(named: "cellBackground")!
+    static let cellBackgroundSelected = UIColor(named: "cellBackgroundSelected")!
     static let border = UIColor(named: "border")!
     static let mainText = UIColor(named: "mainText")!
+    static let subtitleText = UIColor(named: "subtitleText")!
     static let greenAccent = UIColor(named: "greenAccent")!
     static let redAccent = UIColor(named: "redAccent")!
     static let neutralAccent = UIColor(named: "neutralAccent")!
