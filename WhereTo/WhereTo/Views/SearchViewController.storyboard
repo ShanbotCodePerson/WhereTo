@@ -18,7 +18,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWV-pJ-CoS" customClass="SearchButton" customModule="WhereTo" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="802" width="414" height="60"/>
-                                <color key="backgroundColor" red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" name="navBar"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="DeU-Hk-sG6"/>
                                 </constraints>
@@ -63,7 +63,7 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="navBar"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="FFK-ZQ-eJ8" firstAttribute="leading" secondItem="XrV-CK-aej" secondAttribute="leading" constant="10" id="Aj9-hP-tBS"/>
@@ -103,6 +103,9 @@
     <resources>
         <namedColor name="background">
             <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBar">
+            <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarButtonTint">
             <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
