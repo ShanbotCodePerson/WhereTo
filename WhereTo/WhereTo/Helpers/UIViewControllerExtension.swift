@@ -509,6 +509,7 @@ extension UIView {
 }
 
 // MARK: LocationManagerDelegate
+
 extension UIViewController: CLLocationManagerDelegate {
     
     // methods for locationManagerDelegate
@@ -595,6 +596,7 @@ extension UIViewController: CLLocationManagerDelegate {
 }
 
 // MARK: - Apple Maps
+
 extension UIViewController {
     
     func launchMapWith(restaurant: Restaurant) {

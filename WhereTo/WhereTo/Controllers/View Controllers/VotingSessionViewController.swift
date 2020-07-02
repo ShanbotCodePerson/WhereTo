@@ -49,8 +49,11 @@ class VotingSessionViewController: UIViewController {
         restaurantsTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
         // Fill out the description of the voting session
-        guard let votingSession = votingSession, let users = votingSession.users else { return }
-        votingSessionDescriptionLabel.text = "Vote on your top \(votingSession.votesEach) places to eat with \(users.map({ $0.name }).joined(separator: ", ")) near \("LOCATION")"
+        guard let votingSession = votingSession else { return }
+        lookUpAddressFromLocation(location: votingSession.location) { [weak self] (locationDescription) in
+            let city = locationDescription?.locality ?? ""
+            self?.votingSessionDescriptionLabel.text = "Vote on your top \(votingSession.votesEach) choices for places to eat with \(votingSession.participantNames)\(city.isEmpty ? "" : " near ")\(city)!"
+        }
     }
     
     func loadData() {

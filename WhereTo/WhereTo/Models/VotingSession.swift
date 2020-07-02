@@ -120,7 +120,17 @@ class VotingSession {
     // MARK: - Helper Properties
     
     // A nicely formatted list of the other users participating in the vote
-    // TODO: - fix this - won't work for end of vote display
+    var participantNames: String {
+        guard var users = users else { return "nobody" }
+        users.removeAll(where: { $0.uuid == UserController.shared.currentUser?.uuid })
+        if users.count == 1 { return users.first?.name ?? "nobody" }
+        var result = ""
+        for index in 0..<users.count {
+            if index == users.count - 1 { result += ", and \(users[index].name)" }
+            else { result += ", \(users[index].name)" }
+        }
+        return result
+    }
     
     // The winning restaurant
     var winningRestaurant: Restaurant? {
