@@ -78,8 +78,6 @@ class HistoryViewController: UIViewController {
 
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - TableView Methods
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return RestaurantController.shared.previousRestaurants?.count ?? 0
     }
@@ -96,9 +94,19 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // TODO: - enable swipe to delete
-            // Delete the row from the data source
-            //            tableView.deleteRows(at: [indexPath], with: .fade)
+            presentChoiceAlert(title: "Remove", message: "Are you sure you would like to remove this restaurant from your history?") {
+                guard let currentUser = UserController.shared.currentUser else { return }
+                currentUser.previousRestaurants.remove(at: indexPath.row)
+                RestaurantController.shared.previousRestaurants?.remove(at: indexPath.row)
+                UserController.shared.saveChanges(to: currentUser) { (result) in
+                    switch result {
+                    case .success(_):
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    case .failure(let error):
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    }
+                } 
+            }
         }
     }
     
