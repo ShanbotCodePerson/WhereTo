@@ -23,11 +23,11 @@ struct Restaurant: Codable, Hashable {
     let imageURL: String?
     
     struct Location: Codable, Hashable, Equatable {
-        let address1: String
-        let city: String
-        let zip: String
-        let country: String
-        let state: String
+        let address1: String?
+        let city: String?
+        let zip: String?
+        let country: String?
+        let state: String?
         let displayAddress: [String]
         
         enum CodingKeys: String, CodingKey {
