@@ -64,6 +64,7 @@ class RestaurantController {
         var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)\(isOpenQuery)\(categoriesQuery)")!, timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
+        print("got here to \(#function) and \(request.url)")
          
         // 2 - Data task
         URLSession.shared.dataTask(with: request) { data, _, error in
@@ -81,6 +82,7 @@ class RestaurantController {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
                 let restaurants = businesses.map { $0 }
+                print("got here to decoding restaurants and the ids are \(restaurants.map({$0.restaurantID}).sorted())")
                 
                 return completion(.success(restaurants))
                 

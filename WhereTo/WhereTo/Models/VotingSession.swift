@@ -91,7 +91,12 @@ class VotingSession {
         RestaurantController.shared.fetchRestaurantsByLocation(location: location, dietaryRestrictions: dietaryRestrictions) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
+                print(restaurants?.count)
+                print(restaurants?.map({$0.restaurantID}).sorted())
+                print(self?.restaurantIDs.count)
+                print(self?.restaurantIDs.sorted())
                 guard let restaurantIDs = self?.restaurantIDs else { return }
+                print(restaurants?.filter({ restaurantIDs.contains($0.restaurantID) }).count)
                 self?.restaurants = restaurants?.filter { restaurantIDs.contains($0.restaurantID) }
                 group.leave()
             case .failure(let error):
