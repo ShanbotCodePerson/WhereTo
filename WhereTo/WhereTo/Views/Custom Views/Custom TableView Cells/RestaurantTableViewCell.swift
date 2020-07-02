@@ -55,8 +55,11 @@ class RestaurantTableViewCell: UITableViewCell {
         
         // Set up the image
         restaurantImage.image = #imageLiteral(resourceName: "default_restaurant_image")
-        restaurant.getImage { [weak self] (image) in
-            DispatchQueue.main.async { self?.restaurantImage.image = image }
+        if vote != nil { formatWithVote() }
+        else {
+            restaurant.getImage { [weak self] (image) in
+                DispatchQueue.main.async { self?.restaurantImage.image = image }
+            }
         }
         
         // Establish the defaults for the buttons

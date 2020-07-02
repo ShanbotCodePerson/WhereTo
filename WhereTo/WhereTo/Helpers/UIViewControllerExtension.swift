@@ -367,11 +367,16 @@ extension UIViewController {
     
     @objc func showVotingSessionResult(_ sender: NSNotification) {
         guard let votingSession = sender.object as? VotingSession else { return }
-        DispatchQueue.main.async { self.presentVotingSessionResultAlert(votingSession) }
+        DispatchQueue.main.async {
+            // First dismiss any existing alert
+            self.dismiss(animated: true)
+            self.presentVotingSessionResultAlert(votingSession)
+        }
     }
 }
 
 // MARK: - inviteFriendsTVC Alerts
+
 extension UIViewController {
     
     // Present an alert with a text field to get some input from the user
