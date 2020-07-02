@@ -168,8 +168,8 @@ class LoginSignUpViewController: UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
-                        self?.goToMainApp()
                         self?.view.activityStopAnimating()
+                        self?.goToMainApp()
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                         self?.view.activityStopAnimating()

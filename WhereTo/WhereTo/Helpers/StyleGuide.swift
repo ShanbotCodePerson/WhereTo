@@ -42,6 +42,8 @@ extension UIColor {
     static let greenAccent = UIColor(named: "greenAccent")!
     static let redAccent = UIColor(named: "redAccent")!
     static let neutralAccent = UIColor(named: "neutralAccent")!
+    static let whiteAccent = UIColor(named: "whiteAccent")!
+    static let loginScreen = UIColor(named: "loginScreen")!
 }
 
 // MARK: - Font Names
