@@ -133,9 +133,36 @@ extension SavedRestaurantsViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // TODO: - enable swipe to delete
-            // Delete the row from the data source
-            //            tableView.deleteRows(at: [indexPath], with: .fade)
+            presentChoiceAlert(title: "Remove", message: "Are you sure you would like to remove this restaurant from your saved list?") {
+                guard let currentUser = UserController.shared.currentUser else { return }
+                if self.segmentedControl.selectedSegmentIndex == 0 {
+                    currentUser.favoriteRestaurants.remove(at: indexPath.row)
+                    RestaurantController.shared.favoriteRestaurants?.remove(at: indexPath.row)
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            DispatchQueue.main.async {
+                                tableView.deleteRows(at: [indexPath], with: .fade)
+                            }
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        }
+                    }
+                } else {
+                    currentUser.blacklistedRestaurants.remove(at: indexPath.row)
+                    RestaurantController.shared.blacklistedRestaurants?.remove(at: indexPath.row)
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            DispatchQueue.main.async {
+                                tableView.deleteRows(at: [indexPath], with: .fade)
+                            }
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        }
+                    }
+                }
+            }
         }
     }
     
