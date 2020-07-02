@@ -42,14 +42,15 @@ class RestaurantTableViewCell: UITableViewCell {
         nameLabel.text = restaurant.name
         addressLabel.text = (restaurant.location.address1 + ", " + restaurant.location.city)
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
+        starRating.forEach { $0.image = UIImage(systemName: "star") }
         if let rating = restaurant.rating {
             let intRating = Int(rating)
             for index in 0..<intRating {
-                starRating[index].image = UIImage(systemName: "star.fill")
+                starRating.first(where: { $0.tag == index })?.image = UIImage(systemName: "star.fill")
             }
-            if rating > Float(intRating) { starRating[intRating].image = UIImage(systemName: "star.lefthalf.fill") }
-        } else {
-            starRating.forEach { $0.image = UIImage(systemName: "star") }
+            if rating > Float(intRating) {
+                starRating.first(where: { $0.tag == intRating })?.image = UIImage(systemName: "star.lefthalf.fill")
+            }
         }
         
         // Set up the image
