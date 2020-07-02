@@ -19,6 +19,7 @@ struct Restaurant: Codable, Hashable {
     var categoryNames: [String] { Array(categories.compactMap({ $0["title"] })) }
     let rating: Float?
     let location: Location
+    let url: String
     let imageURL: String?
     
     struct Location: Codable, Hashable, Equatable {
@@ -39,7 +40,7 @@ struct Restaurant: Codable, Hashable {
     }
    
     enum CodingKeys: String, CodingKey {
-        case name, coordinates, categories, rating, location, restaurantID = "id", imageURL = "image_url"
+        case name, coordinates, categories, rating, location, url, restaurantID = "id", imageURL = "image_url"
     }
     
     func getImage(completion: @escaping (UIImage) -> Void) {
