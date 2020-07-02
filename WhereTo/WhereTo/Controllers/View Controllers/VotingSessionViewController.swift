@@ -1,5 +1,5 @@
 //
-//  VotingSessionTableViewController.swift
+//  VotingSessionViewController.swift
 //  WhereTo
 //
 //  Created by Shannon Draeker on 6/23/20.
@@ -8,11 +8,12 @@
 
 import UIKit
 
-class VotingSessionTableViewController: UITableViewController {
+class VotingSessionViewController: UIViewController {
     
     // MARK: - Outlets
     
     @IBOutlet weak var votingSessionDescriptionLabel: UILabel!
+    @IBOutlet weak var restaurantsTableView: UITableView!
     
     // MARK: - Properties
     
@@ -38,12 +39,14 @@ class VotingSessionTableViewController: UITableViewController {
     
     func setUpViews() {
         // Hide the extra section markers at the bottom of the tableview
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        restaurantsTableView.tableFooterView = UIView()
+        restaurantsTableView.backgroundColor = .background
         
-        // Set up the tableview cells
-        tableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
-        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        // Set up the tableview
+        restaurantsTableView.delegate = self
+        restaurantsTableView.dataSource = self
+        restaurantsTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
+        restaurantsTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
         // Fill out the description of the voting session
         guard let votingSession = votingSession, let users = votingSession.users else { return }
@@ -64,7 +67,7 @@ class VotingSessionTableViewController: UITableViewController {
                     self?.votes = votes.filter { $0.userID == currentUser.uuid }
                     
                     // Update the tableview
-                    self?.tableView.reloadData()
+                    self?.restaurantsTableView.reloadData()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -76,18 +79,21 @@ class VotingSessionTableViewController: UITableViewController {
     
     // MARK: - Actions
     
-    @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
+    @IBAction func closeButtonTapped(_ sender: UIBarButtonItem) {
         // Return to the main view of the app
         transitionToStoryboard(named: .TabViewHome)
     }
+}
+
+// MARK: - TableView Methods
+
+extension VotingSessionViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return votingSession?.restaurants?.count ?? 0
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
         
         guard let restaurant = votingSession?.restaurants?[indexPath.row] else { return cell }
@@ -100,9 +106,7 @@ class VotingSessionTableViewController: UITableViewController {
         return cell
     }
     
-    // MARK: - Vote
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Make sure the cell isn't already selected and not all the votes have been cast already
         guard let cell = tableView.cellForRow(at: indexPath) as? RestaurantTableViewCell,
             let votingSession = votingSession,
@@ -123,7 +127,7 @@ class VotingSessionTableViewController: UITableViewController {
                     
                     // Update the cell
                     cell.vote = (self?.votes.count ?? 1) - 1
-                    self?.tableView.reloadData()
+                    self?.restaurantsTableView.reloadData()
                     
                     // If the max number of votes have been cast, show an alert and return to the main menu
                     if self?.votes.count == votingSession.votesEach {
@@ -141,7 +145,7 @@ class VotingSessionTableViewController: UITableViewController {
 
 // MARK: - SavedButtonDelegate
 
-extension VotingSessionTableViewController: RestaurantTableViewCellSavedButtonDelegate {
+extension VotingSessionViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         guard let currentUser = UserController.shared.currentUser,

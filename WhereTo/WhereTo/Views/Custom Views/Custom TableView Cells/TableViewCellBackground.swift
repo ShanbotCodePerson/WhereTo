@@ -1,5 +1,5 @@
 //
-//  CustomTextField.swift
+//  TableViewCellBackground.swift
 //  WhereTo
 //
 //  Created by Shannon Draeker on 7/1/20.
@@ -8,13 +8,10 @@
 
 import UIKit
 
-class CustomTextField: UITextField {
-    
+class TableViewCellBackground: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
-        
         addCornerRadius()
-        addBorder()
-        backgroundColor = .textViewBackground
+        self.backgroundColor = UIColor.cellBackground.withAlphaComponent(0.8)
     }
 }
