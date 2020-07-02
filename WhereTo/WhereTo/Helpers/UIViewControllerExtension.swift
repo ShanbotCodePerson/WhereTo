@@ -608,7 +608,7 @@ extension UIViewController {
         // Create MKMapItem
         var mapItem: MKMapItem? {
     
-            let location = restaurant.name
+            let location = restaurant.location.displayAddress.joined(separator: ", ")
             
             let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
           
@@ -617,7 +617,8 @@ extension UIViewController {
                 coordinate: coordinates,
                 addressDictionary: addressDict)
             let mapItem = MKMapItem(placemark: placemark)
-            mapItem.name = title
+            mapItem.name = restaurant.name
+            mapItem.url = URL(string: restaurant.url)
             return mapItem
         }
         
