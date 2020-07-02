@@ -138,3 +138,9 @@ class VotingSession {
         return restaurants?.first(where: { $0.restaurantID == outcomeID })
     }
 }
+
+extension VotingSession: Equatable {
+    static func == (lhs: VotingSession, rhs: VotingSession) -> Bool {
+        return lhs.uuid == rhs.uuid
+    }
+}

@@ -88,10 +88,17 @@ class VotingSessionController {
                 votingSession.documentID = reference?.documentID
                 
                 // Add the reference to the voting session to the user's list of active voting sessions
-                currentUser.activeVotingSessions.append(votingSession.uuid)
+                currentUser.activeVotingSessions.uniqueAppend(votingSession.uuid)
                 
                 // Add the voting session to the source of truth
-                self?.votingSessions?.append(votingSession)
+                if var votingSessions = self?.votingSessions {
+                    if !votingSessions.contains(votingSession) {
+                        votingSessions.append(votingSession)
+                        self?.votingSessions = votingSessions
+                    }
+                } else {
+                    self?.votingSessions = [votingSession]
+                }
                 
                 // Save the changes to the user
                 UserController.shared.saveChanges(to: currentUser) { (result) in
@@ -726,8 +733,12 @@ class VotingSessionController {
         guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
         RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant)
         
-        // Send notifications to update the history view and present an alert with the result
+        // Remove the voting session from the source of truth
+        votingSessions?.removeAll(where: { $0 == votingSession })
+        
+        // Send notifications to update the views and present an alert with the result
         NotificationCenter.default.post(Notification(name: updateHistoryList))
+        NotificationCenter.default.post(Notification(name: updateActiveSessionsButton))
         NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
         
         // Remove the voting session from the user's list of active voting sessions
