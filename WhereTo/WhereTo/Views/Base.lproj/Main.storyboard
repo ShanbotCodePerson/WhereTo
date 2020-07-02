@@ -16,54 +16,77 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="PoY-01-yID">
-                                <rect key="frame" x="41.5" y="239.5" width="331" height="245.5"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcm-mm-seE">
+                                <rect key="frame" x="41.5" y="219.5" width="331" height="286"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Mu-RJU">
-                                        <rect key="frame" x="0.0" y="0.0" width="331" height="39.5"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="PoY-01-yID">
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="276"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a6d-Mo-mfe" customClass="ToggleButton" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="165.5" height="39.5"/>
-                                                <state key="normal" title="Sign Up"/>
-                                                <connections>
-                                                    <action selector="signUpToggleButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WmY-UG-ugD"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxX-WX-BNX" customClass="ToggleButton" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="165.5" y="0.0" width="165.5" height="39.5"/>
-                                                <state key="normal" title="Log In">
-                                                    <color key="titleColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="loginToggleButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bqR-wk-UgW"/>
-                                                </connections>
-                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Mu-RJU">
+                                                <rect key="frame" x="0.0" y="0.0" width="331" height="45.5"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a6d-Mo-mfe">
+                                                        <rect key="frame" x="0.0" y="0.0" width="165.5" height="45.5"/>
+                                                        <color key="backgroundColor" name="navBar"/>
+                                                        <state key="normal" title="Sign Up">
+                                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="signUpToggleButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WmY-UG-ugD"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxX-WX-BNX">
+                                                        <rect key="frame" x="165.5" y="0.0" width="165.5" height="45.5"/>
+                                                        <color key="backgroundColor" name="navBarFaded"/>
+                                                        <state key="normal" title="Log In">
+                                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="loginToggleButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bqR-wk-UgW"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <textField opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
+                                                <rect key="frame" x="8" y="57.5" width="315" height="45.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
+                                            </textField>
+                                            <textField opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
+                                                <rect key="frame" x="8" y="115" width="315" height="45.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                            </textField>
+                                            <textField opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
+                                                <rect key="frame" x="8" y="172.5" width="315" height="46"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
+                                            </textField>
+                                            <textField opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm password..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zni-Kw-RXd" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
+                                                <rect key="frame" x="8" y="230.5" width="315" height="45.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
+                                            </textField>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstItem="Zni-Kw-RXd" firstAttribute="width" secondItem="PoY-01-yID" secondAttribute="width" multiplier="0.95" id="05Y-8o-aDO"/>
+                                            <constraint firstItem="r46-jI-bPM" firstAttribute="width" secondItem="PoY-01-yID" secondAttribute="width" multiplier="0.95" id="Hww-QU-n2i"/>
+                                            <constraint firstItem="6Kw-Xj-2zg" firstAttribute="width" secondItem="PoY-01-yID" secondAttribute="width" multiplier="0.95" id="Sm8-FY-8hH"/>
+                                            <constraint firstItem="vUr-rx-3WX" firstAttribute="width" secondItem="PoY-01-yID" secondAttribute="width" multiplier="0.95" id="iqb-TO-lpC"/>
+                                            <constraint firstItem="smM-Mu-RJU" firstAttribute="width" secondItem="PoY-01-yID" secondAttribute="width" id="k09-xK-5l1"/>
+                                        </constraints>
                                     </stackView>
-                                    <textField opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="51.5" width="331" height="39.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="103" width="331" height="39.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="154.5" width="331" height="39.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
-                                    </textField>
-                                    <textField opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm password..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zni-Kw-RXd" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="206" width="331" height="39.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
-                                    </textField>
                                 </subviews>
-                            </stackView>
+                                <color key="backgroundColor" name="navBar"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="PoY-01-yID" secondAttribute="bottom" constant="10" id="DEQ-fT-cGS"/>
+                                    <constraint firstItem="PoY-01-yID" firstAttribute="leading" secondItem="jcm-mm-seE" secondAttribute="leading" id="o8o-aO-gMk"/>
+                                    <constraint firstAttribute="trailing" secondItem="PoY-01-yID" secondAttribute="trailing" id="rOP-Xp-VK6"/>
+                                    <constraint firstItem="PoY-01-yID" firstAttribute="top" secondItem="jcm-mm-seE" secondAttribute="top" id="sTU-Ch-Gqn"/>
+                                </constraints>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAt-O7-sUA" customClass="GoButton" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="311.5" y="515" width="61" height="31"/>
+                                <rect key="frame" x="311.5" y="535.5" width="61" height="31"/>
                                 <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="17"/>
                                 <state key="normal" title="Sign Up"/>
                                 <connections>
@@ -74,14 +97,14 @@
                         <color key="backgroundColor" name="background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="PoY-01-yID" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.3" id="2Vm-lC-4Ep"/>
-                            <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="PoY-01-yID" secondAttribute="bottom" constant="30" id="3bH-5O-q39"/>
-                            <constraint firstItem="kAt-O7-sUA" firstAttribute="trailing" secondItem="PoY-01-yID" secondAttribute="trailing" id="5NQ-tS-a9y"/>
-                            <constraint firstItem="PoY-01-yID" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" priority="999" id="NZ8-fl-MIr"/>
-                            <constraint firstItem="PoY-01-yID" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="RTd-JP-13d"/>
-                            <constraint firstItem="PoY-01-yID" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="fGE-NH-Rly"/>
+                            <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="30" id="ERg-wW-dlk"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="GKY-Mu-P4k"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="gKY-I2-kSx"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.35" id="kqZ-tC-RJU"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="rMa-ng-W41"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="PoY-01-yID" secondAttribute="bottom" id="yjX-0Z-53l"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="trailing" secondItem="kAt-O7-sUA" secondAttribute="trailing" id="rwx-2U-zTY"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" priority="999" id="wSR-7B-DYM"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="377" id="yjX-0Z-53l"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <variation key="default">
@@ -95,6 +118,7 @@
                     </view>
                     <connections>
                         <outlet property="confirmPasswordTextField" destination="Zni-Kw-RXd" id="J2b-o9-dIa"/>
+                        <outlet property="containerView" destination="jcm-mm-seE" id="Hw0-2V-Si1"/>
                         <outlet property="doneButton" destination="kAt-O7-sUA" id="RRH-5A-ypb"/>
                         <outlet property="emailTextField" destination="6Kw-Xj-2zg" id="1ys-82-WUJ"/>
                         <outlet property="keyboardHeightLayoutConstraint" destination="yjX-0Z-53l" id="6dr-hs-wHw"/>
@@ -117,10 +141,16 @@
     <color key="tintColor" name="navBarButtonTint"/>
     <resources>
         <namedColor name="background">
-            <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBar">
+            <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarButtonTint">
-            <color red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="navBarFaded">
+            <color red="0.71706642916579066" green="0.79610012955548459" blue="0.92520621827411165" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -91,9 +91,3 @@ class SearchButton: UIButton {
         super.awakeFromNib()
     }
 }
-
-class ToggleButton: UIButton {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-}

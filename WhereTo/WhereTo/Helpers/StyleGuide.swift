@@ -29,6 +29,7 @@ extension UIView {
 extension UIColor {
     static let background = UIColor(named: "background")!
     static let navBar = UIColor(named: "navBar")!
+    static let navBarFaded = UIColor(named: "navBarFaded")!
     static let navBarText = UIColor(named: "navBarText")!
     static let navBarButtonTint = UIColor(named: "navBarButtonTint")!
     static let tabBarUnselected = UIColor(named: "tabBarUnselected")!
