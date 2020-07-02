@@ -9,16 +9,21 @@
 import UIKit
 
 extension UILabel {
-    func setUpViews(cornerRadius: CGFloat = 8, textColor: UIColor = .black, fontSize: CGFloat = 20, fontName: String = FontNames.mainFont) {
+    func setUpViews(textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: FontNames = .mainFont) {
         
-        numberOfLines = 0
         self.textColor = textColor
-        font = UIFont(name: fontName, size: fontSize)
+        font = UIFont(name: fontName.rawValue, size: fontSize)
     }
 }
 
-class CustomLabel: UILabel {
+class DefaultLabel: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews()
+    }
+}
 
+class HeaderLabel: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews()

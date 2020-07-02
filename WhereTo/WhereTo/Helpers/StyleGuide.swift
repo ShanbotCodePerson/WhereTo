@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+// MARK: - Common Formatting Functions
+
 extension UIView {
     
     func addCornerRadius(_ radius: CGFloat = 8) {
@@ -22,13 +24,25 @@ extension UIView {
     }
 }
 
+// MARK: - Custom Color Names
+
 extension UIColor {
     static let background = UIColor(named: "background")!
     static let navBar = UIColor(named: "navBar")!
     static let navBarText = UIColor(named: "navBarText")!
     static let navBarButtonTint = UIColor(named: "navBarButtonTint")!
+    static let tabBarUnselected = UIColor(named: "tabBarUnselected")!
+    static let textViewBackground = UIColor(named: "textViewBackground")!
+    static let border = UIColor(named: "border")!
+    static let mainText = UIColor(named: "mainText")!
+    static let greenAccent = UIColor(named: "greenAccent")!
+    static let redAccent = UIColor(named: "redAccent")!
+    static let neutralAccent = UIColor(named: "neutralAccent")!
 }
 
-struct FontNames {
-    static let mainFont = ""
+// MARK: - Font Names
+
+enum FontNames: String {
+    case mainFont = "Arial-Regular"
+    case boldFont = "Arial-Bold"
 }

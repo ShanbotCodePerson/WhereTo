@@ -1,5 +1,5 @@
 //
-//  SavedRestaurantsTableViewController.swift
+//  HistoryViewController.swift
 //  WhereTo
 //
 //  Created by Shannon Draeker on 6/23/20.
@@ -7,17 +7,12 @@
 //
 
 import UIKit
-import CoreLocation
 
-class SavedRestaurantsTableViewController: UITableViewController {
-    
-    // MARK: - Properties
-    
-    let locationManager = CLLocationManager()
+class HistoryViewController: UIViewController {
     
     // MARK: - Outlets
     
-    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var restaurantsTableView: UITableView!
     
     // MARK: - Lifecycle Methods
     
@@ -28,44 +23,44 @@ class SavedRestaurantsTableViewController: UITableViewController {
         setUpViews()
         
         // Set up the observer to listen for changes in the data
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateSavedList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
         
         // Load the data if it hasn't been loaded already
-        loadAllData()
+        loadData()
     }
     
     // MARK: - Respond to Notifications
     
     @objc func refreshData() {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { self.restaurantsTableView.reloadData() }
     }
     
-    // MARK: - Set Up UI
+    // MARK: - Set up the UI
     
     func setUpViews() {
         // Hide the extra section markers at the bottom of the tableview
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .background
+        restaurantsTableView.tableFooterView = UIView()
+        restaurantsTableView.backgroundColor = .background
         
-        // Set up the location managers delegate
-        locationManager.delegate = self
-        
-        // Set up the tableview cells
-        tableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
+        // Set up the tableview
+        restaurantsTableView.delegate = self
+        restaurantsTableView.dataSource = self
+        restaurantsTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
+        restaurantsTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
     }
     
-    func loadAllData() {
-        if RestaurantController.shared.favoriteRestaurants == nil {
+    func loadData() {
+        if RestaurantController.shared.previousRestaurants == nil {
             view.activityStartAnimating()
-            RestaurantController.shared.fetchFavoriteRestaurants { [weak self] (result) in
+            RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
-                        // Refresh the tableview
-                        self?.tableView.reloadData()
+                        // Reload the tableview
+                        self?.refreshData()
                         self?.view.activityStopAnimating()
                     case .failure(let error):
                         // Print and display the error
@@ -76,59 +71,30 @@ class SavedRestaurantsTableViewController: UITableViewController {
                 }
             }
         }
-        if RestaurantController.shared.blacklistedRestaurants == nil {
-            RestaurantController.shared.fetchBlacklistedRestaurants { [weak self] (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(_):
-                        // Refresh the tableview
-                        self?.tableView.reloadData()
-                    case .failure(let error):
-                        // Print and display the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        self?.presentErrorAlert(error)
-                    }
-                }
-            }
-        }
+    }
+}
+
+// MARK: - TableView Methods
+
+extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - TableView Methods
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return RestaurantController.shared.previousRestaurants?.count ?? 0
     }
     
-    // MARK: - Actions
-    
-    @IBAction func addRestaurantButtonTapped(_ sender: UIBarButtonItem) {
-    }
-    
-    @IBAction func segmentedControlTapped(_ sender: Any) {
-        tableView.reloadData()
-    }
-    
-    // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            return RestaurantController.shared.favoriteRestaurants?.count ?? 0
-        }
-        return RestaurantController.shared.blacklistedRestaurants?.count ?? 0
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as? RestaurantTableViewCell else { return UITableViewCell() }
         
-        var restaurant: Restaurant?
-        if segmentedControl.selectedSegmentIndex == 0 {
-            restaurant = RestaurantController.shared.favoriteRestaurants?[indexPath.row]
-        } else {
-            restaurant = RestaurantController.shared.blacklistedRestaurants?[indexPath.row]
-        }
-        
+        guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return cell }
         cell.restaurant = restaurant
         cell.delegate = self
-        cell.isFavoriteButton.isSelected = true
         
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // TODO: - enable swipe to delete
             // Delete the row from the data source
@@ -136,20 +102,19 @@ class SavedRestaurantsTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard segmentedControl.selectedSegmentIndex == 0,
-            let restaurant = RestaurantController.shared.favoriteRestaurants?[indexPath.row]
-            else { return }
-           
-           // Present an alert controller asking the user if they want to open the restaurant in maps
-           presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
-               self.launchMapWith(restaurant: restaurant)
-           }
-       }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return }
+        
+        // Present an alert controller asking the user if they want to open the restaurant in maps
+        presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
+            self.launchMapWith(restaurant: restaurant)
+        }
+    }
 }
 
 // MARK: - SavedButtonDelegate
-extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButtonDelegate {
+
+extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
     
     func favoriteRestaurantButton(for cell: RestaurantTableViewCell) {
         guard let currentUser = UserController.shared.currentUser,
@@ -170,11 +135,8 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                     // Display the success
                     self?.presentAlert(title: "Removed Favorite", message: "You have successfully removed \(restaurant.name) from your favorites")
                     
-                    // Update the tableview
-                    self?.refreshData()
-                    
-                    // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    // Send the notification to update the saved restaurants list
+                    NotificationCenter.default.post(Notification(name: updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -196,11 +158,8 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                     // Display the success
                     self?.presentAlert(title: "Successfully Favorited", message: "You have successfully saved \(restaurant.name) to your favorite restaurants")
                     
-                    // Update the tableview
-                    self?.refreshData()
-                    
-                    // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    // Send the notification to update the saved restaurants list
+                    NotificationCenter.default.post(Notification(name: updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -229,11 +188,8 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                     // Display the success
                     self?.presentAlert(title: "Removed Blacklist", message: "You have successfully removed \(restaurant.name) from your blacklisted restaurants")
                     
-                    // Update the tableview
-                    self?.refreshData()
-                    
-                    // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    // Send the notification to update the saved restaurants list
+                    NotificationCenter.default.post(Notification(name: updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -255,11 +211,8 @@ extension SavedRestaurantsTableViewController: RestaurantTableViewCellSavedButto
                     // Display the success
                     self?.presentAlert(title: "Successfully Blacklisted", message: "You have successfully blacklisted \(restaurant.name) and will not be directed there again")
                     
-                    // Update the tableview
-                    self?.refreshData()
-                    
-                    // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    // Send the notification to update the saved restaurants list
+                    NotificationCenter.default.post(Notification(name: updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

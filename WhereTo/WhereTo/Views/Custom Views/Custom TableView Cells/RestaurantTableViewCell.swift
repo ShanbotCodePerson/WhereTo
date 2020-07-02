@@ -17,14 +17,15 @@ class RestaurantTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var containerView: TableViewCellBackground!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var categoriesLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
-    @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var isFavoriteButton: UIButton!
     @IBOutlet weak var isBlacklistedButton: UIButton!
-    @IBOutlet weak var voteStatusImage: UIImageView!
+    @IBOutlet weak var restaurantImage: UIImageView!
     @IBOutlet weak var imageContainerView: UIView!
+    @IBOutlet var starRating: [UIImageView]!
     
     // MARK: - Properties
     
@@ -42,7 +43,15 @@ class RestaurantTableViewCell: UITableViewCell {
         nameLabel.text = restaurant.name
         addressLabel.text = (restaurant.location.address1 + ", " + restaurant.location.city)
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
-        if let rating = restaurant.rating { ratingLabel.text = "\(rating) Stars" }
+        if let rating = restaurant.rating {
+            let intRating = Int(rating)
+            for index in 0..<intRating {
+                starRating[index].image = UIImage(systemName: "star.fill")
+            }
+            if rating > Float(intRating) { starRating[intRating].image = UIImage(systemName: "star.lefthalf.fill") }
+        } else {
+            starRating.forEach { $0.image = UIImage(systemName: "star") }
+        }
         
         // Establish the defaults for the buttons
         isFavoriteButton.isHidden = false
@@ -71,8 +80,7 @@ class RestaurantTableViewCell: UITableViewCell {
         guard let vote = vote else { return }
         
         imageContainerView.isHidden = false
-        voteStatusImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
-        // TODO: - change color of image, or of entire cell, based on ranking?
+        restaurantImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
     }
     
     // MARK: - Actions

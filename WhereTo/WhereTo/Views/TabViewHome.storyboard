@@ -7,10 +7,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tab Bar Controller-->
+        <!--Tab Bar View Controller-->
         <scene sceneID="n9x-M9-o22">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="NX6-6F-Duw" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="NX6-6F-Duw" customClass="TabBarViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="qd3-VL-Ycg">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
@@ -39,7 +39,7 @@
         <scene sceneID="ykt-Tw-r86">
             <objects>
                 <viewControllerPlaceholder storyboardName="Profile" id="N9b-x7-Ap4" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="g9c-1V-5vE"/>
+                    <tabBarItem key="tabBarItem" title="" image="person.fill" catalog="system" selectedImage="person.fill" id="g9c-1V-5vE"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VEj-Wp-v14" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -49,7 +49,7 @@
         <scene sceneID="DH1-wl-o0I">
             <objects>
                 <viewControllerPlaceholder storyboardName="History" id="cy4-K0-dnc" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="t1J-Ez-YMK"/>
+                    <tabBarItem key="tabBarItem" title="" image="clock.fill" catalog="system" selectedImage="clock.fill" id="t1J-Ez-YMK"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fu5-Un-Tix" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -59,7 +59,7 @@
         <scene sceneID="6C1-rk-iiN">
             <objects>
                 <viewControllerPlaceholder storyboardName="Favorites" id="up6-rk-i3f" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="AVi-9s-qWY"/>
+                    <tabBarItem key="tabBarItem" title="" image="star.fill" catalog="system" selectedImage="star.fill" id="AVi-9s-qWY"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5uC-lj-flo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -69,7 +69,7 @@
         <scene sceneID="kTa-zT-k0K">
             <objects>
                 <viewControllerPlaceholder storyboardName="WhereTo" id="bkG-Jh-i9Y" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="Xj7-jY-Ww1"/>
+                    <tabBarItem key="tabBarItem" title="" image="house.fill" catalog="system" selectedImage="house.fill" id="Xj7-jY-Ww1"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DMb-2m-15e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -78,11 +78,15 @@
     </scenes>
     <color key="tintColor" name="navBarButtonTint"/>
     <resources>
+        <image name="clock.fill" catalog="system" width="128" height="121"/>
+        <image name="house.fill" catalog="system" width="128" height="106"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
         <namedColor name="navBar">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarButtonTint">
-            <color red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

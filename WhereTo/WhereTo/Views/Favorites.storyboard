@@ -1,90 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="IfB-HV-Cbp">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2Hc-yz-bJI">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Saved Restaurants Table View Controller-->
-        <scene sceneID="myo-Re-ByC">
+        <!--Saved Restaurants View Controller-->
+        <scene sceneID="bs4-K5-FnE">
             <objects>
-                <tableViewController id="IfB-HV-Cbp" customClass="SavedRestaurantsTableViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AXg-zo-LBo">
+                <viewController id="2Hc-yz-bJI" customClass="SavedRestaurantsViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="y6A-0t-fSc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" name="navBar"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="hea-kj-jH9">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="86"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X2i-BZ-Bro">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="45"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="45" id="Egv-gd-Kyv"/>
-                                    </constraints>
-                                    <color key="barTintColor" name="navBar"/>
-                                    <textAttributes key="titleTextAttributes">
-                                        <color key="textColor" name="navBarText"/>
-                                    </textAttributes>
-                                    <items>
-                                        <navigationItem title="Saved Restaurants" id="9l6-d2-EhQ">
-                                            <barButtonItem key="rightBarButtonItem" systemItem="add" id="Msi-GO-zhV">
-                                                <color key="tintColor" name="navBarButtonTint"/>
-                                                <connections>
-                                                    <action selector="addRestaurantButtonTapped:" destination="IfB-HV-Cbp" id="Tjb-7R-2DV"/>
-                                                    <segue destination="V2t-8d-Z7l" kind="show" id="d2A-dj-FFn"/>
-                                                </connections>
-                                            </barButtonItem>
-                                        </navigationItem>
-                                    </items>
-                                </navigationBar>
-                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="17E-hW-8uu">
-                                    <rect key="frame" x="120.5" y="53" width="173" height="26"/>
-                                    <segments>
-                                        <segment title="Favorites"/>
-                                        <segment title="Blacklisted"/>
-                                    </segments>
-                                    <connections>
-                                        <action selector="segmentedControlTapped:" destination="IfB-HV-Cbp" eventType="valueChanged" id="zY5-ky-tUf"/>
-                                    </connections>
-                                </segmentedControl>
-                            </subviews>
-                            <color key="backgroundColor" name="background"/>
-                            <constraints>
-                                <constraint firstItem="17E-hW-8uu" firstAttribute="centerX" secondItem="hea-kj-jH9" secondAttribute="centerX" id="2RK-GX-XhJ"/>
-                                <constraint firstItem="X2i-BZ-Bro" firstAttribute="top" secondItem="hea-kj-jH9" secondAttribute="top" id="3d2-A9-jrT"/>
-                                <constraint firstItem="X2i-BZ-Bro" firstAttribute="leading" secondItem="hea-kj-jH9" secondAttribute="leading" id="NB7-sG-7Xw"/>
-                                <constraint firstAttribute="trailing" secondItem="X2i-BZ-Bro" secondAttribute="trailing" id="RGD-Rg-5Vw"/>
-                                <constraint firstItem="17E-hW-8uu" firstAttribute="top" secondItem="X2i-BZ-Bro" secondAttribute="bottom" constant="8" id="nGN-FS-sFO"/>
-                                <constraint firstAttribute="bottom" secondItem="17E-hW-8uu" secondAttribute="bottom" constant="8" id="xQg-Et-DhI"/>
-                            </constraints>
-                        </view>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="12C-Xb-1E1" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="114" width="414" height="43.5"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="12C-Xb-1E1" id="oaE-cK-SpS">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="IfB-HV-Cbp" id="25s-He-ypV"/>
-                            <outlet property="delegate" destination="IfB-HV-Cbp" id="qXQ-2m-Y8A"/>
-                        </connections>
-                    </tableView>
-                    <tabBarItem key="tabBarItem" systemItem="favorites" id="QYM-0z-HoW"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X2i-BZ-Bro">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <color key="barTintColor" name="navBar"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" name="navBarText"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Saved Restaurants" id="9l6-d2-EhQ">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Msi-GO-zhV">
+                                            <color key="tintColor" name="navBarButtonTint"/>
+                                            <connections>
+                                                <action selector="addRestaurantButtonTapped:" destination="2Hc-yz-bJI" id="KFy-QG-9cT"/>
+                                                <segue destination="V2t-8d-Z7l" kind="show" id="d2A-dj-FFn"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="17E-hW-8uu">
+                                <rect key="frame" x="120.5" y="100" width="173" height="32"/>
+                                <segments>
+                                    <segment title="Favorites"/>
+                                    <segment title="Blacklisted"/>
+                                </segments>
+                                <color key="selectedSegmentTintColor" name="navBar"/>
+                                <connections>
+                                    <action selector="segmentedControlTapped:" destination="2Hc-yz-bJI" eventType="valueChanged" id="mqJ-K8-aEJ"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="N4w-bM-et0">
+                                <rect key="frame" x="0.0" y="143" width="414" height="670"/>
+                                <color key="backgroundColor" name="background"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="restaurantCell" id="12C-Xb-1E1" customClass="RestaurantTableViewCell" customModule="WhereTo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="12C-Xb-1E1" id="oaE-cK-SpS">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hRA-Ig-u8h">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <color key="backgroundColor" name="navBar"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="hRA-Ig-u8h" firstAttribute="top" secondItem="y6A-0t-fSc" secondAttribute="top" id="6o9-Iq-HDP"/>
+                            <constraint firstItem="X2i-BZ-Bro" firstAttribute="top" secondItem="fop-e7-0HN" secondAttribute="top" id="GSD-Jw-rJa"/>
+                            <constraint firstItem="17E-hW-8uu" firstAttribute="centerX" secondItem="fop-e7-0HN" secondAttribute="centerX" id="Jwx-VG-IL4"/>
+                            <constraint firstItem="N4w-bM-et0" firstAttribute="leading" secondItem="fop-e7-0HN" secondAttribute="leading" id="K62-x4-QzM"/>
+                            <constraint firstItem="X2i-BZ-Bro" firstAttribute="top" secondItem="hRA-Ig-u8h" secondAttribute="bottom" id="LjS-Mr-IHi"/>
+                            <constraint firstAttribute="trailing" secondItem="hRA-Ig-u8h" secondAttribute="trailing" id="dJL-Ly-Qfq"/>
+                            <constraint firstItem="X2i-BZ-Bro" firstAttribute="trailing" secondItem="fop-e7-0HN" secondAttribute="trailing" id="dWi-V3-qkY"/>
+                            <constraint firstItem="17E-hW-8uu" firstAttribute="top" secondItem="X2i-BZ-Bro" secondAttribute="bottom" constant="12" id="gHT-5h-yPS"/>
+                            <constraint firstItem="17E-hW-8uu" firstAttribute="centerX" secondItem="y6A-0t-fSc" secondAttribute="centerX" id="gaN-hY-yZ8"/>
+                            <constraint firstItem="fop-e7-0HN" firstAttribute="bottom" secondItem="N4w-bM-et0" secondAttribute="bottom" id="inl-sE-sH3"/>
+                            <constraint firstItem="fop-e7-0HN" firstAttribute="trailing" secondItem="N4w-bM-et0" secondAttribute="trailing" id="nWP-Wp-BIC"/>
+                            <constraint firstItem="X2i-BZ-Bro" firstAttribute="leading" secondItem="fop-e7-0HN" secondAttribute="leading" id="rpk-JE-CzA"/>
+                            <constraint firstItem="hRA-Ig-u8h" firstAttribute="leading" secondItem="y6A-0t-fSc" secondAttribute="leading" id="vXC-KE-eWb"/>
+                            <constraint firstItem="N4w-bM-et0" firstAttribute="top" secondItem="17E-hW-8uu" secondAttribute="bottom" constant="12" id="zsk-Rf-wbZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="fop-e7-0HN"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" image="star.fill" catalog="system" id="B7X-aL-Jki"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="segmentedControl" destination="17E-hW-8uu" id="P4X-Zx-78U"/>
+                        <outlet property="restaurantsTableView" destination="N4w-bM-et0" id="ust-SB-ohZ"/>
+                        <outlet property="segmentedControl" destination="17E-hW-8uu" id="jRf-ln-rc1"/>
                     </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IIQ-53-cbw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fRQ-xD-TxI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1079.7101449275362" y="928.79464285714278"/>
+            <point key="canvasLocation" x="211.59420289855075" y="928.79464285714278"/>
         </scene>
         <!--SearchViewController-->
         <scene sceneID="giT-gP-XR7">
@@ -94,19 +104,20 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9xI-il-vuY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1716" y="929"/>
+            <point key="canvasLocation" x="875" y="929"/>
         </scene>
     </scenes>
     <color key="tintColor" name="navBarButtonTint"/>
     <resources>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
         <namedColor name="background">
-            <color red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBar">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49019607843137253" green="0.61960784313725492" blue="0.75294117647058822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarButtonTint">
-            <color red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="navBarText">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

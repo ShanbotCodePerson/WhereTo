@@ -39,7 +39,7 @@ extension UIViewController {
     
     func transitionToVotingSessionPage(with votingSession: VotingSession) {
         let storyboard = UIStoryboard(name: StoryboardNames.VotingSession.rawValue, bundle: nil)
-        guard let initialVC = storyboard.instantiateInitialViewController() as? VotingSessionTableViewController else { return }
+        guard let initialVC = storyboard.instantiateInitialViewController() as? VotingSessionViewController else { return }
         initialVC.votingSession = votingSession
         initialVC.modalPresentationStyle = .fullScreen
         
