@@ -24,7 +24,6 @@ class RestaurantTableViewCell: UITableViewCell {
     @IBOutlet weak var isFavoriteButton: UIButton!
     @IBOutlet weak var isBlacklistedButton: UIButton!
     @IBOutlet weak var restaurantImage: UIImageView!
-    @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet var starRating: [UIImageView]!
     
     // MARK: - Properties
@@ -43,14 +42,21 @@ class RestaurantTableViewCell: UITableViewCell {
         nameLabel.text = restaurant.name
         addressLabel.text = (restaurant.location.address1 + ", " + restaurant.location.city)
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
+        starRating.forEach { $0.image = UIImage(systemName: "star") }
         if let rating = restaurant.rating {
             let intRating = Int(rating)
             for index in 0..<intRating {
-                starRating[index].image = UIImage(systemName: "star.fill")
+                starRating.first(where: { $0.tag == index })?.image = UIImage(systemName: "star.fill")
             }
-            if rating > Float(intRating) { starRating[intRating].image = UIImage(systemName: "star.lefthalf.fill") }
-        } else {
-            starRating.forEach { $0.image = UIImage(systemName: "star") }
+            if rating > Float(intRating) {
+                starRating.first(where: { $0.tag == intRating })?.image = UIImage(systemName: "star.lefthalf.fill")
+            }
+        }
+        
+        // Set up the image
+        restaurantImage.image = #imageLiteral(resourceName: "default_restaurant_image")
+        restaurant.getImage { [weak self] (image) in
+            DispatchQueue.main.async { self?.restaurantImage.image = image }
         }
         
         // Establish the defaults for the buttons
@@ -78,8 +84,6 @@ class RestaurantTableViewCell: UITableViewCell {
     
     func formatWithVote() {
         guard let vote = vote else { return }
-        
-        imageContainerView.isHidden = false
         restaurantImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
     }
     
