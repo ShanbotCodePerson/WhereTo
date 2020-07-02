@@ -10,7 +10,6 @@ import UIKit
 
 extension UILabel {
     func setUpViews(textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: FontNames = .mainFont) {
-        
         self.textColor = textColor
         font = UIFont(name: fontName.rawValue, size: fontSize)
     }
@@ -27,5 +26,26 @@ class HeaderLabel: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpViews()
+    }
+}
+
+class CellText: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews()
+    }
+}
+
+class CellTextHeader: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews()
+    }
+}
+
+class CellTextSubtitle: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(textColor: .subtitleText)
     }
 }

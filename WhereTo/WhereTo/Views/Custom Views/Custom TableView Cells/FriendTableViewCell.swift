@@ -45,7 +45,7 @@ class FriendTableViewCell: UITableViewCell {
         selectionStyle = .none
         
         // Change the colors when the cell is selected
-        if selected { containerView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.8) }
-        else { containerView.backgroundColor = UIColor.darkGray.withAlphaComponent(0.8) }
+        if selected { containerView.backgroundColor = UIColor.cellBackgroundSelected.withAlphaComponent(0.8) }
+        else { containerView.backgroundColor = UIColor.cellBackground.withAlphaComponent(0.8) }
     }
 }

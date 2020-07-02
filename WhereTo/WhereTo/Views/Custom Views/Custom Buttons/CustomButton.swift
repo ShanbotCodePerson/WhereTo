@@ -49,21 +49,21 @@ class ButtonWithBackground: UIButton {
 class GoButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .systemGreen, fontName: .boldFont)
+        setUpViews(backgroundColor: .greenAccent, fontName: .boldFont)
     }
 }
 
 class DeleteButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .systemRed, fontName: .boldFont)
+        setUpViews(backgroundColor: .redAccent, fontName: .boldFont)
     }
 }
 
 class NeutralButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .gray, fontName: .boldFont)
+        setUpViews(backgroundColor: .neutralAccent, fontName: .boldFont)
     }
 }
 
