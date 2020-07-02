@@ -421,6 +421,7 @@ extension UIViewController {
 }
 
 // MARK: - savedRestaurantsTVC Alerts
+
 extension UIViewController {
     
     func presentLocationSelectionAlert(completion: @escaping (Result<Bool, WhereToError>) -> Void) {
@@ -480,7 +481,8 @@ extension UIViewController {
     }
 }
 
-// MARK: - Extension:UIView-Activity indicator
+// MARK: - Activity indicator
+
 extension UIView {
     func activityStartAnimating() {
         DispatchQueue.main.async {
