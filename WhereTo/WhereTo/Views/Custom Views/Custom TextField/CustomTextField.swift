@@ -16,5 +16,6 @@ class CustomTextField: UITextField {
         addCornerRadius()
         addBorder()
         backgroundColor = .textViewBackground
+        
     }
 }
