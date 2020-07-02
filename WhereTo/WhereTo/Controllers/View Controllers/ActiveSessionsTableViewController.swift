@@ -42,6 +42,7 @@ class ActiveSessionsTableViewController: UITableViewController {
             let city = locationDescription?.locality ?? ""
             cell.textLabel?.text = "Choose a place to eat with \(votingSession.participantNames)\(city.isEmpty ? "" : " near ")\(city)!"
         }
+        cell.contentView.superview?.backgroundColor = .background
 
         return cell
     }
