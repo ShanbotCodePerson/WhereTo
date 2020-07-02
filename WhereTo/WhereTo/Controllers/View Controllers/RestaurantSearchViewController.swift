@@ -200,6 +200,9 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
             // Add the restaurant to the source of truth (making sure to avoid duplicates)
             RestaurantController.shared.favoriteRestaurants?.uniqueAppend(restaurant)
             
+            // Save the restaurant to the cloud
+            RestaurantController.shared.save(restaurant) { (_) in }
+            
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
                 switch result {
@@ -254,6 +257,9 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
             
             // Add the restaurant to the source of truth (making sure to avoid duplicates)
             RestaurantController.shared.blacklistedRestaurants?.uniqueAppend(restaurant)
+            
+            // Save the restaurant to the cloud
+            RestaurantController.shared.save(restaurant) { (_) in }
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in

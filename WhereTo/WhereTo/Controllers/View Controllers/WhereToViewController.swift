@@ -266,6 +266,9 @@ class WhereToViewController: UIViewController {
                     // Add the restaurant to the source of truth (making sure to avoid duplicates)
                     RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant)
                     
+                    // Save the restaurant to the cloud
+                    RestaurantController.shared.save(restaurant) { (_) in }
+                    
                     // Save the changes to the user
                     UserController.shared.saveChanges(to: currentUser) { (result) in
                         switch result {
