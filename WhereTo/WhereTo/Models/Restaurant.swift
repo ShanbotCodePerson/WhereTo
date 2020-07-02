@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit.UIImage
 
 struct Restaurant: Codable, Hashable {
     
@@ -16,10 +16,10 @@ struct Restaurant: Codable, Hashable {
     let name: String
     let coordinates: [String : Float]
     let categories: [[String : String]]
-    var categoryNames: [String] { Array(categories.compactMap({ ($0 as? NSDictionary)?["title"] as? String })) }
+    var categoryNames: [String] { Array(categories.compactMap({ $0["title"] })) }
     let rating: Float?
     let location: Location
-    //let photos: [String]
+    let imageURL: String?
     
     struct Location: Codable, Hashable, Equatable {
         let address1: String
@@ -39,7 +39,11 @@ struct Restaurant: Codable, Hashable {
     }
    
     enum CodingKeys: String, CodingKey {
-        case name, coordinates, categories, rating, location, restaurantID = "id"
+        case name, coordinates, categories, rating, location, restaurantID = "id", imageURL = "image_url"
+    }
+    
+    func getImage(completion: @escaping (UIImage) -> Void) {
+        RestaurantController.shared.fetchImage(for: self, completion: completion)
     }
 }
 

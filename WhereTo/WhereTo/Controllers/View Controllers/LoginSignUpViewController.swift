@@ -36,7 +36,7 @@ class LoginSignUpViewController: UIViewController {
         setUpViews()
         
         // Try to log the user in automatically
-//        autoLogin()
+        autoLogin()
         
         // Add an observer for when the keyboard appears or disappears
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)

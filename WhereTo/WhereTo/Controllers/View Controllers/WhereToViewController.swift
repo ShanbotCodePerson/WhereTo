@@ -31,6 +31,7 @@ class WhereToViewController: UIViewController {
         
         // Set up the observers to listen for notifications telling this particular view to update
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateButton), name: updateActiveSessionsButton, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
@@ -80,15 +81,24 @@ class WhereToViewController: UIViewController {
         }
         
         // Check to see if there are still active voting sessions, and if not, hide the active voting session button
-        if VotingSessionController.shared.votingSessions?.count ?? 0 > 0 {
-            viewActiveVotingSessionsButton.isHidden = false
-        } else { viewActiveVotingSessionsButton.isHidden = true }
+        if VotingSessionController.shared.votingSessions?.count ?? 0 == 0 {
+            viewActiveVotingSessionsButton.isHidden = true
+        } else { viewActiveVotingSessionsButton.isHidden = false }
     }
     
     // MARK: - Receive Notifications
     
     @objc func refreshData() {
         DispatchQueue.main.async { self.friendsTableView.reloadData() }
+    }
+    
+    @objc func updateButton() {
+        // Don't allow the user to go to the page displaying all the voting sessions if there aren't any
+        DispatchQueue.main.async {
+            if VotingSessionController.shared.votingSessions?.count ?? 0 == 0 {
+                self.viewActiveVotingSessionsButton.isHidden = true
+            }
+        }
     }
     
     // MARK: - Set Up UI
