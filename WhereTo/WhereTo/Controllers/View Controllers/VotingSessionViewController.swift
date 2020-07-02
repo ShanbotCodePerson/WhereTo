@@ -104,7 +104,7 @@ extension VotingSessionViewController: UITableViewDelegate, UITableViewDataSourc
         cell.delegate = self
         if let voteIndex = votes.firstIndex(where: { $0.restaurantID == restaurant.restaurantID }) {
             cell.vote = voteIndex
-        }
+        } else { cell.vote = nil }
         
         return cell
     }

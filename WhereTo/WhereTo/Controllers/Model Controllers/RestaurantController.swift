@@ -64,7 +64,6 @@ class RestaurantController {
         var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(yelpStrings.searchPath)?\(yelpStrings.latitudeKey)=\(location.coordinate.latitude)&\(yelpStrings.longitudeKey)=\(location.coordinate.longitude)&\(yelpStrings.termKey)=\(yelpStrings.termValue)\(isOpenQuery)\(categoriesQuery)")!, timeoutInterval: Double.infinity)
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
         request.httpMethod = yelpStrings.methodValue
-        print("got here to \(#function) and \(request.url)")
          
         // 2 - Data task
         URLSession.shared.dataTask(with: request) { data, _, error in
@@ -82,7 +81,6 @@ class RestaurantController {
                 let topLevelDictionary = try JSONDecoder().decode(RestaurantTopLevelDictionary.self, from: data)
                 let businesses = topLevelDictionary.businesses
                 let restaurants = businesses.map { $0 }
-                print("got here to decoding restaurants and the ids are \(restaurants.map({$0.restaurantID}).sorted())")
                 
                 return completion(.success(restaurants))
                 
@@ -187,23 +185,27 @@ class RestaurantController {
             do {
                 // Check to see if the result is an error about too many requests per second
                 if let error = (try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary)?["error"] {
-//                    print("got here and apparently Json has an error")
+                    print("got here and apparently Json has an error")
                     if let errorCode = (error as? NSDictionary)?["code"] as? String, errorCode == "TOO_MANY_REQUESTS_PER_SECOND" {
-//                        print("got here and it was too many  requests")
+                        print("got here and it was too many requests")
                         // Wait a tiny bit then try the request again
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let waitTime = (Double.random(in: 0.2...0.8) * 10).rounded() / 10
+                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
                             self?.fetchRestaurantByID(restaurantID, completion: completion)
                         }
                     }
-//                    print("got here and uhoh the error was something different! \(error)")
+                    else {
+                        print("got here and UHOH SOMETHING DIFFERENT the error was something different! \(error)")
+                        print("Error in \(#function) : \(error)")
+                        return completion(.failure(.noData))
+                    }
                 }
                 else {
                     let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
-//                    print("got to end and restaurant exists")
+                    print("got to end and restaurant exists")
                     return completion(.success(restaurant))
                 }
             } catch {
-                // TODO: - if error is that too many queries per second, if so, retry fetching later?
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(.thrownError(error)))
             }

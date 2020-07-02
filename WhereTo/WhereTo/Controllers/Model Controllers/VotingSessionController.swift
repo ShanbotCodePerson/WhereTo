@@ -53,7 +53,6 @@ class VotingSessionController {
                 allBlacklisted.append(contentsOf: friends.map({ $0.blacklistedRestaurants }).joined())
                 let blacklisted = Set(allBlacklisted)
                 restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
-                print("got here to \(#function) and filtered out blacklisted and now ids are \(restaurants.map({$0.restaurantID}).sorted())")
                 
                 // Check to see if there are any restaurants remaining
                 guard restaurants.count > 0  else { return completion(.failure(.noRestaurantsMatch)) }
@@ -66,7 +65,6 @@ class VotingSessionController {
                     }
                     return restaurant1.name > restaurant0.name
                 })
-                print("sorted restaurants and now ids are \(restaurants.map({$0.restaurantID}).sorted())")
                 
                 // Calculate how many votes each user should get
                 var users = friends
@@ -77,7 +75,6 @@ class VotingSessionController {
                 let votingSession = VotingSession(votesEach: votesEach, dietaryRestrictions: dietaryRestrictions, location: location, restaurantIDs: restaurants.map({ $0.restaurantID }))
                 votingSession.users = users
                 votingSession.restaurants = restaurants
-                print("voting session created with ids \(votingSession.restaurantIDs.sorted())")
                 
                 // Save the voting session to the cloud
                 let reference: DocumentReference? = self?.db.collection(VotingSessionStrings.recordType).addDocument(data: votingSession.asDictionary()) { (error) in

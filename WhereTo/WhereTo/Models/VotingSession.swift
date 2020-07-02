@@ -88,16 +88,11 @@ class VotingSession {
         
         // Fetch the restaurant objects
         group.enter()
-        RestaurantController.shared.fetchRestaurantsByLocation(location: location, dietaryRestrictions: dietaryRestrictions) { [weak self] (result) in
+        RestaurantController.shared.fetchRestaurantsWithIDs(restaurantIDs: restaurantIDs) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
-                print(restaurants?.count)
-                print(restaurants?.map({$0.restaurantID}).sorted())
-                print(self?.restaurantIDs.count)
-                print(self?.restaurantIDs.sorted())
-                guard let restaurantIDs = self?.restaurantIDs else { return }
-                print(restaurants?.filter({ restaurantIDs.contains($0.restaurantID) }).count)
-                self?.restaurants = restaurants?.filter { restaurantIDs.contains($0.restaurantID) }
+                print("got here to \(#function) and got \(restaurants.count) restaurants back")
+                self?.restaurants = restaurants
                 group.leave()
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -106,6 +101,7 @@ class VotingSession {
         }
         
         group.notify(queue: .main) {
+            print("returning voting session object now, and it has \(self.restaurants?.count) restaurants")
             return completion(self)
         }
     }
