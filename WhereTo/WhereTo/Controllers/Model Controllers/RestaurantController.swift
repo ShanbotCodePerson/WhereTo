@@ -150,9 +150,17 @@ class RestaurantController {
     
     // Read (fetch) a list of restaurants from the cloud by their ID's
     func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]>) {
+        // Handle the edge case of no restaurants
+        if restaurantIDs.count == 0 { return completion(.success([])) }
+        
+        // FIXME: - remove this later
+        return completion(.success([]))
+        
+        // FIXME: - will need to refactor this to fetch ten elements at a time (or one at a time...)
+        
         // Get the data from the cloud
         db.collection("restaurant")
-        .whereField("id", in: restaurantIDs)
+            .whereField("id", in: restaurantIDs)
             .getDocuments { (results, error) in
                 
                 // Handle any errors
