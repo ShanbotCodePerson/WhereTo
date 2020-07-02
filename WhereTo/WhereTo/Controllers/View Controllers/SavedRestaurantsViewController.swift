@@ -135,14 +135,31 @@ extension SavedRestaurantsViewController: UITableViewDelegate, UITableViewDataSo
         if editingStyle == .delete {
             presentChoiceAlert(title: "Remove", message: "Are you sure you would like to remove this restaurant from your saved list?") {
                 guard let currentUser = UserController.shared.currentUser else { return }
-                currentUser.favoriteRestaurants.remove(at: indexPath.row)
-                RestaurantController.shared.favoriteRestaurants?.remove(at: indexPath.row)
-                UserController.shared.saveChanges(to: currentUser) { (result) in
-                    switch result {
-                    case .success(_):
-                        tableView.deleteRows(at: [indexPath], with: .fade)
-                    case .failure(let error):
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                if self.segmentedControl.selectedSegmentIndex == 0 {
+                    currentUser.favoriteRestaurants.remove(at: indexPath.row)
+                    RestaurantController.shared.favoriteRestaurants?.remove(at: indexPath.row)
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            DispatchQueue.main.async {
+                                tableView.deleteRows(at: [indexPath], with: .fade)
+                            }
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        }
+                    }
+                } else {
+                    currentUser.blacklistedRestaurants.remove(at: indexPath.row)
+                    RestaurantController.shared.blacklistedRestaurants?.remove(at: indexPath.row)
+                    UserController.shared.saveChanges(to: currentUser) { (result) in
+                        switch result {
+                        case .success(_):
+                            DispatchQueue.main.async {
+                                tableView.deleteRows(at: [indexPath], with: .fade)
+                            }
+                        case .failure(let error):
+                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        }
                     }
                 }
             }

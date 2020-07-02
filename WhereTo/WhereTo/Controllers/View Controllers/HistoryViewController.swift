@@ -101,11 +101,13 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
                 UserController.shared.saveChanges(to: currentUser) { (result) in
                     switch result {
                     case .success(_):
-                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        DispatchQueue.main.async {
+                            tableView.deleteRows(at: [indexPath], with: .fade)
+                        }
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     }
-                } 
+                }
             }
         }
     }
