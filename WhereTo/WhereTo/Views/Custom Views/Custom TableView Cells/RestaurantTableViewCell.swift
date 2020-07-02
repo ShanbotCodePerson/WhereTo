@@ -24,7 +24,6 @@ class RestaurantTableViewCell: UITableViewCell {
     @IBOutlet weak var isFavoriteButton: UIButton!
     @IBOutlet weak var isBlacklistedButton: UIButton!
     @IBOutlet weak var restaurantImage: UIImageView!
-    @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet var starRating: [UIImageView]!
     
     // MARK: - Properties
@@ -53,6 +52,12 @@ class RestaurantTableViewCell: UITableViewCell {
             starRating.forEach { $0.image = UIImage(systemName: "star") }
         }
         
+        // Set up the image
+        restaurantImage.image = #imageLiteral(resourceName: "default_restaurant_image")
+        restaurant.getImage { [weak self] (image) in
+            DispatchQueue.main.async { self?.restaurantImage.image = image }
+        }
+        
         // Establish the defaults for the buttons
         isFavoriteButton.isHidden = false
         isFavoriteButton.isSelected = false
@@ -78,8 +83,6 @@ class RestaurantTableViewCell: UITableViewCell {
     
     func formatWithVote() {
         guard let vote = vote else { return }
-        
-        imageContainerView.isHidden = false
         restaurantImage.image = UIImage(systemName: "\(vote + 1).circle.fill")
     }
     

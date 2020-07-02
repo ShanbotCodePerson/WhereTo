@@ -9,6 +9,7 @@
 import Foundation
 import Firebase
 import CoreLocation
+import UIKit.UIImage
 
 struct yelpStrings {
     static let baseURLString = "https://api.yelp.com/v3/businesses"
@@ -165,6 +166,7 @@ class RestaurantController {
         request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
 
         request.httpMethod = yelpStrings.methodValue
+//        print("got here to \(#function) and \(request)")
         
         // 2 - Data task
         URLSession.shared.dataTask(with: request) { [weak self] (data, _, error) in
@@ -173,23 +175,29 @@ class RestaurantController {
             if let error = error {
                 return completion(.failure(.thrownError(error)))
             }
+//            print("got here2 and there's no error")
             
             // 4 - check for data
             guard let data = data else { return completion(.failure(.noData))}
+//            print("got here 3 and the data exists")
             
             // 5 - Decode data
             do {
                 // Check to see if the result is an error about too many requests per second
                 if let error = (try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary)?["error"] {
+//                    print("got here and apparently Json has an error")
                     if let errorCode = (error as? NSDictionary)?["code"] as? String, errorCode == "TOO_MANY_REQUESTS_PER_SECOND" {
+//                        print("got here and it was too many  requests")
                         // Wait a tiny bit then try the request again
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             self?.fetchRestaurantByID(restaurantID, completion: completion)
                         }
                     }
+//                    print("got here and uhoh the error was something different! \(error)")
                 }
                 else {
                     let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
+//                    print("got to end and restaurant exists")
                     return completion(.success(restaurant))
                 }
             } catch {
@@ -317,5 +325,28 @@ class RestaurantController {
                 return completion(.failure(error))
             }
         }
+    }
+    
+    // Read (fetch) a restaurant's image
+    func fetchImage(for restaurant: Restaurant, completion: @escaping (UIImage) -> Void) {
+        // If the restaurant doesn't have an image, use the default image instead
+        guard let imageURL = restaurant.imageURL,
+            let finalURL = URL(string: imageURL)
+            else { return completion(#imageLiteral(resourceName: "default_restaurant_image")) }
+        
+        // Get the image from the cloud
+        URLSession.shared.dataTask(with: finalURL) { (data, _, error) in
+            
+            // If the cloud returned an error, use the default image instead
+            if error != nil { return completion(#imageLiteral(resourceName: "default_restaurant_image")) }
+            
+            // Ensure that the data exists
+            guard let data = data else { return completion(#imageLiteral(resourceName: "default_restaurant_image")) }
+            
+            // Convert the data to a UIImage
+            guard let image = UIImage(data: data) else { return completion(#imageLiteral(resourceName: "default_restaurant_image")) }
+            return completion(image)
+            
+        }.resume()
     }
 }
