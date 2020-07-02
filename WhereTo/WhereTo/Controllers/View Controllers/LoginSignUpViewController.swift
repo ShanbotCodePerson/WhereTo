@@ -43,8 +43,7 @@ class LoginSignUpViewController: UIViewController {
     }
     
     func assignbackground(){
-        let background = UIImage(named: "3.png")
-
+        let background = UIImage(named: "loginBackground.png")
         var imageView : UIImageView!
         imageView = UIImageView(frame: view.bounds)
         imageView.contentMode =  UIView.ContentMode.scaleAspectFill
