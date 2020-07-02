@@ -88,10 +88,17 @@ class VotingSessionController {
                 votingSession.documentID = reference?.documentID
                 
                 // Add the reference to the voting session to the user's list of active voting sessions
-                currentUser.activeVotingSessions.append(votingSession.uuid)
+                currentUser.activeVotingSessions.uniqueAppend(votingSession.uuid)
                 
                 // Add the voting session to the source of truth
-                self?.votingSessions?.append(votingSession)
+                if var votingSessions = self?.votingSessions {
+                    if !votingSessions.contains(votingSession) {
+                        votingSessions.append(votingSession)
+                        self?.votingSessions = votingSessions
+                    }
+                } else {
+                    self?.votingSessions = [votingSession]
+                }
                 
                 // Save the changes to the user
                 UserController.shared.saveChanges(to: currentUser) { (result) in
@@ -582,52 +589,6 @@ class VotingSessionController {
         }
     }
     
-//    // The voting session is over and has been deleted
-//    func subscribeToSessionOverNotifications() {
-//        guard let currentUser = UserController.shared.currentUser,
-//            currentUser.activeVotingSessions.count > 0
-//            else { return }
-//
-//        // Set up a listener on all voting sessions the user is currently involved in
-//        db.collection(VotingSessionStrings.recordType)
-//            .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
-//            .addSnapshotListener { [weak self] (snapshot, error) in
-//
-//                if let error = error {
-//                    // Print and return the error
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                    return
-//                }
-//
-//                // Only pay attention to when the voting session is deleted
-//                snapshot?.documentChanges.forEach({ (change) in
-//                    if change.type == .removed {
-//                        // If there was an outcome, add that restaurant the user's list of previous restaurants
-//                        let votingSession = VotingSession(dictionary: change.document.data())
-//                        if let outcome = votingSession?.outcomeID {
-//                            // Only add the new restaurant if it's not a duplicate
-//                            var previousRestaurants = currentUser.previousRestaurants
-//                            previousRestaurants.append(outcome)
-//                            currentUser.previousRestaurants = Array(Set(previousRestaurants))
-//
-//                            // Send a notification to update the history view and present an alert with the result
-//                            NotificationCenter.default.post(Notification(name: updateHistoryList))
-//                            NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
-//                        }
-//
-//                        // Remove the voting session from the source of truth
-//                        self?.votingSessions?.removeAll(where: { $0.uuid == votingSession?.uuid })
-//
-//                        // Remove the voting session from the user's list of active sessions
-//                        currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession?.uuid })
-//
-//                        // Save the changes to the user
-//                        UserController.shared.saveChanges(to: currentUser) { (_) in }
-//                    }
-//                })
-//        }
-//    }
-    
     // A vote has been submitted
     func subscribeToVoteNotifications() {
         // Set up a listener on all votes referencing voting sessions the user is currently involved in
@@ -772,8 +733,12 @@ class VotingSessionController {
         guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
         RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant)
         
-        // Send notifications to update the history view and present an alert with the result
+        // Remove the voting session from the source of truth
+        votingSessions?.removeAll(where: { $0 == votingSession })
+        
+        // Send notifications to update the views and present an alert with the result
         NotificationCenter.default.post(Notification(name: updateHistoryList))
+        NotificationCenter.default.post(Notification(name: updateActiveSessionsButton))
         NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
         
         // Remove the voting session from the user's list of active voting sessions

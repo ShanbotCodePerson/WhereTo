@@ -367,11 +367,16 @@ extension UIViewController {
     
     @objc func showVotingSessionResult(_ sender: NSNotification) {
         guard let votingSession = sender.object as? VotingSession else { return }
-        DispatchQueue.main.async { self.presentVotingSessionResultAlert(votingSession) }
+        DispatchQueue.main.async {
+            // First dismiss any existing alert
+            self.dismiss(animated: true)
+            self.presentVotingSessionResultAlert(votingSession)
+        }
     }
 }
 
 // MARK: - inviteFriendsTVC Alerts
+
 extension UIViewController {
     
     // Present an alert with a text field to get some input from the user
@@ -509,6 +514,7 @@ extension UIView {
 }
 
 // MARK: LocationManagerDelegate
+
 extension UIViewController: CLLocationManagerDelegate {
     
     // methods for locationManagerDelegate
@@ -595,6 +601,7 @@ extension UIViewController: CLLocationManagerDelegate {
 }
 
 // MARK: - Apple Maps
+
 extension UIViewController {
     
     func launchMapWith(restaurant: Restaurant) {
@@ -607,7 +614,7 @@ extension UIViewController {
         
         // Create MKMapItem
         var mapItem: MKMapItem? {
-    
+            
             let location = restaurant.location.displayAddress.joined(separator: ", ")
             
             let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

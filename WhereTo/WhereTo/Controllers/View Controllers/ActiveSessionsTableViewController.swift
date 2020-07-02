@@ -37,11 +37,11 @@ class ActiveSessionsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "votingSessionCell", for: indexPath)
 
-        guard let votingSession = VotingSessionController.shared.votingSessions?[indexPath.row],
-            let users = votingSession.users
-            else { return cell }
-        cell.textLabel?.text = "Choose a place to eat with \(users.map({ $0.name }).joined(separator: ", "))!" // TODO: - format better, have "and" before last name, describe location name and time?
-//        cell.detailTextLabel?.text = "Currently waiting for ..." // TODO: - fill this part out better
+        guard let votingSession = VotingSessionController.shared.votingSessions?[indexPath.row] else { return cell }
+        lookUpAddressFromLocation(location: votingSession.location) { (locationDescription) in
+            let city = locationDescription?.locality ?? ""
+            cell.textLabel?.text = "Choose a place to eat with \(votingSession.participantNames)\(city.isEmpty ? "" : " near ")\(city)!"
+        }
 
         return cell
     }

@@ -185,23 +185,27 @@ class RestaurantController {
             do {
                 // Check to see if the result is an error about too many requests per second
                 if let error = (try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary)?["error"] {
-//                    print("got here and apparently Json has an error")
+                    print("got here and apparently Json has an error")
                     if let errorCode = (error as? NSDictionary)?["code"] as? String, errorCode == "TOO_MANY_REQUESTS_PER_SECOND" {
-//                        print("got here and it was too many  requests")
+                        print("got here and it was too many requests")
                         // Wait a tiny bit then try the request again
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let waitTime = (Double.random(in: 0.2...0.8) * 10).rounded() / 10
+                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
                             self?.fetchRestaurantByID(restaurantID, completion: completion)
                         }
                     }
-//                    print("got here and uhoh the error was something different! \(error)")
+                    else {
+                        print("got here and UHOH SOMETHING DIFFERENT the error was something different! \(error)")
+                        print("Error in \(#function) : \(error)")
+                        return completion(.failure(.noData))
+                    }
                 }
                 else {
                     let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
-//                    print("got to end and restaurant exists")
+                    print("got to end and restaurant exists")
                     return completion(.success(restaurant))
                 }
             } catch {
-                // TODO: - if error is that too many queries per second, if so, retry fetching later?
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                 return completion(.failure(.thrownError(error)))
             }

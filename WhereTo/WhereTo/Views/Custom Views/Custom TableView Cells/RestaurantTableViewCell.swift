@@ -40,7 +40,7 @@ class RestaurantTableViewCell: UITableViewCell {
         
         // Fill in the basic information about the restaurant
         nameLabel.text = restaurant.name
-        addressLabel.text = (restaurant.location.address1 + ", " + restaurant.location.city)
+        addressLabel.text = ((restaurant.location.address1 ?? "") + ", " + ( restaurant.location.city ?? ""))
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
         starRating.forEach { $0.image = UIImage(systemName: "star") }
         if let rating = restaurant.rating {
@@ -54,9 +54,10 @@ class RestaurantTableViewCell: UITableViewCell {
         }
         
         // Set up the image
-        restaurantImage.image = #imageLiteral(resourceName: "default_restaurant_image")
         restaurant.getImage { [weak self] (image) in
-            DispatchQueue.main.async { self?.restaurantImage.image = image }
+            DispatchQueue.main.async {
+                if self?.vote == nil { self?.restaurantImage.image = image }
+            }
         }
         
         // Establish the defaults for the buttons

@@ -142,7 +142,7 @@ class WhereToViewController: UIViewController {
                     if votingSessions.count == 0 {
                         // Don't allow the user to go to the page displaying all the voting sessions if there aren't any
                         self?.viewActiveVotingSessionsButton.isHidden = true
-                    }
+                    } else {  self?.viewActiveVotingSessionsButton.isHidden = false }
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
