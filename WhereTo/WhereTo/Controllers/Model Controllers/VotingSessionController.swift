@@ -87,6 +87,9 @@ class VotingSessionController {
                 }
                 votingSession.documentID = reference?.documentID
                 
+                // Save the restaurants to the cloud
+                restaurants.forEach { RestaurantController.shared.save($0, completion: { (_) in })  }
+                
                 // Add the reference to the voting session to the user's list of active voting sessions
                 currentUser.activeVotingSessions.uniqueAppend(votingSession.uuid)
                 

@@ -13,7 +13,7 @@ import UIKit.UIImage
 
 struct RestaurantStrings {
     static let recordType = "restaurant"
-    fileprivate static let restaurantIDKey = "restaurantID"
+    static let restaurantIDKey = "restaurantID"
     fileprivate static let nameKey = "name"
     fileprivate static let coordinatesKey = "coordinates"
     fileprivate static let categoriesKey = "categories"
