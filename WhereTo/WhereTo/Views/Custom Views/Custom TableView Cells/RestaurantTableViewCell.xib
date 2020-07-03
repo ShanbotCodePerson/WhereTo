@@ -25,28 +25,28 @@
                                 <rect key="frame" x="8" y="10.5" width="334" height="85"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="sL9-bU-aas">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="85"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="85"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_restaurant_image" translatesAutoresizingMaskIntoConstraints="NO" id="Grm-ES-GBE" customClass="RestaurantImageView" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="17.5" width="50" height="50"/>
+                                                <rect key="frame" x="0.0" y="12.5" width="60" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="50" id="Wuh-fw-3Vy"/>
                                                     <constraint firstAttribute="width" secondItem="Grm-ES-GBE" secondAttribute="height" multiplier="1:1" id="Ymi-pu-wwK"/>
                                                 </constraints>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstItem="Grm-ES-GBE" firstAttribute="width" secondItem="sL9-bU-aas" secondAttribute="width" id="3uC-PN-2SA"/>
                                             <constraint firstItem="Grm-ES-GBE" firstAttribute="centerY" secondItem="sL9-bU-aas" secondAttribute="centerY" id="UlF-N8-loW"/>
-                                            <constraint firstAttribute="width" constant="50" id="eSf-LB-411"/>
+                                            <constraint firstAttribute="width" constant="60" id="eSf-LB-411"/>
                                             <constraint firstItem="Grm-ES-GBE" firstAttribute="centerX" secondItem="sL9-bU-aas" secondAttribute="centerX" id="lEO-yG-FSo"/>
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" axis="vertical" distribution="equalSpacing" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Iij-Sj-wId">
-                                        <rect key="frame" x="58" y="0.0" width="238" height="85"/>
+                                        <rect key="frame" x="68" y="0.0" width="228" height="85"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="17e-zd-N5D">
-                                                <rect key="frame" x="0.0" y="0.0" width="238" height="35"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="228" height="35"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="(name) " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNn-Aa-yPv">
                                                         <rect key="frame" x="0.0" y="0.0" width="61.5" height="35"/>
@@ -114,13 +114,13 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(address)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="60v-ra-3lU" userLabel="Address label">
-                                                <rect key="frame" x="0.0" y="43" width="238" height="17"/>
+                                                <rect key="frame" x="0.0" y="43" width="228" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="(categories) " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="T4W-nk-SE4">
-                                                <rect key="frame" x="0.0" y="68" width="238" height="17"/>
+                                                <rect key="frame" x="0.0" y="68" width="228" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
