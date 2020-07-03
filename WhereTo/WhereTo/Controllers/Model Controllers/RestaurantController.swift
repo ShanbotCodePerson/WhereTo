@@ -53,7 +53,7 @@ class RestaurantController {
     // Save a restaurant to the cloud
     func save(_ restaurant: Restaurant, completion: @escaping resultCompletion) {
         // Save the restaurant to the cloud, using the restaurant id as the document id (to avoid duplicates)
-        db.collection("restaurant")
+        db.collection(RestaurantStrings.recordType)
             .document(restaurant.restaurantID)
             .setData(restaurant.asDictionary()) { (error) in
                 
@@ -153,14 +153,45 @@ class RestaurantController {
         // Handle the edge case of no restaurants
         if restaurantIDs.count == 0 { return completion(.success([])) }
         
-        // FIXME: - remove this later
-        return completion(.success([]))
+        // Handle the base case of 10 restaurants or fewer
+        if restaurantIDs.count <= 10 { return fetchTenRestaurants(with: restaurantIDs, completion: completion) }
         
-        // FIXME: - will need to refactor this to fetch ten elements at a time (or one at a time...)
+        // Initialize the result
+        var restaurants: [Restaurant] = []
+        let group = DispatchGroup()
+        
+        // Firebase only allows searches of 10 items at a time, so break up the data into groups of ten
+        let rounds = Int(Double(restaurantIDs.count / 10).rounded(.up))
+         for round in 0..<rounds {
+            // Get the subsection of restaurants to search for
+            let subsection = Array(restaurantIDs[(round * 10)..<min(((round + 1) * 10), restaurantIDs.count)])
+            
+            // Run the query for just those ten elements
+            group.enter()
+            fetchTenRestaurants(with: subsection) { (result) in
+                switch result {
+                case .success(let tenRestaurants):
+                    restaurants.append(contentsOf: tenRestaurants)
+                    group.leave()
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        }
+        
+        
+        // Return the result
+        group.notify(queue: .main) { return completion(.success(restaurants)) }
+    }
+    
+    // A helper function that can pull only ten restaurants from the cloud at once
+    private func fetchTenRestaurants(with restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]>) {
         
         // Get the data from the cloud
-        db.collection("restaurant")
-            .whereField("id", in: restaurantIDs)
+        db.collection(RestaurantStrings.recordType)
+            .whereField(RestaurantStrings.restaurantIDKey, in: restaurantIDs)
             .getDocuments { (results, error) in
                 
                 // Handle any errors

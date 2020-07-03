@@ -16,28 +16,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppIcon2" translatesAutoresizingMaskIntoConstraints="NO" id="urT-SZ-txS">
-                                <rect key="frame" x="127" y="373" width="160" height="160"/>
+                                <rect key="frame" x="83" y="351.5" width="248" height="248.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="urT-SZ-txS" secondAttribute="height" multiplier="1:1" id="Pjc-Bn-ccp"/>
-                                    <constraint firstAttribute="width" constant="160" id="qYe-gf-oYv"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Where To?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fSa-6s-WfM">
-                                <rect key="frame" x="117" y="299.5" width="180" height="43.5"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="Qa8-Bo-4SP"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="SignPainter-HouseScript" family="SignPainter" pointSize="48"/>
+                                <rect key="frame" x="83" y="258" width="248" height="63.5"/>
+                                <fontDescription key="fontDescription" name="SignPainter-HouseScript" family="SignPainter" pointSize="70"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="0.67450980392156867" green="0.22352941176470587" blue="0.19215686274509802" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="fSa-6s-WfM" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="255.5" id="Jgm-4i-ZRs"/>
+                            <constraint firstItem="urT-SZ-txS" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.6" id="DSV-aE-aY7"/>
+                            <constraint firstItem="urT-SZ-txS" firstAttribute="top" secondItem="fSa-6s-WfM" secondAttribute="bottom" constant="30" id="Iwi-SN-wny"/>
                             <constraint firstItem="urT-SZ-txS" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Rje-0q-asU"/>
                             <constraint firstItem="fSa-6s-WfM" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="cYP-Iv-ps2"/>
-                            <constraint firstItem="urT-SZ-txS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="edM-48-kHz"/>
+                            <constraint firstItem="fSa-6s-WfM" firstAttribute="width" secondItem="urT-SZ-txS" secondAttribute="width" id="dFa-Jm-sjk"/>
+                            <constraint firstItem="urT-SZ-txS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.05" id="edM-48-kHz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

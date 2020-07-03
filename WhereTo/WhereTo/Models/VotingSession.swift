@@ -91,8 +91,17 @@ class VotingSession {
         RestaurantController.shared.fetchRestaurantsWithIDs(restaurantIDs: restaurantIDs) { [weak self] (result) in
             switch result {
             case .success(let restaurants):
-                print("got here to \(#function) and got \(restaurants.count) restaurants back")
-                self?.restaurants = restaurants
+                // Sort the restaurants, first by highest to lowest rating, then alphabetically
+                let sortedRestaurants = restaurants.sorted(by: { (restaurant0, restaurant1) -> Bool in
+                    if let rating0 = restaurant0.rating, let rating1 = restaurant1.rating {
+                        if rating0 == rating1 { return restaurant1.name > restaurant0.name }
+                        return rating1 > rating0
+                    }
+                    
+                    return restaurant1.name > restaurant0.name
+                })
+                
+                self?.restaurants = sortedRestaurants
                 group.leave()
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -100,10 +109,7 @@ class VotingSession {
             }
         }
         
-        group.notify(queue: .main) {
-            print("returning voting session object now, and it has \(self.restaurants?.count) restaurants")
-            return completion(self)
-        }
+        group.notify(queue: .main) { return completion(self) }
     }
     
     // MARK: - Convert to Dictionary

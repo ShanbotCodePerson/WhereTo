@@ -16,13 +16,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginBackground" translatesAutoresizingMaskIntoConstraints="NO" id="29l-Qr-OAe">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-P0-0ur">
-                                <rect key="frame" x="20" y="164" width="374" height="47"/>
+                                <rect key="frame" x="41.5" y="171" width="331" height="54"/>
                                 <attributedString key="attributedText">
                                     <fragment content="Where To?">
                                         <attributes>
                                             <color key="NSColor" red="1" green="0.41960784313725491" blue="0.20784313725490194" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <font key="NSFont" size="52" name="SignPainter-HouseScript"/>
+                                            <font key="NSFont" size="60" name="SignPainter-HouseScript"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -116,15 +119,19 @@
                         <constraints>
                             <constraint firstItem="Ljc-7S-aef" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="0ik-lv-DHe"/>
                             <constraint firstItem="Ljc-7S-aef" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="27z-WY-z9f"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="top" secondItem="yXI-P0-0ur" secondAttribute="bottom" constant="80" id="2lL-C7-wWf"/>
+                            <constraint firstItem="29l-Qr-OAe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="3Tc-jr-Do1"/>
+                            <constraint firstAttribute="bottom" secondItem="29l-Qr-OAe" secondAttribute="bottom" id="41d-VG-AsV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="29l-Qr-OAe" secondAttribute="trailing" id="7hc-ZD-PP7"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="top" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="8" id="ERg-wW-dlk"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="GKY-Mu-P4k"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="NO5-Nt-cHp"/>
-                            <constraint firstItem="yXI-P0-0ur" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="V6m-Ri-tdM"/>
+                            <constraint firstItem="yXI-P0-0ur" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="PrS-u1-jl5"/>
+                            <constraint firstItem="29l-Qr-OAe" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Vkg-mD-yOn"/>
+                            <constraint firstItem="yXI-P0-0ur" firstAttribute="width" secondItem="jcm-mm-seE" secondAttribute="width" id="Xt7-QL-lql"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ljc-7S-aef" secondAttribute="trailing" id="Y34-ww-zfk"/>
-                            <constraint firstItem="yXI-P0-0ur" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="ZLw-cb-LhU"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="gKY-I2-kSx"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.35" id="kqZ-tC-RJU"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yXI-P0-0ur" secondAttribute="trailing" constant="20" id="r47-db-Oof"/>
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="rMa-ng-W41"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="trailing" secondItem="kAt-O7-sUA" secondAttribute="trailing" id="rwx-2U-zTY"/>
                             <constraint firstAttribute="bottom" secondItem="Ljc-7S-aef" secondAttribute="bottom" id="sIq-lC-WQH"/>
@@ -165,6 +172,7 @@
     </scenes>
     <color key="tintColor" name="navBarButtonTint"/>
     <resources>
+        <image name="loginBackground" width="1080" height="1920"/>
         <namedColor name="background">
             <color red="0.92100000381469727" green="0.92100000381469727" blue="0.92100000381469727" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

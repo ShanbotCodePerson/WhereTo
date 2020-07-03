@@ -36,6 +36,7 @@ extension UIColor {
     static let textViewBackground = UIColor(named: "textViewBackground")!
     static let cellBackground = UIColor(named: "cellBackground")!
     static let cellBackgroundSelected = UIColor(named: "cellBackgroundSelected")!
+    static let separator = UIColor(named: "separator")!
     static let border = UIColor(named: "border")!
     static let mainText = UIColor(named: "mainText")!
     static let subtitleText = UIColor(named: "subtitleText")!
@@ -44,6 +45,8 @@ extension UIColor {
     static let neutralAccent = UIColor(named: "neutralAccent")!
     static let whiteAccent = UIColor(named: "whiteAccent")!
     static let loginScreen = UIColor(named: "loginScreen")!
+    static let activityIndicatorBackground = UIColor(named: "activityIndicatorBackground")!
+    static let activityIndicator = UIColor(named: "activityIndicator")!
 }
 
 // MARK: - Font Names

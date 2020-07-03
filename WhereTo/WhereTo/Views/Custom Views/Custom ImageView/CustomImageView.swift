@@ -11,7 +11,7 @@ import UIKit
 class ProfileImageView: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
-        addCornerRadius(self.frame.height / 2)
+        addCornerRadius(self.frame.width / 2)
         addBorder()
     }
 }
@@ -19,6 +19,6 @@ class ProfileImageView: UIImageView {
 class RestaurantImageView: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
-        addCornerRadius(self.frame.height / 2)
+        addCornerRadius(self.frame.width / 2)
     }
 }

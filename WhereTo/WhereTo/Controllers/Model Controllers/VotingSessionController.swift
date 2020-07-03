@@ -51,7 +51,7 @@ class VotingSessionController {
                 // Filter out restaurants that have been blacklisted by the selected users
                 var allBlacklisted = currentUser.blacklistedRestaurants
                 allBlacklisted.append(contentsOf: friends.map({ $0.blacklistedRestaurants }).joined())
-                let blacklisted = Set(allBlacklisted)
+                let blacklisted = Array(Set(allBlacklisted))
                 restaurants = restaurants.filter { !blacklisted.contains($0.restaurantID) }
                 
                 // Check to see if there are any restaurants remaining
@@ -86,6 +86,9 @@ class VotingSessionController {
                     }
                 }
                 votingSession.documentID = reference?.documentID
+                
+                // Save the restaurants to the cloud
+                restaurants.forEach { RestaurantController.shared.save($0, completion: { (_) in })  }
                 
                 // Add the reference to the voting session to the user's list of active voting sessions
                 currentUser.activeVotingSessions.uniqueAppend(votingSession.uuid)

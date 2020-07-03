@@ -21,7 +21,16 @@ extension UIViewController {
         case VotingSession
     }
     
-    func transitionToStoryboard(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft) {
+    func transitionToStoryboard(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft, completion: @escaping () -> Void = {}) {
+        // Make sure the user is not already on the given storyboard
+        print("got here to \(#function) and current is \(self.storyboard?.value(forKey: "name") as? String) and specified is \(storyboard.rawValue)")
+        guard let currentStoryboard = self.storyboard?.value(forKey: "name") as? String,
+            currentStoryboard != storyboard.rawValue
+            else { return }
+        guard !(currentStoryboard == "WhereTo" && storyboard == .TabViewHome) else { return completion() }
+        print("got past guard statement...")
+        
+        // Get the reference to the new storyboard
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
         guard let initialVC = storyboard.instantiateInitialViewController() else { return }
         initialVC.modalPresentationStyle = .fullScreen
@@ -34,7 +43,7 @@ extension UIViewController {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         view.window?.layer.add(transition, forKey: kCATransition)
         
-        present(initialVC, animated: false)
+        present(initialVC, animated: false, completion: completion)
     }
     
     func transitionToVotingSessionPage(with votingSession: VotingSession) {
@@ -57,6 +66,7 @@ extension UIViewController {
     
 // MARK: - Alerts
 
+var simpleAlert: UIAlertController?
 extension UIViewController {
     
     // Generic Alerts
@@ -64,15 +74,15 @@ extension UIViewController {
     // Present an alert with a simple dismiss button to display a message to the user
     func presentAlert(title: String, message: String, completion: @escaping () -> Void = { () in }) {
         // Create the alert controller
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        simpleAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in
+        simpleAlert?.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in
             completion()
         }))
         
         // Present the alert
-        present(alertController, animated: true)
+        if let simpleAlert = simpleAlert { present(simpleAlert, animated: true) }
     }
     
     // Present an alert that the internet connection isn't working
@@ -369,8 +379,13 @@ extension UIViewController {
         guard let votingSession = sender.object as? VotingSession else { return }
         DispatchQueue.main.async {
             // First dismiss any existing alert
-            self.dismiss(animated: true)
-            self.presentVotingSessionResultAlert(votingSession)
+            simpleAlert?.dismiss(animated: true, completion: {
+                self.transitionToStoryboard(named: .TabViewHome) {
+                    print("about to present voting session result")
+                    self.presentVotingSessionResultAlert(votingSession)
+                    print("should be presenting voting session result now")
+                }
+            })
         }
     }
 }
@@ -488,14 +503,14 @@ extension UIView {
         DispatchQueue.main.async {
             let backgroundView = UIView()
             backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-            backgroundView.backgroundColor = UIColor(white: 0, alpha: 0.15)
+            backgroundView.backgroundColor = .activityIndicatorBackground
             backgroundView.tag = 475647
             
             let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
             activityIndicator.center = self.center
             activityIndicator.hidesWhenStopped = true
             activityIndicator.style = .large
-            activityIndicator.color = .darkGray
+            activityIndicator.color = .activityIndicator
             activityIndicator.startAnimating()
             self.isUserInteractionEnabled = false
             
