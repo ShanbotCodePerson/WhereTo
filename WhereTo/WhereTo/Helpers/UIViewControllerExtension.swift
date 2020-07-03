@@ -23,12 +23,10 @@ extension UIViewController {
     
     func transitionToStoryboard(named storyboard: StoryboardNames, direction: CATransitionSubtype = .fromLeft, completion: @escaping () -> Void = {}) {
         // Make sure the user is not already on the given storyboard
-        print("got here to \(#function) and current is \(self.storyboard?.value(forKey: "name") as? String) and specified is \(storyboard.rawValue)")
         guard let currentStoryboard = self.storyboard?.value(forKey: "name") as? String,
             currentStoryboard != storyboard.rawValue
             else { return }
         guard !(currentStoryboard == "WhereTo" && storyboard == .TabViewHome) else { return completion() }
-        print("got past guard statement...")
         
         // Get the reference to the new storyboard
         let storyboard = UIStoryboard(name: storyboard.rawValue, bundle: nil)
@@ -381,9 +379,7 @@ extension UIViewController {
             // First dismiss any existing alert
             simpleAlert?.dismiss(animated: true, completion: {
                 self.transitionToStoryboard(named: .TabViewHome) {
-                    print("about to present voting session result")
                     self.presentVotingSessionResultAlert(votingSession)
-                    print("should be presenting voting session result now")
                 }
             })
         }

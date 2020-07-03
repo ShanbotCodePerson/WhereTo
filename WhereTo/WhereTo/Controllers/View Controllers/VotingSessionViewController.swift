@@ -122,14 +122,12 @@ extension VotingSessionViewController: UITableViewDelegate, UITableViewDataSourc
         let voteValue = votingSession.votesEach - votes.count
         
         // Create a vote and save it to the cloud
-        print("got here to \(#function) and about to save vote")
         VotingSessionController.shared.vote(value: voteValue, for: restaurant, in: votingSession) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let vote):
                     // Add the vote to the array
                     self?.votes.append(vote)
-                    print("got here and successfully saved vote to cloud and added to array")
                     
                     // Update the cell
                     cell.vote = (self?.votes.count ?? 1) - 1
@@ -137,7 +135,6 @@ extension VotingSessionViewController: UITableViewDelegate, UITableViewDataSourc
                     
                     // If the max number of votes have been cast, show an alert and return to the main menu
                     if self?.votes.count == votingSession.votesEach {
-                        print("got here and determined reached limit of votes, so presenting alert that outcome will be announced later")
                         self?.presentAlert(title: "Voting Completed!", message: "Thank you for your votes! The winning restaurant will be announced once all votes are cast!", completion: { self?.transitionToStoryboard(named: .TabViewHome) })
                     }
                 case .failure(let error):

@@ -42,7 +42,6 @@ class WhereToViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        print("got here to \(#function) and arrived at main view")
         
         // Check for pending friend requests, then show alerts for each one if there are any
         FriendRequestController.shared.fetchPendingRequests { [weak self] (result) in
