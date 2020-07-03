@@ -488,14 +488,14 @@ extension UIView {
         DispatchQueue.main.async {
             let backgroundView = UIView()
             backgroundView.frame = CGRect.init(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-            backgroundView.backgroundColor = UIColor(white: 0, alpha: 0.15)
+            backgroundView.backgroundColor = .activityIndicatorBackground
             backgroundView.tag = 475647
             
             let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
             activityIndicator.center = self.center
             activityIndicator.hidesWhenStopped = true
             activityIndicator.style = .large
-            activityIndicator.color = .darkGray
+            activityIndicator.color = .activityIndicator
             activityIndicator.startAnimating()
             self.isUserInteractionEnabled = false
             

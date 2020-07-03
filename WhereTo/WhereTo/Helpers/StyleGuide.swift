@@ -44,6 +44,8 @@ extension UIColor {
     static let neutralAccent = UIColor(named: "neutralAccent")!
     static let whiteAccent = UIColor(named: "whiteAccent")!
     static let loginScreen = UIColor(named: "loginScreen")!
+    static let activityIndicatorBackground = UIColor(named: "activityIndicatorBackground")!
+    static let activityIndicator = UIColor(named: "activityIndicator")!
 }
 
 // MARK: - Font Names
