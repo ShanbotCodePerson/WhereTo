@@ -53,6 +53,9 @@
 		78508DB624A296FA00A525FF /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB524A296FA00A525FF /* Favorites.storyboard */; };
 		78508DB824A2987900A525FF /* WhereTo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78508DB724A2987900A525FF /* WhereTo.storyboard */; };
 		786B5F2624ACF39200A3445F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 786B5F2524ACF39200A3445F /* Colors.xcassets */; };
+		78ABDE0624B3AEB90074EBF6 /* SelectedRestaurantAlert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78ABDE0524B3AEB90074EBF6 /* SelectedRestaurantAlert.storyboard */; };
+		78ABDE0D24B3B29A0074EBF6 /* SelectedRestaurantAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ABDE0C24B3B29A0074EBF6 /* SelectedRestaurantAlertViewController.swift */; };
+		78ABDE0F24B3B5F70074EBF6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78ABDE0E24B3B5F70074EBF6 /* AlertService.swift */; };
 		BC8B5353175386317AFE3306 /* Pods_WhereTo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C97E80CC5B8301C04493D6F /* Pods_WhereTo.framework */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +111,9 @@
 		78508DB524A296FA00A525FF /* Favorites.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
 		78508DB724A2987900A525FF /* WhereTo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WhereTo.storyboard; sourceTree = "<group>"; };
 		786B5F2524ACF39200A3445F /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		78ABDE0524B3AEB90074EBF6 /* SelectedRestaurantAlert.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SelectedRestaurantAlert.storyboard; sourceTree = "<group>"; };
+		78ABDE0C24B3B29A0074EBF6 /* SelectedRestaurantAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedRestaurantAlertViewController.swift; sourceTree = "<group>"; };
+		78ABDE0E24B3B5F70074EBF6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		F4A020CE53683948133E3F08 /* Pods-WhereTo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WhereTo.release.xcconfig"; path = "Target Support Files/Pods-WhereTo/Pods-WhereTo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,6 +223,7 @@
 				40B2587724A12C5B0090495C /* UIViewControllerExtension.swift */,
 				4005A19D24AB91B300BE556F /* UIImageExtension.swift */,
 				408D8A3724ACF26A00238674 /* HelperFunctions.swift */,
+				78ABDE0E24B3B5F70074EBF6 /* AlertService.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -262,6 +269,7 @@
 		40B2585524A119B50090495C /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				78ABDE0724B3B1E80074EBF6 /* Custome Alerts */,
 				40B2589424A2519B0090495C /* Custom TableView Cells */,
 				408D8A2E24ACE73100238674 /* Custom Labels */,
 				408D8A2D24ACE72800238674 /* Custom Buttons */,
@@ -307,6 +315,15 @@
 				401E38B124AD4B8800E83241 /* TableViewCellBackground.swift */,
 			);
 			path = "Custom TableView Cells";
+			sourceTree = "<group>";
+		};
+		78ABDE0724B3B1E80074EBF6 /* Custome Alerts */ = {
+			isa = PBXGroup;
+			children = (
+				78ABDE0524B3AEB90074EBF6 /* SelectedRestaurantAlert.storyboard */,
+				78ABDE0C24B3B29A0074EBF6 /* SelectedRestaurantAlertViewController.swift */,
+			);
+			path = "Custome Alerts";
 			sourceTree = "<group>";
 		};
 		92C12A3E68CD3CB10D3C3D9F /* Frameworks */ = {
@@ -382,6 +399,7 @@
 				786B5F2624ACF39200A3445F /* Colors.xcassets in Resources */,
 				40B2583E24A115D80090495C /* Assets.xcassets in Resources */,
 				78508DB224A296BD00A525FF /* Profile.storyboard in Resources */,
+				78ABDE0624B3AEB90074EBF6 /* SelectedRestaurantAlert.storyboard in Resources */,
 				40B2588424A15CA20090495C /* GoogleService-Info.plist in Resources */,
 				78508DB624A296FA00A525FF /* Favorites.storyboard in Resources */,
 				40B2583C24A115D30090495C /* Main.storyboard in Resources */,
@@ -451,6 +469,7 @@
 				408D8A3424ACE78200238674 /* CustomButton.swift in Sources */,
 				40B2583524A115D30090495C /* AppDelegate.swift in Sources */,
 				40B258A824A253610090495C /* HistoryViewController.swift in Sources */,
+				78ABDE0F24B3B5F70074EBF6 /* AlertService.swift in Sources */,
 				40B2587C24A143910090495C /* UserController.swift in Sources */,
 				40B2588A24A16EF20090495C /* VotingSession.swift in Sources */,
 				401E38B224AD4B8800E83241 /* TableViewCellBackground.swift in Sources */,
@@ -475,6 +494,7 @@
 				40B2589A24A251C90090495C /* FriendTableViewCell.swift in Sources */,
 				40B258AA24A253700090495C /* SavedRestaurantsViewController.swift in Sources */,
 				4005A19E24AB91B300BE556F /* UIImageExtension.swift in Sources */,
+				78ABDE0D24B3B29A0074EBF6 /* SelectedRestaurantAlertViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,14 +641,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WhereTo/WhereTo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HT2WKYL4R9;
+				DEVELOPMENT_TEAM = 6FR69MK7S5;
 				INFOPLIST_FILE = WhereTo/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shannon.WhereTo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Bryce.WhereTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -642,14 +662,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = WhereTo/WhereTo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = HT2WKYL4R9;
+				DEVELOPMENT_TEAM = 6FR69MK7S5;
 				INFOPLIST_FILE = WhereTo/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shannon.WhereTo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Bryce.WhereTo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

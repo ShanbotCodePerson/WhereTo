@@ -337,7 +337,7 @@ class RestaurantController {
     func fetchImage(for restaurant: Restaurant, completion: @escaping (UIImage) -> Void) {
         // If the restaurant doesn't have an image, use the default image instead
         guard let imageURL = restaurant.imageURL,
-            let finalURL = URL(string: imageURL)
+             let finalURL = URL(string: imageURL)
             else { return completion(#imageLiteral(resourceName: "default_restaurant_image")) }
         
         // Get the image from the cloud
