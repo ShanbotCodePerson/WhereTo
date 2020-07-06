@@ -503,7 +503,7 @@ extension UIView {
             backgroundView.tag = 475647
             
             let activityIndicator = UIActivityIndicatorView(frame: backgroundView.frame)
-            activityIndicator.center = self.center
+            activityIndicator.center = backgroundView.center
             activityIndicator.hidesWhenStopped = true
             activityIndicator.style = .large
             activityIndicator.color = .activityIndicator

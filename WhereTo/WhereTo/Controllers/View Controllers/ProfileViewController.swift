@@ -355,8 +355,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         imagePicker.dismiss(animated: true)
         
         // Save the photo to the cloud
+        profileImageView.activityStartAnimating()
         UserController.shared.savePhotoToCloud(photo) { [weak self] (result) in
             DispatchQueue.main.async {
+                self?.profileImageView.activityStopAnimating()
+                
                 switch result {
                 case .success(_):
                     // Update the UI
