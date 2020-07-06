@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIButton {
-    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .border, backgroundColor: UIColor = .white, backgroundOpacity: CGFloat = 1, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 22, fontName: FontNames = .mainFont) {
+    func setUpViews(cornerRadius: CGFloat = 8, borderWidth: CGFloat = 2, borderColor: UIColor = .border, backgroundColor: UIColor = .white, backgroundOpacity: CGFloat = 1, textColor: UIColor = .white, tintColor: UIColor = .darkGray, fontSize: CGFloat = 18, fontName: FontNames = .boldFont) {
         
         addCornerRadius(cornerRadius)
         addBorder(width: borderWidth, color: borderColor)
@@ -49,28 +49,28 @@ class ButtonWithBackground: UIButton {
 class GoButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .greenAccent, fontName: .boldFont)
+        setUpViews(backgroundColor: .greenAccent)
     }
 }
 
 class DeleteButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .redAccent, fontName: .boldFont)
+        setUpViews(backgroundColor: .redAccent)
     }
 }
 
 class NeutralButton: ButtonWithBackground {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(backgroundColor: .neutralAccent, fontName: .boldFont)
+        setUpViews(backgroundColor: .neutralAccent)
     }
 }
 
 class EditButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 16, borderWidth: 0, backgroundColor: .whiteAccent, backgroundOpacity: 0.6, textColor: .darkGray)
+        setUpViews(cornerRadius: 16, borderWidth: 0, backgroundColor: .whiteAccent, backgroundOpacity: 0.6, textColor: .darkGray, fontSize: 16)
     }
     
     override var intrinsicContentSize: CGSize { return addInsets(to: super.intrinsicContentSize) }
@@ -89,5 +89,6 @@ class EditButton: UIButton {
 class SearchButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .navBar)
     }
 }

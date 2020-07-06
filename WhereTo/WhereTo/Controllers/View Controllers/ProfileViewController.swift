@@ -54,7 +54,7 @@ class ProfileViewController: UIViewController {
         
         profileImageView.image = currentUser.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = currentUser.name
-        emailLabel.text = currentUser.email
+        emailLabel.text = "Email: \(currentUser.email)"
         
         if currentUser.dietaryRestrictions.count == User.DietaryRestriction.allCases.count {
             addRestrictionButton.isHidden = true
