@@ -39,7 +39,7 @@ class CellTextHeader: UILabel {
 class CellText: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(textColor: .white, fontSize: 16)
+        setUpViews(textColor: .white, fontSize: 14)
     }
 }
 

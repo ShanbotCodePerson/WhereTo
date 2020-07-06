@@ -183,6 +183,8 @@ class VotingSessionController {
             return completion(.success([]))
         }
         
+        // FIXME: - break into groups of 10 at a time
+        
         // Fetch the data from the cloud
         db.collection(VotingSessionStrings.recordType)
             .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
@@ -272,7 +274,6 @@ class VotingSessionController {
         // Fetch the data from the cloud
         db.collection(VoteStrings.recordType)
             .whereField(VoteStrings.votingSessionIDKey, isEqualTo: votingSession.uuid)
-//            .whereField(VoteStrings.userIDKey, isEqualTo: currentUser.uuid)
             .getDocuments { (results, error) in
                 
                 if let error = error {
@@ -559,6 +560,8 @@ class VotingSessionController {
             currentUser.activeVotingSessions.count > 0
             else { return }
         
+        // FIXME: - break into groups of 10??
+        
         // Set up a listener to be alerted whenever someone responds to an invitation for a voting session the user is in
         db.collection(VotingSessionInviteStrings.recordType)
             .whereField(VotingSessionInviteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
@@ -598,6 +601,8 @@ class VotingSessionController {
         guard let currentUser = UserController.shared.currentUser,
             currentUser.activeVotingSessions.count > 0
             else { return }
+        
+        // FIXME: - break into groups of 10?
         
         db.collection(VoteStrings.recordType)
             .whereField(VoteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
