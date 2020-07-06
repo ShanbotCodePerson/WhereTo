@@ -586,6 +586,9 @@ class VotingSessionController {
                             switch result {
                             case .success(let users):
                                 votingSession.users = users
+                                
+                                // Check to see if having fewer users makes the voting session complete
+                                self?.calculateOutcome(of: votingSession)
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             }
