@@ -24,16 +24,16 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="ioX-up-gc8">
-                                <rect key="frame" x="45" y="319" width="354" height="30"/>
+                                <rect key="frame" x="55" y="319" width="344" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(name)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JBL-dB-wAG" customClass="HeaderLabel" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="314" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="syk-94-3Xd" customClass="EditButton" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="314" y="0.0" width="40" height="30"/>
+                                        <rect key="frame" x="304" y="0.0" width="40" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="jXZ-iP-Tca"/>
                                         </constraints>
@@ -157,7 +157,7 @@
                         <color key="backgroundColor" name="background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ioX-up-gc8" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" constant="45" id="0rZ-oC-iXL"/>
+                            <constraint firstItem="ioX-up-gc8" firstAttribute="leading" secondItem="K02-n0-dkk" secondAttribute="leading" constant="55" id="0rZ-oC-iXL"/>
                             <constraint firstItem="FsT-eY-lai" firstAttribute="centerX" secondItem="JOj-An-PZS" secondAttribute="centerX" id="1eg-Hp-Ibi"/>
                             <constraint firstItem="K02-n0-dkk" firstAttribute="trailing" secondItem="BiE-DP-P33" secondAttribute="trailing" constant="15" id="20T-e1-bPk"/>
                             <constraint firstItem="K02-n0-dkk" firstAttribute="trailing" secondItem="ioX-up-gc8" secondAttribute="trailing" constant="15" id="2h4-os-LLu"/>

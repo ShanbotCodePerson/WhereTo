@@ -325,7 +325,8 @@ extension UIViewController {
     
     func presentRandomRestaurantAlert(_ restaurant: Restaurant) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken! You have decided to eat at \(restaurant.name)!", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken!", preferredStyle: .alert)
+//        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken!\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
         
         // Create the dismiss button
         let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel) { [weak self] (_) in
@@ -336,6 +337,25 @@ extension UIViewController {
         let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { [weak self] (_) in
             self?.launchMapWith(restaurant: restaurant)
         }
+        
+//        let customView = UIView(frame: .zero)
+//        customView.backgroundColor = .green
+//
+//        let restaurantView = UINib(nibName: "RestaurantTableViewCell", bundle: nil).instantiate(withOwner: nil, options: nil).first as! RestaurantTableViewCell
+//        restaurantView.restaurant = restaurant
+//        restaurantView.isFavoriteButton.isHidden = true
+//        restaurantView.isBlacklistedButton.isHidden = true
+//
+//        customView.addSubview(restaurantView)
+//        alertController.view.addSubview(customView)
+//        customView.anchor(top: nil,
+//                          bottom: alertController.view.bottomAnchor,
+//                          leading: alertController.view.leadingAnchor,
+//                          trailing: alertController.view.trailingAnchor,
+//                          paddingBottom: -50,
+//                          paddingLeading: 10,
+//                          paddingTrailing: 10,
+//                          height: 160)
         
         // Add the buttons and present the alert
         alertController.addAction(dismissAction)
@@ -695,5 +715,33 @@ extension UIViewController {
         }
         
         mapItem?.openInMaps()
+    }
+}
+
+// MARK: - Programmatic Constraints
+
+extension UIView {
+    func anchor(top: NSLayoutYAxisAnchor?, bottom: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, trailing: NSLayoutXAxisAnchor?, paddingTop: CGFloat = 0, paddingBottom: CGFloat = 0, paddingLeading: CGFloat = 0, paddingTrailing: CGFloat = 0, width: CGFloat? = nil, height: CGFloat? = nil) {
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        if let top = top {
+            topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+        }
+        if let bottom = bottom {
+            bottomAnchor.constraint(equalTo: bottom, constant: paddingBottom).isActive = true
+        }
+        if let leading = leading {
+            leadingAnchor.constraint(equalTo: leading, constant: paddingLeading).isActive = true
+        }
+        if let trailing = trailing {
+            trailingAnchor.constraint(equalTo: trailing, constant: -paddingTrailing).isActive = true
+        }
+        if let width = width {
+            widthAnchor.constraint(equalToConstant: width).isActive = true
+        }
+        if let height = height {
+            heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
     }
 }
