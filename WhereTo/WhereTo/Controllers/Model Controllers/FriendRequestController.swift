@@ -58,7 +58,7 @@ class FriendRequestController {
         if userBeingDeleted {
             // Send the notification to the unfriended user
             sendFriendRequest(to: user, addingFriend: false, completion: completion)
-            return completion(.success(true))
+            return
         }
         
         // Save the changes to the user

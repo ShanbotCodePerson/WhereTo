@@ -203,9 +203,6 @@ class LoginSignUpViewController: UIViewController {
     
     // Create a new user
     func signUp(with email: String, password: String) {
-        // Make sure the email doesn't already exist
-        // TODO: - fill this out later
-        
         // Make sure the username isn't blank
         guard usernameTextField.text == nil || usernameTextField.text != "" else {
             presentAlert(title: "Invalid Username", message: "Username can't be blank")
@@ -218,8 +215,6 @@ class LoginSignUpViewController: UIViewController {
             return
         }
         
-        // TODO: - display loading icon
-        
         // Create the user and send the notification email
         view.activityStartAnimating()
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
@@ -227,20 +222,25 @@ class LoginSignUpViewController: UIViewController {
                 // If the error is that the user name already exists, try to log in to that account
                 // Print and display the error
                 print("Error in \(#function) : \(error!.localizedDescription) \n---\n \(error!)")
-                self?.view.activityStopAnimating()
-                DispatchQueue.main.async { self?.presentErrorAlert(error!) }
+                DispatchQueue.main.async {
+                    self?.view.activityStopAnimating()
+                    self?.presentErrorAlert(error!)
+                }
                 return
             }
             
             // Send an email to verify the user's email address
             Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
+                self?.view.activityStopAnimating()
                 
                 if let error = error {
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    self?.view.activityStopAnimating()
                     DispatchQueue.main.async { self?.presentErrorAlert(error) }
                 }
+                
+                // Finish setting up the account
+                self?.setUpUser(with: email, name: self?.usernameTextField.text)
                 
                 // Present an alert asking them to check their email
                 self?.presentVerifyEmailAlert(with: email)
@@ -273,7 +273,7 @@ class LoginSignUpViewController: UIViewController {
                         case .failure(let error):
                             // If the error is that the user doesn't exist yet, then create it
                             if case WhereToError.noUserFound = error {
-                                self?.setUpUser(with: email)
+                                self?.setUpUser(with: email, name: self?.usernameTextField.text)
                                 self?.view.activityStopAnimating()
                                 return
                             }
@@ -293,14 +293,15 @@ class LoginSignUpViewController: UIViewController {
     }
     
     // Once a user has verified their email, finish completing their account
-    func setUpUser(with email: String) {
+    func setUpUser(with email: String, name: String?) {
         view.activityStartAnimating()
-        UserController.shared.newUser(with: email, name: usernameTextField.text) { [weak self] (result) in
+        UserController.shared.newUser(with: email, name: name) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
                     self?.view.activityStopAnimating()
-                    // Navigate to the main screen of the app
+                    // Navigate to the main screen of the app if the email is in fact verified
+                    guard Auth.auth().currentUser?.isEmailVerified ?? false else { return }
                     self?.goToMainApp()
                 case .failure(let error):
                     // Print and display the error
