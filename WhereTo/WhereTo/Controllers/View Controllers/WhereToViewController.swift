@@ -20,6 +20,7 @@ class WhereToViewController: UIViewController {
     // MARK: - Properties
     
     var locationManager = CLLocationManager()
+    let alertService = AlertService()
     
     // MARK: - Lifecycle Methods
     
@@ -258,7 +259,9 @@ class WhereToViewController: UIViewController {
                 switch result {
                 case .success(let restaurant):
                     // Present the alert with the restaurant
-                    self?.presentRandomRestaurantAlert(restaurant)
+                    let alertVC = self!.alertService.alert(restaurant)
+                    self!.present(alertVC, animated: true)
+                    //self?.presentRandomRestaurantAlert(restaurant)
                     
                     // Add the restaurant to the user's list of previous restaurants (making sure to avoid duplicates)
                     currentUser.previousRestaurants.uniqueAppend(restaurant.restaurantID)
