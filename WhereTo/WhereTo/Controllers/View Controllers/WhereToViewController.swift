@@ -85,6 +85,9 @@ class WhereToViewController: UIViewController {
         if VotingSessionController.shared.votingSessions?.count ?? 0 == 0 {
             viewActiveVotingSessionsButton.isHidden = true
         } else { viewActiveVotingSessionsButton.isHidden = false }
+        
+        // Handle any waiting notifications that might have been neglected while transitioning to this view
+        handleNextNotification()
     }
     
     // MARK: - Receive Notifications
@@ -258,9 +261,8 @@ class WhereToViewController: UIViewController {
                 switch result {
                 case .success(let restaurant):
                     // Present the alert with the restaurant
-                    let alertVC = self!.alertService.alert(restaurant)
-                    self!.present(alertVC, animated: true)
-                    //self?.presentRandomRestaurantAlert(restaurant)
+                    guard let alertVC = self?.alertService.alert(restaurant, message: "The randomizer has spoken!") else { return }
+                    self?.present(alertVC, animated: true)
                     
                     // Add the restaurant to the user's list of previous restaurants (making sure to avoid duplicates)
                     currentUser.previousRestaurants.uniqueAppend(restaurant.restaurantID)
