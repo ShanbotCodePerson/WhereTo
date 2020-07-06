@@ -131,7 +131,6 @@ extension RestaurantSearchViewController: UITableViewDelegate, UITableViewDataSo
         nameTextField.resignFirstResponder()
         addressTextField.resignFirstResponder()
         
-        print("got here to \(#function) and \(indexPath.row)")
         let restaurant = restaurants[indexPath.row]
         
         // Present an alert controller asking the user if they want to open the restaurant in maps

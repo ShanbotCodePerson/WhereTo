@@ -52,6 +52,6 @@ extension UIColor {
 // MARK: - Font Names
 
 enum FontNames: String {
-    case mainFont = "Arial-Regular"
-    case boldFont = "Arial-Bold"
+    case mainFont = "Arial"
+    case boldFont = "Arial-BoldMT"
 }

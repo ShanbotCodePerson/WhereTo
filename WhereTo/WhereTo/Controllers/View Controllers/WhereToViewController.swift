@@ -42,7 +42,6 @@ class WhereToViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        print("got here to \(#function) and arrived at main view")
         
         // Check for pending friend requests, then show alerts for each one if there are any
         FriendRequestController.shared.fetchPendingRequests { [weak self] (result) in
@@ -283,6 +282,17 @@ class WhereToViewController: UIViewController {
                         }
                     }
                 case .failure(let error):
+                    // If the error is that no restaurants match the search, allow the user to turn off the dietary restrictions filter, or just alert them that there are no restaurants
+                    if case WhereToError.noRestaurantsMatch = error {
+                        if filterByDiet {
+                            self?.presentChoiceAlert(title: "No Restaurants Found", message: "There are no restaurants matching your search criteria. Would you like to try again without filtering by dietary restrictions?", cancelText: "No", confirmText: "Yes", confirmCompletion: {
+                                self?.getRandomRestaurant(by: location, filterByDiet: false)
+                            })
+                        } else {
+                            self?.presentAlert(title: "No Restaurants Found", message: "There are currently no open restaurants in the location you have selected")
+                        }
+                    }
+                    
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     self?.presentErrorAlert(error)

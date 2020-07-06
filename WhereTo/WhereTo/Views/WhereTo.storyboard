@@ -68,18 +68,18 @@
                                                 <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fp6-Tv-wKw" customClass="TableViewCellBackground" customModule="WhereTo" customModuleProvider="target">
                                                     <rect key="frame" x="10.5" y="4" width="393" height="75.5"/>
                                                     <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="uJK-mw-GWj">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="uJK-mw-GWj">
                                                             <rect key="frame" x="9.5" y="7.5" width="374" height="60.5"/>
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fAw-16-Gfk" customClass="ProfileImageView" customModule="WhereTo" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.5" width="60" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60.5"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="60" id="96G-ud-HIO"/>
                                                                         <constraint firstAttribute="width" secondItem="fAw-16-Gfk" secondAttribute="height" multiplier="1:1" id="uqs-Us-axn"/>
                                                                     </constraints>
                                                                 </imageView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(name)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCc-aE-X6K">
-                                                                    <rect key="frame" x="65" y="19.5" width="309" height="21.5"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(name)" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCc-aE-X6K" customClass="CellTextHeader" customModule="WhereTo" customModuleProvider="target">
+                                                                    <rect key="frame" x="65" y="0.0" width="309" height="60.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -230,7 +230,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="separator">
-            <color red="0.66422420739999999" green="0.66424006219999998" blue="0.66423153879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.66399997472763062" green="0.66399997472763062" blue="0.66399997472763062" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

@@ -54,7 +54,7 @@ class ProfileViewController: UIViewController {
         
         profileImageView.image = currentUser.photo ?? #imageLiteral(resourceName: "default_profile_picture")
         nameLabel.text = currentUser.name
-        emailLabel.text = currentUser.email
+        emailLabel.text = "Email: \(currentUser.email)"
         
         if currentUser.dietaryRestrictions.count == User.DietaryRestriction.allCases.count {
             addRestrictionButton.isHidden = true
@@ -226,9 +226,15 @@ class ProfileViewController: UIViewController {
         // Present an alert to confirm deleting the account
         presentChoiceAlert(title: "Delete account?", message: "Are you sure you want to delete your account? This will permanently remove all your data from this device and from the cloud.") {
             
+            // Show the loading icon
+            self.view.activityStartAnimating()
+            
             // If the user clicks confirm, delete their information from the cloud
             UserController.shared.deleteCurrentUser { [weak self] (result) in
                 DispatchQueue.main.async {
+                    // Hide the loading icon
+                    self?.view.activityStopAnimating()
+                    
                     switch result {
                     case .success(_):
                         // Delete the user's account from the authorization side of Firebase
@@ -349,8 +355,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         imagePicker.dismiss(animated: true)
         
         // Save the photo to the cloud
+        profileImageView.activityStartAnimating()
         UserController.shared.savePhotoToCloud(photo) { [weak self] (result) in
             DispatchQueue.main.async {
+                self?.profileImageView.activityStopAnimating()
+                
                 switch result {
                 case .success(_):
                     // Update the UI

@@ -9,7 +9,7 @@
 import UIKit
 
 extension UILabel {
-    func setUpViews(textColor: UIColor = .mainText, fontSize: CGFloat = 20, fontName: FontNames = .mainFont) {
+    func setUpViews(textColor: UIColor = .mainText, fontSize: CGFloat = 18, fontName: FontNames = .mainFont) {
         self.textColor = textColor
         font = UIFont(name: fontName.rawValue, size: fontSize)
     }
@@ -25,27 +25,27 @@ class DefaultLabel: UILabel {
 class HeaderLabel: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews()
-    }
-}
-
-class CellText: UILabel {
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        setUpViews()
+        setUpViews(fontSize: 22, fontName: .boldFont)
     }
 }
 
 class CellTextHeader: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews()
+        setUpViews(textColor: .white, fontName: .boldFont)
+    }
+}
+
+class CellText: UILabel {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews(textColor: .white, fontSize: 14)
     }
 }
 
 class CellTextSubtitle: UILabel {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(textColor: .subtitleText)
+        setUpViews(textColor: .subtitleText, fontSize: 14)
     }
 }

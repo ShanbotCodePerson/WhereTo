@@ -139,10 +139,59 @@ class UserController {
             return completion(.success(true))
         }
         
+        // If the user has more than 10 friends, the fetch needs to be broken up otherwise it will overwhelm Firebase
+        if currentUser.friends.count > 10 {
+            // Initialize the result
+            var allFriends: [User] = []
+            let group = DispatchGroup()
+            
+            // Break the data up into groups of ten or fewer
+            let rounds = Int(Double(currentUser.friends.count / 10).rounded(.up))
+            for round in 0..<rounds {
+                // Get the subsection of friends to search for
+                let subsection = Array(currentUser.friends[(round * 10)..<min(((round + 1) * 10), currentUser.friends.count)])
+                
+                group.enter()
+                fetchFriendsByIDs(subsection) { (result) in
+                    switch result {
+                    case .success(let friends):
+                        // Add the friends to the total result
+                        allFriends.append(contentsOf: friends)
+                        group.leave()
+                    case .failure(let error):
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(error))
+                    }
+                }
+            }
+            // Save to the source of truth and return the success
+            group.notify(queue: .main) {
+                self.friends = allFriends
+                return completion(.success(true))
+            }
+        } else {
+            fetchFriendsByIDs(currentUser.friends) { [weak self] (result) in
+                switch result {
+                case .success(let friends):
+                    // Save to the source of truth and return the success
+                    self?.friends = friends
+                    return completion(.success(true))
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    // A helper function to search for friends by their IDs
+    private func fetchFriendsByIDs(_ friendsIDS: [String], completion: @escaping resultCompletionWith<[User]>) {
         // Fetch the data from the cloud
         db.collection(UserStrings.recordType)
-            .whereField(UserStrings.uuidKey, in: currentUser.friends)
-            .getDocuments { [weak self] (results, error) in
+            .whereField(UserStrings.uuidKey, in: friendsIDS)
+            .getDocuments { (results, error) in
                 
                 if let error = error {
                     // Print and return the error
@@ -154,9 +203,8 @@ class UserController {
                 guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
                 let friends = documents.compactMap({ User(dictionary: $0.data()) })
                 
-                // Save to the source of truth and return the success
-                self?.friends = friends
-                return completion(.success(true))
+                // Return the success
+                return completion(.success(friends))
         }
     }
     
@@ -223,79 +271,85 @@ class UserController {
         guard let currentUser = currentUser, let documentID = currentUser.documentID
             else { return completion(.failure(.noUserFound)) }
         
-        // Delete the data from the cloud
-        db.collection(UserStrings.recordType)
-            .document(documentID)
-            .delete() { [weak self] (error) in
-                
+        let group = DispatchGroup()
+        
+        // If the user had a profile photo, delete that
+        if let profilePhotoURL = currentUser.profilePhotoURL {
+            group.enter()
+            UserController.shared.deleteProfilePhoto(with: profilePhotoURL) { (error) in
                 if let error = error {
                     // Print and return the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     return completion(.failure(.fsError(error)))
                 }
-                
-                let group = DispatchGroup()
-                
-                // If the user had a profile photo, delete that
-                if let profilePhotoURL = currentUser.profilePhotoURL {
-                    group.enter()
-                    UserController.shared.deleteProfilePhoto(with: profilePhotoURL) { (error) in
-                        if let error = error {
-                            // Print and return the error
-                            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                            return completion(.failure(.fsError(error)))
-                        }
-                        group.leave()
-                    }
+                group.leave()
+            }
+        }
+        
+        // Remove all friends
+        for friend in friends ?? [] {
+            group.enter()
+            FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
+                switch result {
+                case .success(_):
+                    print("successfully removed friend")
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
                 }
-                
-                // Remove all friends, delete all outstanding friend requests, votes, and voting session invitations associated with the user
-                if let friends = self?.friends {
-                    for friend in friends {
-                        group.enter()
-                        FriendRequestController.shared.sendRequestToRemove(friend, userBeingDeleted: true) { (result) in
-                            switch result {
-                            case .success(_):
-                                print("successfully removed friend")
-                            case .failure(let error):
-                                // Print and return the error
-                                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                                return completion(.failure(error))
-                            }
-                            group.leave()
-                        }
-                    }
-                }
-                group.enter()
-                FriendRequestController.shared.deleteAll { (error) in
+                group.leave()
+            }
+        }
+        
+        // Delete all outstanding friend requests sent to or from the current user
+        group.enter()
+        FriendRequestController.shared.deleteAll { (error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+            group.leave()
+        }
+        
+        // Delete all the user's votes
+        group.enter()
+        VotingSessionController.shared.deleteAllVotes { (error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+            group.leave()
+        }
+        
+        // Delete all voting invitations sent to or from the current user
+        group.enter()
+        VotingSessionController.shared.deleteAllVotingInvites { (error) in
+            if let error = error {
+                // Print and return the error
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(.failure(error))
+            }
+            group.leave()
+        }
+        
+        // Delete the data from the cloud
+        group.notify(queue: .main) {
+            self.db.collection(UserStrings.recordType)
+                .document(documentID)
+                .delete() { (error) in
+                    
                     if let error = error {
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        return completion(.failure(error))
+                        return completion(.failure(.fsError(error)))
                     }
-                    group.leave()
-                }
-                group.enter()
-                VotingSessionController.shared.deleteAllVotes { (error) in
-                    if let error = error {
-                        // Print and return the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        return completion(.failure(error))
-                    }
-                    group.leave()
-                }
-                group.enter()
-                VotingSessionController.shared.deleteAllVotingInvites { (error) in
-                    if let error = error {
-                        // Print and return the error
-                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                        return completion(.failure(error))
-                    }
-                    group.leave()
-                }
-                
-                // Return the success
-                group.notify(queue: .main) { return completion(.success(true)) }
+                    
+                    // Return the success
+                    return completion(.success(true))
+            }
         }
     }
     

@@ -122,9 +122,13 @@ class RestaurantController {
         fetchRestaurantsByLocation(location: location, searchByIsOpen: true, dietaryRestrictions: dietaryRestrictions) { (result) in
             switch result {
             case .success(let restaurants):
-                guard let restaurants = restaurants else { return completion(.failure(.noRestaurantsMatch)) }
+                guard var restaurants = restaurants else { return completion(.failure(.noRestaurantsMatch)) }
                 
-                // Make sure the restaurants have ratings
+                // Filter out restaurants that have been blacklisted by the user
+                restaurants = restaurants.filter { !currentUser.blacklistedRestaurants.contains($0.restaurantID) }
+                guard restaurants.count > 0 else { return completion(.failure(.noRestaurantsMatch)) }
+                
+                // Make sure the restaurants have ratings and otherwise just return a random restaurant
                 var sortedRestaurants = restaurants.filter { $0.rating != nil }
                 guard sortedRestaurants.count > 0 else {
                     let randomRestaurant = restaurants[Int.random(in: 0..<restaurants.count)]
@@ -209,87 +213,6 @@ class RestaurantController {
                 return completion(.success(restaurants))
         }
     }
-    
-//    // Read (fetch) a list of restaurants from the API from a list of restaurant ID's
-//    func fetchRestaurantsWithIDs(restaurantIDs: [String], completion: @escaping resultCompletionWith<[Restaurant]>) {
-//
-//        var restaurants: [Restaurant] = []
-//
-//        let group = DispatchGroup()
-//
-//        for id in restaurantIDs {
-//            group.enter()
-//
-//            fetchRestaurantByID(id) { (result) in
-//                switch result {
-//                case .success(let restaurant):
-//                    restaurants.append(restaurant)
-//                case .failure(let error):
-//                    // Print and return the error
-//                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                    return completion(.failure(error))
-//                }
-//                group.leave()
-//            }
-//        }
-//
-//        group.notify(queue: .main) {
-//            return completion(.success(restaurants))
-//        }
-//    }
-    
-//    // Fetch a single restaurant by its ID
-//    func fetchRestaurantByID(_ restaurantID: String, completion: @escaping resultCompletionWith<Restaurant>) {
-//        // 1 - URL setup
-//        var request = URLRequest(url: URL(string: "\(yelpStrings.baseURLString)/\(restaurantID)")!, timeoutInterval: Double.infinity)
-//        request.addValue(yelpStrings.apiKeyValue, forHTTPHeaderField: yelpStrings.authHeader)
-//
-//        request.httpMethod = yelpStrings.methodValue
-////        print("got here to \(#function) and \(request)")
-//
-//        // 2 - Data task
-//        URLSession.shared.dataTask(with: request) { [weak self] (data, _, error) in
-//
-//            // 3 - Error Handling
-//            if let error = error {
-//                return completion(.failure(.thrownError(error)))
-//            }
-////            print("got here2 and there's no error")
-//
-//            // 4 - check for data
-//            guard let data = data else { return completion(.failure(.noData))}
-////            print("got here 3 and the data exists")
-//
-//            // 5 - Decode data
-//            do {
-//                // Check to see if the result is an error about too many requests per second
-//                if let error = (try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? NSDictionary)?["error"] {
-//                    print("got here and apparently Json has an error")
-//                    if let errorCode = (error as? NSDictionary)?["code"] as? String, errorCode == "TOO_MANY_REQUESTS_PER_SECOND" {
-//                        print("got here and it was too many requests")
-//                        // Wait a tiny bit then try the request again
-//                        let waitTime = (Double.random(in: 0.2...0.8) * 10).rounded() / 10
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-//                            self?.fetchRestaurantByID(restaurantID, completion: completion)
-//                        }
-//                    }
-//                    else {
-//                        print("got here and UHOH SOMETHING DIFFERENT the error was something different! \(error)")
-//                        print("Error in \(#function) : \(error)")
-//                        return completion(.failure(.noData))
-//                    }
-//                }
-//                else {
-//                    let restaurant = try JSONDecoder().decode(Restaurant.self, from: data)
-//                    print("got to end and restaurant exists")
-//                    return completion(.success(restaurant))
-//                }
-//            } catch {
-//                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-//                return completion(.failure(.thrownError(error)))
-//            }
-//        }.resume()
-//    }
     
     // fetch restaurants with user input name and optional address
     func fetchRestaurantsByName(name: String, address: String? = nil, currentLocation: CLLocation? = nil, completion: @escaping resultCompletionWith<[Restaurant]>) {

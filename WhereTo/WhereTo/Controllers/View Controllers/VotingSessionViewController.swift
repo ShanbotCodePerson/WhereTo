@@ -19,6 +19,7 @@ class VotingSessionViewController: UIViewController {
     
     var votingSession: VotingSession?
     var votes: [Vote] = []
+    var cityName: String?
     
     // MARK: - Lifecycle Methods
     
@@ -28,7 +29,7 @@ class VotingSessionViewController: UIViewController {
         // Set up the UI
         setUpViews()
         
-        // Load the vote data
+        // Load the data
         loadData()
         
         // Set up the observer to listen for notifications telling any view to display an alert
@@ -49,17 +50,35 @@ class VotingSessionViewController: UIViewController {
         restaurantsTableView.register(UINib(nibName: "RestaurantTableViewCell", bundle: nil), forCellReuseIdentifier: "restaurantCell")
         
         // Fill out the description of the voting session
+        updateDescriptionLabel()
+    }
+    
+    func updateDescriptionLabel() {
         guard let votingSession = votingSession else { return }
-        lookUpAddressFromLocation(location: votingSession.location) { [weak self] (locationDescription) in
-            let city = locationDescription?.locality ?? ""
-            self?.votingSessionDescriptionLabel.text = "Vote on your top \(votingSession.votesEach) choices for places to eat with \(votingSession.participantNames)\(city.isEmpty ? "" : " near ")\(city)!"
+        let city: String = cityName ?? ""
+        
+        var descriptionText = "Vote on your top \(votingSession.votesEach) choices for places to eat with \(votingSession.participantNames)\(city.isEmpty ? "" : " near ")\(city)!"
+        
+        let votesLeft = votingSession.votesEach - votes.count
+        if votesLeft > 0 {
+            descriptionText += "\nYou have \(votesLeft) vote\(votesLeft > 1 ? "s" : "") remaining!"
+        } else {
+            descriptionText += "\nYou have already cast your \(votingSession.votesEach) votes!"
         }
+        
+        votingSessionDescriptionLabel.text = descriptionText
     }
     
     func loadData() {
         guard let votingSession = votingSession,
             let currentUser = UserController.shared.currentUser
             else { return }
+        
+        // Get the name of the city
+        lookUpAddressFromLocation(location: votingSession.location) { [weak self] (locationDescription) in
+            self?.cityName = locationDescription?.locality ?? ""
+            self?.updateDescriptionLabel()
+        }
         
         // Fetch any votes previously made by this user in this voting session
         VotingSessionController.shared.fetchVotes(in: votingSession) { [weak self] (result) in
@@ -71,6 +90,9 @@ class VotingSessionViewController: UIViewController {
                     
                     // Update the tableview
                     self?.restaurantsTableView.reloadData()
+                    
+                    // Tell the user how many votes they have remaining in this voting session
+                    self?.updateDescriptionLabel()
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -122,22 +144,22 @@ extension VotingSessionViewController: UITableViewDelegate, UITableViewDataSourc
         let voteValue = votingSession.votesEach - votes.count
         
         // Create a vote and save it to the cloud
-        print("got here to \(#function) and about to save vote")
         VotingSessionController.shared.vote(value: voteValue, for: restaurant, in: votingSession) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let vote):
                     // Add the vote to the array
                     self?.votes.append(vote)
-                    print("got here and successfully saved vote to cloud and added to array")
                     
                     // Update the cell
                     cell.vote = (self?.votes.count ?? 1) - 1
                     self?.restaurantsTableView.reloadData()
                     
+                    // Update the description label
+                    self?.updateDescriptionLabel()
+                    
                     // If the max number of votes have been cast, show an alert and return to the main menu
                     if self?.votes.count == votingSession.votesEach {
-                        print("got here and determined reached limit of votes, so presenting alert that outcome will be announced later")
                         self?.presentAlert(title: "Voting Completed!", message: "Thank you for your votes! The winning restaurant will be announced once all votes are cast!", completion: { self?.transitionToStoryboard(named: .TabViewHome) })
                     }
                 case .failure(let error):
