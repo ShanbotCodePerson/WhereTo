@@ -288,22 +288,21 @@ class UserController {
         }
         
         // Delete the data from the cloud
-        group.enter()
-        db.collection(UserStrings.recordType)
-            .document(documentID)
-            .delete() { (error) in
-                
-                if let error = error {
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(.fsError(error)))
-                }
-                
-                group.leave()
+        group.notify(queue: .main) {
+            self.db.collection(UserStrings.recordType)
+                .document(documentID)
+                .delete() { (error) in
+                    
+                    if let error = error {
+                        // Print and return the error
+                        print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                        return completion(.failure(.fsError(error)))
+                    }
+                    
+                    // Return the success
+                    return completion(.success(true))
+            }
         }
-        
-        // Return the success
-        group.notify(queue: .main) { return completion(.success(true)) }
     }
     
     // Delete a user's profile photo
