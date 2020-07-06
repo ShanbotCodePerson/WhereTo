@@ -252,7 +252,6 @@ class WhereToViewController: UIViewController {
     func getRandomRestaurant(by location: CLLocation, filterByDiet: Bool) {
         guard let currentUser = UserController.shared.currentUser else { return }
         
-        // FIXME: - what happens when there are no restaurants?
         RestaurantController.shared.fetchRandomRestaurant(near: location, usingDietaryRestrictions: filterByDiet) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {

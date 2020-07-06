@@ -259,10 +259,6 @@ class FriendRequestController {
                 for friendRequest in newFriendRequests {
                     // Create an individual notification for each friend request, and add the notifications to the queue
                     notificationQueue.append(Notification(name: .newFriendRequest, object: friendRequest))
-                    
-//                    // Send a local notification to present an alert
-//                    NotificationCenter.default.post(name: .newFriendRequest, object: friendRequest)
-                    // FIXME: - need to figure out how this works when there are multiple friend requests
                 }
                 
                 // Tell the current view controller to start processing the queue

@@ -294,14 +294,13 @@ class VotingSessionController {
     // Respond to an invitation to a voting session
     func respond(to votingSessionInvite: VotingSessionInvite, accept: Bool, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        // FIXME: - nested completions, need to figure out threading, when to return, when to post notification
+        
         if accept {
             // Add the voting session to the user's list of active voting sessions
             currentUser.activeVotingSessions.append(votingSessionInvite.votingSessionID)
             
             // Make sure the user is subscribed to notifications related to sessions
             subscribeToInvitationResponseNotifications()
-//            subscribeToSessionOverNotifications()
             subscribeToVoteNotifications()
             
             // Save the changes to the user
@@ -313,12 +312,10 @@ class VotingSessionController {
                         switch result {
                         case .success(let votingSession):
                             // Save the voting session to the source of truth
-                            if var votingSessions = self?.votingSessions {
-                                votingSessions.append(votingSession)
-                                self?.votingSessions = votingSessions
-                            } else {
+                            if self?.votingSessions?.append(votingSession) == nil {
                                 self?.votingSessions = [votingSession]
                             }
+                            
                             // Return the success
                             return completion(.success(votingSession))
                         case .failure(let error):
@@ -334,8 +331,6 @@ class VotingSessionController {
                 }
             }
         }
-        
-        // FIXME: - need to make sure this is getting called somewhere
         
         // Delete the invitation from the cloud now that it's no longer necessary
         guard let documentID = votingSessionInvite.documentID else { return completion(.failure(.noData)) }
@@ -372,8 +367,6 @@ class VotingSessionController {
     // Update a voting session with votes
     func vote(value: Int, for restaurant: Restaurant, in votingSession: VotingSession, completion: @escaping resultCompletionWith<Vote>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        
-        // FIXME: - check to see if it's the last vote?
         
         // Create the vote
         let vote = Vote(voteValue: value, userID: currentUser.uuid, restaurantID: restaurant.restaurantID, votingSessionID: votingSession.uuid)

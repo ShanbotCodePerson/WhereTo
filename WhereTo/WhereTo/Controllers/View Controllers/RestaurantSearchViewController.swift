@@ -29,6 +29,7 @@ class RestaurantSearchViewController: UIViewController {
         restaurantTableView.tableFooterView = UIView()
         restaurantTableView.backgroundColor = .background
         setUpDelegates()
+        setUpNotificationObservers()
     }
     
     // MARK: - Helper Methods
