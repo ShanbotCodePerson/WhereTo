@@ -89,6 +89,6 @@ class EditButton: UIButton {
 class SearchButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
-        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .navBar)
+        setUpViews(cornerRadius: 0, borderWidth: 0, backgroundColor: .navBar, fontSize: 22, fontName: .mainFont)
     }
 }
