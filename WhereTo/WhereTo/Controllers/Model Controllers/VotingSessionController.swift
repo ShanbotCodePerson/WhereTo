@@ -548,9 +548,12 @@ class VotingSessionController {
                 
                 // Send a local notification to present an alert for each invitation
                 for invitation in newInvitations {
-                    NotificationCenter.default.post(Notification(name: newVotingSessionInvitation, object: invitation))
-                    // FIXME: - need to figure out how this works when there are multiple invitations
+                    // Create an individual notification for each invitation, and add the notifications to the queue
+                    notificationQueue.append(Notification(name: .newVotingSessionInvitation, object: invitation))
                 }
+                
+                // Tell the current view controller to start processing the queue
+                NotificationCenter.default.post(Notification(name: .notificationEnqueued))
         }
     }
     
@@ -751,10 +754,15 @@ class VotingSessionController {
         // Remove the voting session from the source of truth
         votingSessions?.removeAll(where: { $0 == votingSession })
         
-        // Send notifications to update the views and present an alert with the result
-        NotificationCenter.default.post(Notification(name: updateHistoryList))
-        NotificationCenter.default.post(Notification(name: updateActiveSessionsButton))
-        NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
+        // Tell the relevant views to update themselves
+        NotificationCenter.default.post(Notification(name: .updateHistoryList))
+        NotificationCenter.default.post(Notification(name: .updateActiveSessionsButton))
+        
+        // Create a notification to display the voting session result and add it to the queue
+        notificationQueue.append(Notification(name: .votingSessionResult, object: votingSession))
+        
+        // Tell the view controller to start processing the queue
+        NotificationCenter.default.post(Notification(name: .notificationEnqueued))
         
         // Remove the voting session from the user's list of active voting sessions
         currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession.uuid })
@@ -763,9 +771,6 @@ class VotingSessionController {
         UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
             switch result {
             case .success(_):
-                // Display an alert with the outcome of the voting session
-                NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
-                
                 // If there are no more users referencing this voting session, then delete it from the cloud
                 self?.db.collection(UserStrings.recordType)
                     .whereField(UserStrings.activeVotingSessionsKey, arrayContains: votingSession.uuid)

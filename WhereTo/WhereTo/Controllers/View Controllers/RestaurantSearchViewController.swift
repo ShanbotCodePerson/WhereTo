@@ -183,8 +183,8 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
                     self?.presentAlert(title: "Removed Favorite", message: "You have successfully removed \(restaurant.name) from your favorites")
                     
                     // Send the notifications to update the saved and previous restaurants lists
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -210,8 +210,8 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
                     self?.presentAlert(title: "Successfully Favorited", message: "You have successfully saved \(restaurant.name) to your favorite restaurants")
                     
                     // Send the notifications to update the saved and previous restaurants lists
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -241,8 +241,8 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
                     self?.presentAlert(title: "Removed Blacklist", message: "You have successfully removed \(restaurant.name) from your blacklisted restaurants")
                     
                     // Send the notifications to update the saved and previous restaurants lists
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -268,8 +268,8 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
                     self?.presentAlert(title: "Successfully Blacklisted", message: "You have successfully blacklisted \(restaurant.name) and will not be directed there again after this voting session")
                     
                     // Send the notifications to update the saved and previous restaurants lists
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

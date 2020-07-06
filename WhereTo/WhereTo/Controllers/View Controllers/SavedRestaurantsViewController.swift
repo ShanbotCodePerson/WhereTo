@@ -29,7 +29,7 @@ class SavedRestaurantsViewController: UIViewController {
         setUpViews()
         
         // Set up the observer to listen for changes in the data
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateSavedList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .updateSavedList, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
@@ -205,7 +205,7 @@ extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDele
                     self?.refreshData()
                     
                     // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -234,7 +234,7 @@ extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDele
                     self?.refreshData()
                     
                     // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -267,7 +267,7 @@ extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDele
                     self?.refreshData()
                     
                     // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -296,7 +296,7 @@ extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDele
                     self?.refreshData()
                     
                     // Send the notification to update the previous restaurants list
-                    NotificationCenter.default.post(Notification(name: updateHistoryList))
+                    NotificationCenter.default.post(Notification(name: .updateHistoryList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

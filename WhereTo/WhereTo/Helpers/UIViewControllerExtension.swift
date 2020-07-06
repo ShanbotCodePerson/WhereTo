@@ -75,8 +75,9 @@ extension UIViewController {
         simpleAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
-        simpleAlert?.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in
+        simpleAlert?.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: { [weak self] (_) in
             completion()
+            self?.handleNextNotification()
         }))
         
         // Present the alert
@@ -94,10 +95,14 @@ extension UIViewController {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Add the cancel button to the alert
-        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: { (_) in cancelCompletion() }))
+        alertController.addAction(UIAlertAction(title: cancelText, style: .cancel, handler: { [weak self] (_) in cancelCompletion()
+            self?.handleNextNotification()
+        }))
         
         // Add the confirm button to the alert
-        alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: { (_) in confirmCompletion() }))
+        alertController.addAction(UIAlertAction(title: confirmText, style: .default, handler: { [weak self] (_) in confirmCompletion()
+            self?.handleNextNotification()
+        }))
         
         // Present the alert
         present(alertController, animated: true)
@@ -118,15 +123,19 @@ extension UIViewController {
         }
         
         // Create the cancel button
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] (_) in
+            self?.handleNextNotification()
+        }
         
         // Create the save button
-        let saveAction = UIAlertAction(title: saveButtonTitle, style: .default) { (_) in
+        let saveAction = UIAlertAction(title: saveButtonTitle, style: .default) { [weak self] (_) in
             // Get the text from the text field
             guard let text = alertController.textFields?.first?.text, !text.isEmpty else { return }
             
             // Pass it to the helper function to handle sending the friend request
             completion(text)
+            
+            self?.handleNextNotification()
         }
         
         // Add the buttons to the alert and present it
@@ -141,7 +150,9 @@ extension UIViewController {
         let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .actionSheet)
         
         // Add the dismiss button to the alert
-        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] (_) in
+            self?.handleNextNotification()
+        }))
         
         // Present the alert
         present(alertController, animated: true)
@@ -151,7 +162,9 @@ extension UIViewController {
         let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .actionSheet)
         
         // Add the dismiss button to the alert
-        alertController.addAction(UIAlertAction(title: "OK", style: .cancel))
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] (_) in
+            self?.handleNextNotification()
+        }))
         
         // Present the alert
         present(alertController, animated: true)
@@ -211,7 +224,7 @@ extension UIViewController {
                         self?.presentAlert(title: "Added Friend", message: "You have successfully added \(friendRequest.fromName) as a friend!")
                         
                         // Send a notification for the list of friends to be updated
-                        NotificationCenter.default.post(Notification(name: updateFriendsList))
+                        NotificationCenter.default.post(Notification(name: .updateFriendsList))
                     case .failure(let error):
                         // Print and display the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -244,6 +257,7 @@ extension UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(_):
+                        self?.handleNextNotification()
                         return completion(nil)
                     case .failure(let error):
                         // Print and display the error
@@ -261,6 +275,7 @@ extension UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let votingSession):
+                        self?.handleNextNotification()
                         return completion(votingSession)
                     case .failure(let error):
                         // Print and display the error
@@ -288,11 +303,16 @@ extension UIViewController {
         let alertController = UIAlertController(title: "Vote Decided!", message: "The crowd has spoken! You have decided to eat at \(winningRestaurant.name)!", preferredStyle: .alert)
         
         // Create the dismiss button
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel) { [weak self] (_) in
+            self?.handleNextNotification()
+        }
         
         // Create the open in maps button
         let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { [weak self] (_) in
-            guard let restaurant = RestaurantController.shared.previousRestaurants?.last else { return }
+            guard let restaurant = RestaurantController.shared.previousRestaurants?.last else {
+                self?.handleNextNotification()
+                return
+            }
             self?.launchMapWith(restaurant: restaurant )
         }
         
@@ -309,7 +329,9 @@ extension UIViewController {
         let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken! You have decided to eat at \(restaurant.name)!", preferredStyle: .alert)
         
         // Create the dismiss button
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel)
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel) { [weak self] (_) in
+            self?.handleNextNotification()
+        }
         
         // Create the open in maps button
         let openInMapsAction = UIAlertAction(title: "Open in Maps", style: .default) { [weak self] (_) in
@@ -326,42 +348,73 @@ extension UIViewController {
 // MARK: - Respond to and Display Notifications
 
 // Names of local notifications
-let newFriendRequest = Notification.Name("newFriendRequest")
-let responseToFriendRequest = Notification.Name("responseToFriendRequest")
-let updateFriendsList = Notification.Name("updateFriendsList")
-let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
-let votingSessionResult = Notification.Name("votingSessionResult")
-let updateActiveSessionsButton = Notification.Name("updateActiveSessionsButton")
-let updateHistoryList = Notification.Name("updateHistoryList")
-let updateSavedList = Notification.Name("updateSavedList")
-let updateProfileView = Notification.Name("updateProfileView")
+extension Notification.Name {
+    static let notificationEnqueued = Notification.Name("notificationEnqueued")
+    static let newFriendRequest = Notification.Name("newFriendRequest")
+    static let responseToFriendRequest = Notification.Name("responseToFriendRequest")
+    static let updateFriendsList = Notification.Name("updateFriendsList")
+    static let newVotingSessionInvitation = Notification.Name("newVotingSessionInvitation")
+    static let votingSessionResult = Notification.Name("votingSessionResult")
+    static let updateActiveSessionsButton = Notification.Name("updateActiveSessionsButton")
+    static let updateHistoryList = Notification.Name("updateHistoryList")
+    static let updateSavedList = Notification.Name("updateSavedList")
+    static let updateProfileView = Notification.Name("updateProfileView")
+}
+
+// A queue of all the notifications to be displayed
+var notificationQueue: [Notification] = []
 
 extension UIViewController {
     
     func setUpNotificationObservers() {
-        // Set up the observers to listen for friend request notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: newFriendRequest, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: responseToFriendRequest, object: nil)
+        // Set up observers to listen for when notifications are added to the queue
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNextNotification), name: .notificationEnqueued, object: nil)
         
-        // Set up the observer to listen for voting session invitation notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: newVotingSessionInvitation, object: nil)
-        
-        // Set up the observer to listen for voting session result notifications
-        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: votingSessionResult, object: nil)
+//        // Set up the observers to listen for friend request notifications
+//        NotificationCenter.default.addObserver(self, selector: #selector(showNewFriendRequest(_:)), name: .newFriendRequest, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(showFriendRequestResult(_:)), name: .responseToFriendRequest, object: nil)
+//
+//        // Set up the observer to listen for voting session invitation notifications
+//        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionInvitation(_:)), name: .newVotingSessionInvitation, object: nil)
+//
+//        // Set up the observer to listen for voting session result notifications
+//        NotificationCenter.default.addObserver(self, selector: #selector(showVotingSessionResult(_:)), name: .votingSessionResult, object: nil)
     }
     
-    @objc func showNewFriendRequest(_ sender: NSNotification) {
-        guard let friendRequest = sender.object as? FriendRequest else { return }
+    @objc func handleNextNotification() {
+        // Make sure there is a notification waiting to be displayed and that no alert is currently being displayed
+        guard notificationQueue.count > 0, presentedViewController == nil else { return }
+        
+        // Get the next notification in line from the queue
+        let notification = notificationQueue.removeFirst()
+        
+        // Call the relevant helper function for that notification
+        switch notification.name {
+        case .newFriendRequest:
+            showNewFriendRequest(notification)
+        case .responseToFriendRequest:
+            showFriendRequestResult(notification)
+        case .newVotingSessionInvitation:
+            showVotingSessionInvitation(notification)
+        case .votingSessionResult:
+            showVotingSessionResult(notification)
+        default:
+            print("This shouldn't happen: Notification received with name \(notification.name)")
+        }
+    }
+    
+    func showNewFriendRequest(_ notification: Notification) {
+        guard let friendRequest = notification.object as? FriendRequest else { return }
         DispatchQueue.main.async { self.presentNewFriendRequestAlert(friendRequest) }
     }
     
-    @objc func showFriendRequestResult(_ sender: NSNotification) {
-        guard let friendRequest = sender.object as? FriendRequest else { return }
+    func showFriendRequestResult(_ notification: Notification) {
+        guard let friendRequest = notification.object as? FriendRequest else { return }
         DispatchQueue.main.async { self.presentFriendRequestResponseAlert(friendRequest) }
     }
     
-    @objc func showVotingSessionInvitation(_ sender: NSNotification) {
-        guard let votingSessionInvite = sender.object as? VotingSessionInvite else { return }
+    func showVotingSessionInvitation(_ notification: Notification) {
+        guard let votingSessionInvite = notification.object as? VotingSessionInvite else { return }
         DispatchQueue.main.async {
             self.presentVotingSessionInvitationAlert(votingSessionInvite) { [weak self] (newVotingSession) in
                 // If the user accepted the invitation, add it to the source of truth and transition them to the voting session page
@@ -373,8 +426,8 @@ extension UIViewController {
         }
     }
     
-    @objc func showVotingSessionResult(_ sender: NSNotification) {
-        guard let votingSession = sender.object as? VotingSession else { return }
+    func showVotingSessionResult(_ notification: Notification) {
+        guard let votingSession = notification.object as? VotingSession else { return }
         DispatchQueue.main.async {
             // First dismiss any existing alert
             simpleAlert?.dismiss(animated: true, completion: {

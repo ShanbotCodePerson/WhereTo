@@ -23,7 +23,7 @@ class HistoryViewController: UIViewController {
         setUpViews()
         
         // Set up the observer to listen for changes in the data
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateHistoryList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .updateHistoryList, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
@@ -146,7 +146,7 @@ extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
                     self?.presentAlert(title: "Removed Favorite", message: "You have successfully removed \(restaurant.name) from your favorites")
                     
                     // Send the notification to update the saved restaurants list
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -172,7 +172,7 @@ extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
                     self?.presentAlert(title: "Successfully Favorited", message: "You have successfully saved \(restaurant.name) to your favorite restaurants")
                     
                     // Send the notification to update the saved restaurants list
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -202,7 +202,7 @@ extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
                     self?.presentAlert(title: "Removed Blacklist", message: "You have successfully removed \(restaurant.name) from your blacklisted restaurants")
                     
                     // Send the notification to update the saved restaurants list
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -228,7 +228,7 @@ extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
                     self?.presentAlert(title: "Successfully Blacklisted", message: "You have successfully blacklisted \(restaurant.name) and will not be directed there again")
                     
                     // Send the notification to update the saved restaurants list
-                    NotificationCenter.default.post(Notification(name: updateSavedList))
+                    NotificationCenter.default.post(Notification(name: .updateSavedList))
                 case .failure(let error):
                     // Print and display the error
                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
