@@ -309,8 +309,6 @@ class WhereToViewController: UIViewController {
         fetchCurrentLocation(locationManager)
         guard let currentLocation = locationManager.location else { return }
         
-        // TODO: - disable vote button until at least one other person is selected
-        
         presentLocationSelectionAlert(currentLocation: currentLocation) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {

@@ -295,7 +295,6 @@ extension UIViewController {
     
     // Voting Session Results Alert
     
-    // TODO: - what if no restaurant won because the voting session was cancelled somehow?
     func presentVotingSessionResultAlert(_ votingSession: VotingSession) {
         guard let winningRestaurant = votingSession.winningRestaurant else { return }
         
