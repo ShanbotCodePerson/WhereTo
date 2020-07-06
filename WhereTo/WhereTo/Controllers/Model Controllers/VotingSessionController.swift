@@ -88,7 +88,7 @@ class VotingSessionController {
                 votingSession.documentID = reference?.documentID
                 
                 // Save the restaurants to the cloud
-                restaurants.forEach { RestaurantController.shared.save($0, completion: { (_) in })  }
+                restaurants.forEach { RestaurantController.shared.save($0, completion: { (_) in }) }
                 
                 // Add the reference to the voting session to the user's list of active voting sessions
                 currentUser.activeVotingSessions.uniqueAppend(votingSession.uuid)
@@ -107,10 +107,9 @@ class VotingSessionController {
                 UserController.shared.saveChanges(to: currentUser) { (result) in
                     switch result {
                     case .success(_):
-                        // Make sure the user is subscribed to notifications related to sessions
-                        self?.subscribeToInvitationResponseNotifications()
-//                        self?.subscribeToSessionOverNotifications()
-                        self?.subscribeToVoteNotifications()
+                        // Make sure the user is subscribed to notifications related to the  session
+                        self?.subscribeToInvitationResponseNotification(for: votingSession.uuid)
+                        self?.subscribeToVoteNotification(for: votingSession.uuid)
                     case .failure(let error):
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -183,40 +182,35 @@ class VotingSessionController {
             return completion(.success([]))
         }
         
-        // FIXME: - break into groups of 10 at a time
-        
-        // Fetch the data from the cloud
-        db.collection(VotingSessionStrings.recordType)
-            .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
-            .getDocuments { [weak self] (results, error) in
-                
-                if let error = error {
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(.fsError(error)))
-                }
-                
-                // Unwrap the data
-                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                var votingSessions: [VotingSession] = []
-                for document in documents {
-                    guard let votingSession = VotingSession(dictionary: document.data()) else { return completion(.failure(.couldNotUnwrap)) }
-                    votingSession.documentID = document.documentID
-                    
-                    // FIXME: - check to see if all votes have been cast?
-                    
+        // Fetch the voting sessions one at a time (to avoid overwhelming firebase)
+        let group = DispatchGroup()
+        var allVotingSessions: [VotingSession] = []
+        for votingSessionID in currentUser.activeVotingSessions {
+            group.enter()
+            fetchVotingSession(with: votingSessionID) { [weak self] (result) in
+                switch result {
+                case .success(let votingSession):
                     // If the voting session is over, handle that
                     if votingSession.outcomeID != nil {
                         self?.handleFinishedSession(votingSession)
                     } else {
-                        // Otherwise, add it to the source of truth
-                        votingSessions.append(votingSession)
+                        // Otherwise, add it to the result
+                        allVotingSessions.append(votingSession)
                     }
+                    
+                    group.leave()
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
                 }
-                
-                // Save to the source of truth and return the success
-                self?.votingSessions = votingSessions
-                return completion(.success(votingSessions))
+            }
+        }
+        
+        // Save to the source of truth and return the success
+        group.notify(queue: .main) {
+            self.votingSessions = allVotingSessions
+            return completion(.success(allVotingSessions))
         }
     }
     
@@ -299,9 +293,9 @@ class VotingSessionController {
             // Add the voting session to the user's list of active voting sessions
             currentUser.activeVotingSessions.append(votingSessionInvite.votingSessionID)
             
-            // Make sure the user is subscribed to notifications related to sessions
-            subscribeToInvitationResponseNotifications()
-            subscribeToVoteNotifications()
+            // Make sure the user is subscribed to notifications related to the session
+            subscribeToInvitationResponseNotification(for: votingSessionInvite.votingSessionID)
+            subscribeToVoteNotification(for: votingSessionInvite.votingSessionID)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
@@ -556,11 +550,16 @@ class VotingSessionController {
             currentUser.activeVotingSessions.count > 0
             else { return }
         
-        // FIXME: - break into groups of 10??
-        
+        // Set up the listeners one at a time, in order to not overwhelm Firebase's limit of 10
+        for votingSessionID in currentUser.activeVotingSessions {
+            subscribeToInvitationResponseNotification(for: votingSessionID)
+        }
+    }
+    // A helper function to subscribe to one at a time
+    private func subscribeToInvitationResponseNotification(for votingSessionID: String) {
         // Set up a listener to be alerted whenever someone responds to an invitation for a voting session the user is in
         db.collection(VotingSessionInviteStrings.recordType)
-            .whereField(VotingSessionInviteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
+            .whereField(VotingSessionInviteStrings.votingSessionIDKey, isEqualTo: votingSessionID)
             .addSnapshotListener { [weak self] (snapshot, error) in
                 
                 if let error = error {
@@ -601,10 +600,16 @@ class VotingSessionController {
             currentUser.activeVotingSessions.count > 0
             else { return }
         
-        // FIXME: - break into groups of 10?
-        
+        // Set up the listeners one at a time, in order to not overwhelm Firebase's limit of 10
+        for votingSessionID in currentUser.activeVotingSessions {
+            subscribeToVoteNotification(for: votingSessionID)
+        }
+    }
+    // A helper function to subscribe to one at a time
+    private func subscribeToVoteNotification(for votingSessionID: String) {
+        // Set up a listener to be alerted whenever someone votes in a voting session the user is in
         db.collection(VoteStrings.recordType)
-            .whereField(VoteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
+            .whereField(VoteStrings.votingSessionIDKey, isEqualTo: votingSessionID)
             .addSnapshotListener { [weak self] (snapshots, error) in
                 
                 if let error = error {
