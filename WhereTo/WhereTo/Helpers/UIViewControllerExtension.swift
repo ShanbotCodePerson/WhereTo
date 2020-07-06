@@ -446,14 +446,16 @@ extension UIViewController {
     }
     
     func showVotingSessionResult(_ notification: Notification) {
-        guard let votingSession = notification.object as? VotingSession else { return }
+        guard let votingSession = notification.object as? VotingSession,
+            let outcomeID = votingSession.outcomeID
+            else { return }
         DispatchQueue.main.async {
             // First dismiss any existing alert
             simpleAlert?.dismiss(animated: true, completion: {
                 // Navigate to the main page (if the current page is the voting session view)
                 self.transitionToStoryboard(named: .TabViewHome) {
                     // Show the result of the vote
-                    guard let restaurant = RestaurantController.shared.previousRestaurants?.last else { return }
+                    guard let restaurant = RestaurantController.shared.previousRestaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
                     let alertVC = AlertService().alert(restaurant, message: "The crowd has spoken!")
                     self.present(alertVC, animated: true)
                     //                    self.presentVotingSessionResultAlert(votingSession)

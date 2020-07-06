@@ -744,7 +744,9 @@ class VotingSessionController {
         
         // Add the restaurant to the source of truth (making sure to avoid duplicates)
         guard let restaurant = votingSession.restaurants?.first(where: { $0.restaurantID == outcomeID }) else { return }
-        RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant)
+        if RestaurantController.shared.previousRestaurants?.uniqueAppend(restaurant) == nil {
+            RestaurantController.shared.previousRestaurants = [restaurant]
+        }
         
         // Save the restaurant to the cloud
         RestaurantController.shared.save(restaurant) { (_) in }
