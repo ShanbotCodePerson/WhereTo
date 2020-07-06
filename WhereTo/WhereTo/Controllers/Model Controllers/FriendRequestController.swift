@@ -55,7 +55,11 @@ class FriendRequestController {
         UserController.shared.friends?.removeAll(where: { $0.uuid == user.uuid })
         
         // Don't try to save the changes to the user if this is part of deleting the user
-        if userBeingDeleted { return completion(.success(true)) }
+        if userBeingDeleted {
+            // Send the notification to the unfriended user
+            sendFriendRequest(to: user, addingFriend: false, completion: completion)
+            return completion(.success(true))
+        }
         
         // Save the changes to the user
         UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
