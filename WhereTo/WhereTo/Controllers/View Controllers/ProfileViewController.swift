@@ -36,7 +36,7 @@ class ProfileViewController: UIViewController {
         setUpNotificationObservers()
         
         // Set up the observer to update the view once the photo has loaded
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: updateProfileView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: .updateProfileView, object: nil)
     }
     
     // MARK: - Respond to Notifications

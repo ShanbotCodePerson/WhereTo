@@ -169,8 +169,7 @@ class LoginSignUpViewController: UIViewController {
     
     // Present an alert prompting the user to verify their email address
     func presentVerifyEmailAlert(with email: String) {
-        // FIXME: - allow user to edit email address
-        // FIXME: - refactor to elsewhere
+        // TODO: - allow user to edit email address if it was incorrectly entered?
         
         // Create the alert controller
         let alertController = UIAlertController(title: "Verify Email Address", message: "Please check your email \(email) to verify your email address", preferredStyle: .alert)
