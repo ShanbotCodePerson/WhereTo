@@ -10,10 +10,8 @@ import UIKit
 
 class SelectedRestaurantAlertViewController: UIViewController {
     
-    // MARK: - Properties
-    var restaurant: Restaurant?
-    
     // MARK: - Outlets
+    
     @IBOutlet weak var alertView: UIView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
@@ -24,18 +22,25 @@ class SelectedRestaurantAlertViewController: UIViewController {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var openMapsButton: UIButton!
     
-
+    // MARK: - Properties
+    
+    var restaurant: Restaurant?
+    var message: String?
+    
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
     }
     
     // MARK: - Actions
+    
     @IBAction func cancelButtonTapped(_ sender: Any) {
         navigationController?.popViewController(animated: true)
         dismiss(animated: true, completion: nil)
     }
+    
     @IBAction func openMapsButtonTapped(_ sender: Any) {
         guard let restaurant = restaurant else { return }
         launchMapWith(restaurant: restaurant)
@@ -43,7 +48,8 @@ class SelectedRestaurantAlertViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Helpers
+    // MARK: - Set Up UI
+    
     func setupViews() {
         
         alertView.addBorder(width: 2, color: .black)
@@ -51,17 +57,15 @@ class SelectedRestaurantAlertViewController: UIViewController {
         cancelButton.addBorder(width: 2, color: .black)
         openMapsButton.addBorder(width: 2, color: .black)
         
-        
         guard let restaurant = restaurant else { return }
-        // get Image
-        var image: UIImage?
-        RestaurantController.shared.fetchImage(for: restaurant) { (img) in
-            image = img
-        }
         
-        messageLabel.text = "Random Picker Chose"
+        messageLabel.text = message
         nameLabel.text = restaurant.name
-        addressLabel.text = restaurant.location.displayAddress.joined(separator: ", ")
+        if let address = restaurant.location.address1 {
+            if let city = restaurant.location.city {
+                addressLabel.text = "\(address), \(city)"
+            } else { addressLabel.text = address }
+        } else { addressLabel.text = restaurant.location.city ?? "" }
         categoriesLabel.text = restaurant.categoryNames.joined(separator: ", ")
         starRating.forEach { $0.image = UIImage(systemName: "star") }
         if let rating = restaurant.rating {
@@ -72,6 +76,11 @@ class SelectedRestaurantAlertViewController: UIViewController {
             if rating > Float(intRating) {
                 starRating.first(where: { $0.tag == intRating })?.image = UIImage(systemName: "star.lefthalf.fill")
             }
+        }
+        
+        // Set up the image
+        restaurant.getImage { [weak self] (image) in
+            DispatchQueue.main.async { self?.restaurantImage.image = image }
         }
     }
 }
