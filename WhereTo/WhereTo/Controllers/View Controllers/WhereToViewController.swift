@@ -30,8 +30,8 @@ class WhereToViewController: UIViewController {
         setUpViews()
         
         // Set up the observers to listen for notifications telling this particular view to update
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: updateFriendsList, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateButton), name: updateActiveSessionsButton, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .updateFriendsList, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateButton), name: .updateActiveSessionsButton, object: nil)
         
         // Set up the observer to listen for notifications telling any view to display an alert
         setUpNotificationObservers()
@@ -252,7 +252,6 @@ class WhereToViewController: UIViewController {
     func getRandomRestaurant(by location: CLLocation, filterByDiet: Bool) {
         guard let currentUser = UserController.shared.currentUser else { return }
         
-        // FIXME: - what happens when there are no restaurants?
         RestaurantController.shared.fetchRandomRestaurant(near: location, usingDietaryRestrictions: filterByDiet) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
@@ -274,7 +273,7 @@ class WhereToViewController: UIViewController {
                         switch result {
                         case .success(_):
                             // Send the notification telling the history page to update its data
-                            NotificationCenter.default.post(Notification(name: updateHistoryList))
+                            NotificationCenter.default.post(Notification(name: .updateHistoryList))
                         case .failure(let error):
                             // Print and display the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")

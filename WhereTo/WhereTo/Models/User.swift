@@ -93,8 +93,8 @@ class User {
             self?.photo = photo
             
             // Update the UI
-            NotificationCenter.default.post(Notification(name: updateFriendsList))
-            NotificationCenter.default.post(Notification(name: updateProfileView))
+            NotificationCenter.default.post(Notification(name: .updateFriendsList))
+            NotificationCenter.default.post(Notification(name: .updateProfileView))
         }
     }
     

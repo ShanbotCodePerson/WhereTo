@@ -125,7 +125,7 @@ class FriendRequestController {
                         switch result {
                         case .success(_):
                             // Send a local notification to update the tableview as necessary
-                            NotificationCenter.default.post(Notification(name: updateFriendsList))
+                            NotificationCenter.default.post(Notification(name: .updateFriendsList))
                         case .failure(let error):
                             // Print and return the error
                             print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -257,10 +257,12 @@ class FriendRequestController {
                 }
                 
                 for friendRequest in newFriendRequests {
-                    // Send a local notification to present an alert
-                    NotificationCenter.default.post(name: newFriendRequest, object: friendRequest)
-                    // FIXME: - need to figure out how this works when there are multiple friend requests
+                    // Create an individual notification for each friend request, and add the notifications to the queue
+                    notificationQueue.append(Notification(name: .newFriendRequest, object: friendRequest))
                 }
+                
+                // Tell the current view controller to start processing the queue
+                NotificationCenter.default.post(Notification(name: .notificationEnqueued))
         }
     }
     
@@ -299,9 +301,15 @@ class FriendRequestController {
                             UserController.shared.fetchUsersFriends { (result) in
                                 switch result {
                                 case .success(_):
-                                    // Send local notifications to show an alert and update the tableview as necessary
-                                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
-                                    NotificationCenter.default.post(Notification(name: updateFriendsList))
+                                    // Tell the tableview of user's friends to update itself
+                                    NotificationCenter.default.post(Notification(name: .updateFriendsList))
+                                    
+                                    // Create a notification to display the result of the friend request and add it to the queue
+                                    notificationQueue.append(Notification(name: .responseToFriendRequest, object: response))
+//                                    NotificationCenter.default.post(name: responseToFriendRequest, object: response)
+                                    
+                                    // Tell the view controller to start processing the queue
+                                    NotificationCenter.default.post(Notification(name: .notificationEnqueued))
                                 case .failure(let error):
                                     print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                                 }
@@ -352,7 +360,7 @@ class FriendRequestController {
                         UserController.shared.friends?.removeAll(where: { friendsIDs.contains($0.uuid) })
                         
                         // Send a local notification to update the tableview
-                        NotificationCenter.default.post(Notification(name: updateFriendsList))
+                        NotificationCenter.default.post(Notification(name: .updateFriendsList))
                     case .failure(let error):
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                     }

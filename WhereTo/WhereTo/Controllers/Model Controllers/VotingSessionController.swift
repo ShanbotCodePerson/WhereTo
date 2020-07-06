@@ -88,7 +88,7 @@ class VotingSessionController {
                 votingSession.documentID = reference?.documentID
                 
                 // Save the restaurants to the cloud
-                restaurants.forEach { RestaurantController.shared.save($0, completion: { (_) in })  }
+                restaurants.forEach { RestaurantController.shared.save($0, completion: { (_) in }) }
                 
                 // Add the reference to the voting session to the user's list of active voting sessions
                 currentUser.activeVotingSessions.uniqueAppend(votingSession.uuid)
@@ -107,10 +107,9 @@ class VotingSessionController {
                 UserController.shared.saveChanges(to: currentUser) { (result) in
                     switch result {
                     case .success(_):
-                        // Make sure the user is subscribed to notifications related to sessions
-                        self?.subscribeToInvitationResponseNotifications()
-//                        self?.subscribeToSessionOverNotifications()
-                        self?.subscribeToVoteNotifications()
+                        // Make sure the user is subscribed to notifications related to the  session
+                        self?.subscribeToInvitationResponseNotification(for: votingSession.uuid)
+                        self?.subscribeToVoteNotification(for: votingSession.uuid)
                     case .failure(let error):
                         // Print and return the error
                         print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -183,40 +182,35 @@ class VotingSessionController {
             return completion(.success([]))
         }
         
-        // FIXME: - break into groups of 10 at a time
-        
-        // Fetch the data from the cloud
-        db.collection(VotingSessionStrings.recordType)
-            .whereField(VotingSessionStrings.uuidKey, in: currentUser.activeVotingSessions)
-            .getDocuments { [weak self] (results, error) in
-                
-                if let error = error {
-                    // Print and return the error
-                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
-                    return completion(.failure(.fsError(error)))
-                }
-                
-                // Unwrap the data
-                guard let documents = results?.documents else { return completion(.failure(.couldNotUnwrap)) }
-                var votingSessions: [VotingSession] = []
-                for document in documents {
-                    guard let votingSession = VotingSession(dictionary: document.data()) else { return completion(.failure(.couldNotUnwrap)) }
-                    votingSession.documentID = document.documentID
-                    
-                    // FIXME: - check to see if all votes have been cast?
-                    
+        // Fetch the voting sessions one at a time (to avoid overwhelming firebase)
+        let group = DispatchGroup()
+        var allVotingSessions: [VotingSession] = []
+        for votingSessionID in currentUser.activeVotingSessions {
+            group.enter()
+            fetchVotingSession(with: votingSessionID) { [weak self] (result) in
+                switch result {
+                case .success(let votingSession):
                     // If the voting session is over, handle that
                     if votingSession.outcomeID != nil {
                         self?.handleFinishedSession(votingSession)
                     } else {
-                        // Otherwise, add it to the source of truth
-                        votingSessions.append(votingSession)
+                        // Otherwise, add it to the result
+                        allVotingSessions.append(votingSession)
                     }
+                    
+                    group.leave()
+                case .failure(let error):
+                    // Print and return the error
+                    print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                    return completion(.failure(error))
                 }
-                
-                // Save to the source of truth and return the success
-                self?.votingSessions = votingSessions
-                return completion(.success(votingSessions))
+            }
+        }
+        
+        // Save to the source of truth and return the success
+        group.notify(queue: .main) {
+            self.votingSessions = allVotingSessions
+            return completion(.success(allVotingSessions))
         }
     }
     
@@ -294,15 +288,14 @@ class VotingSessionController {
     // Respond to an invitation to a voting session
     func respond(to votingSessionInvite: VotingSessionInvite, accept: Bool, completion: @escaping resultCompletionWith<VotingSession>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        // FIXME: - nested completions, need to figure out threading, when to return, when to post notification
+        
         if accept {
             // Add the voting session to the user's list of active voting sessions
             currentUser.activeVotingSessions.append(votingSessionInvite.votingSessionID)
             
-            // Make sure the user is subscribed to notifications related to sessions
-            subscribeToInvitationResponseNotifications()
-//            subscribeToSessionOverNotifications()
-            subscribeToVoteNotifications()
+            // Make sure the user is subscribed to notifications related to the session
+            subscribeToInvitationResponseNotification(for: votingSessionInvite.votingSessionID)
+            subscribeToVoteNotification(for: votingSessionInvite.votingSessionID)
             
             // Save the changes to the user
             UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
@@ -313,12 +306,10 @@ class VotingSessionController {
                         switch result {
                         case .success(let votingSession):
                             // Save the voting session to the source of truth
-                            if var votingSessions = self?.votingSessions {
-                                votingSessions.append(votingSession)
-                                self?.votingSessions = votingSessions
-                            } else {
+                            if self?.votingSessions?.append(votingSession) == nil {
                                 self?.votingSessions = [votingSession]
                             }
+                            
                             // Return the success
                             return completion(.success(votingSession))
                         case .failure(let error):
@@ -334,8 +325,6 @@ class VotingSessionController {
                 }
             }
         }
-        
-        // FIXME: - need to make sure this is getting called somewhere
         
         // Delete the invitation from the cloud now that it's no longer necessary
         guard let documentID = votingSessionInvite.documentID else { return completion(.failure(.noData)) }
@@ -372,8 +361,6 @@ class VotingSessionController {
     // Update a voting session with votes
     func vote(value: Int, for restaurant: Restaurant, in votingSession: VotingSession, completion: @escaping resultCompletionWith<Vote>) {
         guard let currentUser = UserController.shared.currentUser else { return completion(.failure(.noUserFound)) }
-        
-        // FIXME: - check to see if it's the last vote?
         
         // Create the vote
         let vote = Vote(voteValue: value, userID: currentUser.uuid, restaurantID: restaurant.restaurantID, votingSessionID: votingSession.uuid)
@@ -548,9 +535,12 @@ class VotingSessionController {
                 
                 // Send a local notification to present an alert for each invitation
                 for invitation in newInvitations {
-                    NotificationCenter.default.post(Notification(name: newVotingSessionInvitation, object: invitation))
-                    // FIXME: - need to figure out how this works when there are multiple invitations
+                    // Create an individual notification for each invitation, and add the notifications to the queue
+                    notificationQueue.append(Notification(name: .newVotingSessionInvitation, object: invitation))
                 }
+                
+                // Tell the current view controller to start processing the queue
+                NotificationCenter.default.post(Notification(name: .notificationEnqueued))
         }
     }
     
@@ -560,11 +550,16 @@ class VotingSessionController {
             currentUser.activeVotingSessions.count > 0
             else { return }
         
-        // FIXME: - break into groups of 10??
-        
+        // Set up the listeners one at a time, in order to not overwhelm Firebase's limit of 10
+        for votingSessionID in currentUser.activeVotingSessions {
+            subscribeToInvitationResponseNotification(for: votingSessionID)
+        }
+    }
+    // A helper function to subscribe to one at a time
+    private func subscribeToInvitationResponseNotification(for votingSessionID: String) {
         // Set up a listener to be alerted whenever someone responds to an invitation for a voting session the user is in
         db.collection(VotingSessionInviteStrings.recordType)
-            .whereField(VotingSessionInviteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
+            .whereField(VotingSessionInviteStrings.votingSessionIDKey, isEqualTo: votingSessionID)
             .addSnapshotListener { [weak self] (snapshot, error) in
                 
                 if let error = error {
@@ -586,6 +581,9 @@ class VotingSessionController {
                             switch result {
                             case .success(let users):
                                 votingSession.users = users
+                                
+                                // Check to see if having fewer users makes the voting session complete
+                                self?.calculateOutcome(of: votingSession)
                             case .failure(let error):
                                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
                             }
@@ -602,10 +600,16 @@ class VotingSessionController {
             currentUser.activeVotingSessions.count > 0
             else { return }
         
-        // FIXME: - break into groups of 10?
-        
+        // Set up the listeners one at a time, in order to not overwhelm Firebase's limit of 10
+        for votingSessionID in currentUser.activeVotingSessions {
+            subscribeToVoteNotification(for: votingSessionID)
+        }
+    }
+    // A helper function to subscribe to one at a time
+    private func subscribeToVoteNotification(for votingSessionID: String) {
+        // Set up a listener to be alerted whenever someone votes in a voting session the user is in
         db.collection(VoteStrings.recordType)
-            .whereField(VoteStrings.votingSessionIDKey, in: currentUser.activeVotingSessions)
+            .whereField(VoteStrings.votingSessionIDKey, isEqualTo: votingSessionID)
             .addSnapshotListener { [weak self] (snapshots, error) in
                 
                 if let error = error {
@@ -748,10 +752,15 @@ class VotingSessionController {
         // Remove the voting session from the source of truth
         votingSessions?.removeAll(where: { $0 == votingSession })
         
-        // Send notifications to update the views and present an alert with the result
-        NotificationCenter.default.post(Notification(name: updateHistoryList))
-        NotificationCenter.default.post(Notification(name: updateActiveSessionsButton))
-        NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
+        // Tell the relevant views to update themselves
+        NotificationCenter.default.post(Notification(name: .updateHistoryList))
+        NotificationCenter.default.post(Notification(name: .updateActiveSessionsButton))
+        
+        // Create a notification to display the voting session result and add it to the queue
+        notificationQueue.append(Notification(name: .votingSessionResult, object: votingSession))
+        
+        // Tell the view controller to start processing the queue
+        NotificationCenter.default.post(Notification(name: .notificationEnqueued))
         
         // Remove the voting session from the user's list of active voting sessions
         currentUser.activeVotingSessions.removeAll(where: { $0 == votingSession.uuid })
@@ -760,9 +769,6 @@ class VotingSessionController {
         UserController.shared.saveChanges(to: currentUser) { [weak self] (result) in
             switch result {
             case .success(_):
-                // Display an alert with the outcome of the voting session
-                NotificationCenter.default.post(name: votingSessionResult, object: votingSession)
-                
                 // If there are no more users referencing this voting session, then delete it from the cloud
                 self?.db.collection(UserStrings.recordType)
                     .whereField(UserStrings.activeVotingSessionsKey, arrayContains: votingSession.uuid)
