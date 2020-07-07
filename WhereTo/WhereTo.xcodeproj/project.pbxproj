@@ -19,6 +19,7 @@
 		408D8A3624ACE79000238674 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3524ACE79000238674 /* CustomLabel.swift */; };
 		408D8A3824ACF26A00238674 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3724ACF26A00238674 /* HelperFunctions.swift */; };
 		408D8A3A24AD303800238674 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408D8A3924AD303800238674 /* TabBarViewController.swift */; };
+		40902FD724B3EF0E00BC1769 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40902FD624B3EF0E00BC1769 /* Reachability.swift */; };
 		40B2583524A115D30090495C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583424A115D30090495C /* AppDelegate.swift */; };
 		40B2583724A115D30090495C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B2583624A115D30090495C /* SceneDelegate.swift */; };
 		40B2583C24A115D30090495C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40B2583A24A115D30090495C /* Main.storyboard */; };
@@ -74,6 +75,7 @@
 		408D8A3524ACE79000238674 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		408D8A3724ACF26A00238674 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		408D8A3924AD303800238674 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		40902FD624B3EF0E00BC1769 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		40B2583124A115D30090495C /* WhereTo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WhereTo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B2583424A115D30090495C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40B2583624A115D30090495C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				4005A19D24AB91B300BE556F /* UIImageExtension.swift */,
 				408D8A3724ACF26A00238674 /* HelperFunctions.swift */,
 				78ABDE0E24B3B5F70074EBF6 /* AlertService.swift */,
+				40902FD624B3EF0E00BC1769 /* Reachability.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 				40B2588A24A16EF20090495C /* VotingSession.swift in Sources */,
 				401E38B224AD4B8800E83241 /* TableViewCellBackground.swift in Sources */,
 				40B2588024A154800090495C /* LoginSignUpViewController.swift in Sources */,
+				40902FD724B3EF0E00BC1769 /* Reachability.swift in Sources */,
 				40B258A424A253440090495C /* ProfileViewController.swift in Sources */,
 				401715B124A3E92C002D86E0 /* ActiveSessionsTableViewController.swift in Sources */,
 				40B2588F24A16F0A0090495C /* FriendRequestController.swift in Sources */,

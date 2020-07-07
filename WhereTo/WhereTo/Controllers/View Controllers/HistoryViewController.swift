@@ -53,6 +53,12 @@ class HistoryViewController: UIViewController {
     }
     
     func loadData() {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         if RestaurantController.shared.previousRestaurants == nil {
             view.activityStartAnimating()
             RestaurantController.shared.fetchPreviousRestaurants { [weak self] (result) in
@@ -94,6 +100,12 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            // Make sure the user is connected to the internet
+            guard Reachability.checkReachable() else {
+                presentInternetAlert()
+                return
+            }
+            
             presentChoiceAlert(title: "Remove", message: "Are you sure you would like to remove this restaurant from your history?") {
                 guard let currentUser = UserController.shared.currentUser else { return }
                 currentUser.previousRestaurants.remove(at: indexPath.row)
@@ -115,6 +127,12 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let restaurant = RestaurantController.shared.previousRestaurants?[indexPath.row] else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Present an alert controller asking the user if they want to open the restaurant in maps
         presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
             self.launchMapWith(restaurant: restaurant)
@@ -130,6 +148,12 @@ extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of favorite restaurants
@@ -186,6 +210,12 @@ extension HistoryViewController: RestaurantTableViewCellSavedButtonDelegate {
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of blacklisted restaurants

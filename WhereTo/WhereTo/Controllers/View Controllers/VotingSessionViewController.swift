@@ -140,6 +140,12 @@ extension VotingSessionViewController: UITableViewDelegate, UITableViewDataSourc
             let restaurant = cell.restaurant
             else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Calculate the value of the vote
         let voteValue = votingSession.votesEach - votes.count
         
@@ -180,6 +186,12 @@ extension VotingSessionViewController: RestaurantTableViewCellSavedButtonDelegat
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of favorite restaurants
@@ -238,6 +250,12 @@ extension VotingSessionViewController: RestaurantTableViewCellSavedButtonDelegat
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of blacklisted restaurants

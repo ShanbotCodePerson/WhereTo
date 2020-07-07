@@ -62,6 +62,12 @@ class SavedRestaurantsViewController: UIViewController {
     }
     
     func loadAllData() {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         if RestaurantController.shared.favoriteRestaurants == nil {
             view.activityStartAnimating()
             RestaurantController.shared.fetchFavoriteRestaurants { [weak self] (result) in
@@ -133,6 +139,12 @@ extension SavedRestaurantsViewController: UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            // Make sure the user is connected to the internet
+            guard Reachability.checkReachable() else {
+                presentInternetAlert()
+                return
+            }
+            
             presentChoiceAlert(title: "Remove", message: "Are you sure you would like to remove this restaurant from your saved list?") {
                 guard let currentUser = UserController.shared.currentUser else { return }
                 if self.segmentedControl.selectedSegmentIndex == 0 {
@@ -171,6 +183,12 @@ extension SavedRestaurantsViewController: UITableViewDelegate, UITableViewDataSo
             let restaurant = RestaurantController.shared.favoriteRestaurants?[indexPath.row]
             else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Present an alert controller asking the user if they want to open the restaurant in maps
         presentChoiceAlert(title: "Open in Maps?", message: "", confirmText: "Open in Maps") {
             self.launchMapWith(restaurant: restaurant)
@@ -186,6 +204,12 @@ extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDele
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of favorite restaurants
@@ -248,6 +272,12 @@ extension SavedRestaurantsViewController: RestaurantTableViewCellSavedButtonDele
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of blacklisted restaurants

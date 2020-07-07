@@ -44,6 +44,12 @@ class WhereToViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Check for pending friend requests, then show alerts for each one if there are any
         FriendRequestController.shared.fetchPendingRequests { [weak self] (result) in
             DispatchQueue.main.async {
@@ -121,7 +127,19 @@ class WhereToViewController: UIViewController {
     }
     
     func loadAllData() {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         guard UserController.shared.friends == nil else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         // Load the user's friends
         UserController.shared.fetchUsersFriends { [weak self] (result) in
@@ -159,6 +177,12 @@ class WhereToViewController: UIViewController {
     // MARK: - Actions
     
     @IBAction func addFriendButtonTapped(_ sender: UIBarButtonItem) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // TODO: - allow searching by email or username
         
         // Present the text field for the user to enter the desired email
@@ -221,6 +245,12 @@ class WhereToViewController: UIViewController {
     }
     
     @IBAction func pickRandomRestaurantButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Get the current location or allow the user to choose a location
         fetchCurrentLocation(locationManager)
         guard let currentLocation = locationManager.location,
@@ -306,6 +336,12 @@ class WhereToViewController: UIViewController {
     }
     
     @IBAction func voteButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Get the selected friends
         guard let indexPaths = friendsTableView.indexPathsForSelectedRows else { return }
         let friends = indexPaths.compactMap { UserController.shared.friends?[$0.row] }
@@ -390,6 +426,12 @@ extension WhereToViewController: UITableViewDelegate, UITableViewDataSource {
             guard let currentUser = UserController.shared.currentUser,
                 let friend = UserController.shared.friends?[indexPath.row]
                 else { return }
+            
+            // Make sure the user is connected to the internet
+            guard Reachability.checkReachable() else {
+                presentInternetAlert()
+                return
+            }
             
             // Present an alert confirming that the user wants to remove the friend
             presentChoiceAlert(title: "Are you sure?", message: "Are you sure you want to de-friend \(friend.name)?") {

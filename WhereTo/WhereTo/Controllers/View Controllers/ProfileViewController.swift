@@ -77,6 +77,12 @@ class ProfileViewController: UIViewController {
     @IBAction func editImageButtonTapped(_ sender: Any) {
         dietaryRestrictionsPickerView.isHidden = true
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Create an alert controller with options for how to get a photo
         let alertController = UIAlertController(title: "Choose a Photo", message: nil, preferredStyle: .actionSheet)
         
@@ -105,6 +111,12 @@ class ProfileViewController: UIViewController {
     @IBAction func editNameButtonTapped(_ sender: Any) {
         dietaryRestrictionsPickerView.isHidden = true
         guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         // Present an alert allowing the user to enter a new name
         presentTextFieldAlert(title: "Enter a new username", message: "Choose how your name will appear to your friends", textFieldPlaceholder: nil, textFieldText: currentUser.name) { [weak self] (newName) in
@@ -138,6 +150,12 @@ class ProfileViewController: UIViewController {
         dietaryRestrictionsPickerView.isHidden = true
         guard let currentUser = UserController.shared.currentUser else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Present an alert to have the user enter their current password first
         presentTextFieldAlert(title: "Enter Current Password", message: "First enter your current password before you can change it", textFieldPlaceholder: nil) { [weak self] (currentPassword) in
             
@@ -168,6 +186,12 @@ class ProfileViewController: UIViewController {
     
     @IBAction func addDietaryRestrictionButtonTapped(_ sender: UIButton) {
         guard let currentUser = UserController.shared.currentUser else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         // If the options are not currently displayed, then display them
         if dietaryRestrictionsPickerView.isHidden {
@@ -222,6 +246,12 @@ class ProfileViewController: UIViewController {
     
     @IBAction func deleteAccountButtonTapped(_ sender: UIButton) {
         dietaryRestrictionsPickerView.isHidden = true
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         // Present an alert to confirm deleting the account
         presentChoiceAlert(title: "Delete account?", message: "Are you sure you want to delete your account? This will permanently remove all your data from this device and from the cloud.") {
@@ -280,6 +310,12 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             guard let currentUser = UserController.shared.currentUser else { return }
+            
+            // Make sure the user is connected to the internet
+            guard Reachability.checkReachable() else {
+                presentInternetAlert()
+                return
+            }
             
             // Remove the dietary restriction
             currentUser.dietaryRestrictions.remove(at: indexPath.row)

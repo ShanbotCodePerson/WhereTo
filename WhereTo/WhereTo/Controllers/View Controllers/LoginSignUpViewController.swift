@@ -129,6 +129,12 @@ class LoginSignUpViewController: UIViewController {
     }
     
     @IBAction func doneButtonTapped(_ sender: UIButton) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Make sure there is valid text in the email and password fields
         guard let email = emailTextField.text, !email.isEmpty else {
             presentAlert(title: "Invalid Email", message: "Email cannot be blank")
@@ -148,6 +154,12 @@ class LoginSignUpViewController: UIViewController {
     
     // Try to log the user in automatically
     func autoLogin() {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         if let user = Auth.auth().currentUser {
             // If the user's email account has not yet been verified, don't sign in
             guard user.isEmailVerified else { return }

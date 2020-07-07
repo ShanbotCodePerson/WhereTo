@@ -57,6 +57,12 @@ class RestaurantSearchViewController: UIViewController {
     }
     
     @IBAction func searchButtonTapped(_ sender: Any) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         search()
     }
     
@@ -169,6 +175,12 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
             let restaurant = cell.restaurant
             else { return }
         
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         if currentUser.favoriteRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of favorite restaurants
             currentUser.favoriteRestaurants.removeAll(where: {$0 == restaurant.restaurantID})
@@ -226,6 +238,12 @@ extension RestaurantSearchViewController: RestaurantTableViewCellSavedButtonDele
         guard let currentUser = UserController.shared.currentUser,
             let restaurant = cell.restaurant
             else { return }
+        
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
         
         if currentUser.blacklistedRestaurants.contains(restaurant.restaurantID) {
             // Remove the restaurant from the user's list of blacklisted restaurants
