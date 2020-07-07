@@ -53,6 +53,7 @@ class ProfileViewController: UIViewController {
         imagePicker.delegate = self
         
         profileImageView.image = currentUser.photo ?? #imageLiteral(resourceName: "default_profile_picture")
+//        profileImageView.addCornerRadius((view.frame.height * 0.25) / 2)
         nameLabel.text = currentUser.name
         emailLabel.text = "Email: \(currentUser.email)"
         
@@ -84,7 +85,7 @@ class ProfileViewController: UIViewController {
         }
         
         // Create an alert controller with options for how to get a photo
-        let alertController = UIAlertController(title: "Choose a Photo", message: nil, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "Choose a Photo", message: nil, preferredStyle: .alert)
         
         // Add a button option for the photo library
         let photoLibraryAction = UIAlertAction(title: "Choose a photo from the library", style: .default) { [weak self] (_) in

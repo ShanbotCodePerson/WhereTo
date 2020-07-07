@@ -11,7 +11,7 @@ import UIKit
 class ProfileImageView: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
-        addCornerRadius(self.frame.width / 2)
+        addCornerRadius(self.frame.height / 2)
         addBorder()
     }
 }

@@ -147,7 +147,7 @@ extension UIViewController {
     // Present an alert at the bottom of the screen to display an error to the user
     func presentErrorAlert(_ localizedError: LocalizedError) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "ERROR", message: localizedError.errorDescription, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] (_) in
@@ -159,7 +159,7 @@ extension UIViewController {
     }
     func presentErrorAlert(_ error: Error) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "ERROR", message: error.localizedDescription, preferredStyle: .alert)
         
         // Add the dismiss button to the alert
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] (_) in
