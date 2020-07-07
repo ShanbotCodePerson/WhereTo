@@ -325,8 +325,8 @@ extension UIViewController {
     
     func presentRandomRestaurantAlert(_ restaurant: Restaurant) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken!", preferredStyle: .alert)
-//        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken!\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+//        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken!", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Restaurant Decided!", message: "The randomizer algorithm has spoken!\n\n\n\n\n\n\n\n\n\n", preferredStyle: .alert)
         
         // Create the dismiss button
         let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel) { [weak self] (_) in
