@@ -50,6 +50,12 @@ class ActiveSessionsTableViewController: UITableViewController {
     // MARK: - Navigation
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Make sure the user is connected to the internet
+        guard Reachability.checkReachable() else {
+            presentInternetAlert()
+            return
+        }
+        
         // Get the selected voting session
         guard let votingSession = VotingSessionController.shared.votingSessions?[indexPath.row] else { return}
         
