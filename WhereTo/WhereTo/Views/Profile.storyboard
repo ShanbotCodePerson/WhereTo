@@ -38,13 +38,13 @@
                                 <rect key="frame" x="20.5" y="109" width="373" height="733"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JOj-An-PZS" customClass="ProfileImageView" customModule="WhereTo" customModuleProvider="target">
-                                        <rect key="frame" x="74.5" y="0.0" width="224" height="224"/>
+                                        <rect key="frame" x="84.5" y="0.0" width="204.5" height="204.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="JOj-An-PZS" secondAttribute="height" multiplier="1:1" id="0xL-wb-Fn6"/>
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="ioX-up-gc8">
-                                        <rect key="frame" x="0.0" y="244" width="373" height="30"/>
+                                        <rect key="frame" x="0.0" y="224.5" width="373" height="30"/>
                                         <subviews>
                                             <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dL7-iu-0MF" userLabel="spacer">
                                                 <rect key="frame" x="0.0" y="0.0" width="40" height="30"/>
@@ -74,7 +74,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="BiE-DP-P33">
-                                        <rect key="frame" x="0.0" y="294" width="373" height="48"/>
+                                        <rect key="frame" x="0.0" y="274.5" width="373" height="48"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(email)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l26-Z6-ipj" customClass="DefaultLabel" customModule="WhereTo" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="373" height="21.5"/>
@@ -92,16 +92,16 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="AIf-gl-RtG">
-                                        <rect key="frame" x="0.0" y="362" width="373" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="342.5" width="373" height="22.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Dietary Restrictions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7z7-bn-iqO" customClass="DefaultLabel" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="310.5" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="310.5" height="22.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OWm-tv-Ce7" customClass="EditButton" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="310.5" y="0.0" width="62.5" height="20.5"/>
+                                                <rect key="frame" x="310.5" y="0.0" width="62.5" height="22.5"/>
                                                 <state key="normal" title="Add"/>
                                                 <connections>
                                                     <action selector="addDietaryRestrictionButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="W1d-cr-uMh"/>
@@ -110,7 +110,7 @@
                                         </subviews>
                                     </stackView>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="6Wi-XS-Ah3">
-                                        <rect key="frame" x="0.0" y="402.5" width="373" height="274.5"/>
+                                        <rect key="frame" x="0.0" y="385" width="373" height="292"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="dietaryRestrictionCell" textLabel="afN-At-nta" style="IBUITableViewCellStyleDefault" id="okp-QW-uUo">
@@ -150,6 +150,9 @@
                                                 </connections>
                                             </button>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="Yo3-cw-GHa"/>
+                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -162,7 +165,7 @@
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tfs-Yb-MtR" customClass="EditButton" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="192" y="295.5" width="30" height="30"/>
+                                <rect key="frame" x="192" y="278" width="30" height="30"/>
                                 <state key="normal" title="Edit"/>
                                 <connections>
                                     <action selector="editImageButtonTapped:" destination="aUj-2G-47z" eventType="touchUpInside" id="Mov-mo-VpL"/>
@@ -188,12 +191,12 @@
                             <constraint firstItem="aLy-XK-YbU" firstAttribute="width" secondItem="kRx-qw-5cm" secondAttribute="width" id="UyP-fd-N34"/>
                             <constraint firstItem="K02-n0-dkk" firstAttribute="bottom" secondItem="kRx-qw-5cm" secondAttribute="bottom" constant="20" id="XJd-Lr-e9m"/>
                             <constraint firstItem="aLy-XK-YbU" firstAttribute="bottom" secondItem="6Wi-XS-Ah3" secondAttribute="bottom" id="bAA-HI-Mv0"/>
-                            <constraint firstItem="JOj-An-PZS" firstAttribute="height" secondItem="oOf-62-Jhc" secondAttribute="height" multiplier="0.25" id="gI3-n8-1mo"/>
                             <constraint firstItem="2Tn-Qv-lSR" firstAttribute="trailing" secondItem="K02-n0-dkk" secondAttribute="trailing" id="hxQ-0d-evx"/>
-                            <constraint firstItem="XxP-jM-2dn" firstAttribute="height" secondItem="oOf-62-Jhc" secondAttribute="height" multiplier="0.04" id="i0z-5s-JHm"/>
+                            <constraint firstItem="XxP-jM-2dn" firstAttribute="height" secondItem="oOf-62-Jhc" secondAttribute="height" multiplier="0.04" priority="999" id="i0z-5s-JHm"/>
                             <constraint firstItem="tfs-Yb-MtR" firstAttribute="centerY" secondItem="JOj-An-PZS" secondAttribute="centerY" multiplier="1.8" id="jQh-7R-gtH"/>
                             <constraint firstItem="kRx-qw-5cm" firstAttribute="top" secondItem="2Tn-Qv-lSR" secondAttribute="bottom" constant="20" id="sXu-ZA-Pyc"/>
                             <constraint firstItem="Mnm-Fu-JDZ" firstAttribute="top" secondItem="oOf-62-Jhc" secondAttribute="top" id="sdy-I8-wWX"/>
+                            <constraint firstItem="JOj-An-PZS" firstAttribute="height" secondItem="K02-n0-dkk" secondAttribute="height" multiplier="0.25" id="zJ2-uc-zW2"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="K02-n0-dkk"/>
                         <connections>

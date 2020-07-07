@@ -39,6 +39,12 @@ class ProfileViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: .updateProfileView, object: nil)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print("got here to \(#function) and height is \(profileImageView.frame.height) but should be \(view.frame.height * 0.25)")
+        profileImageView.addCornerRadius(profileImageView.frame.height / 2)
+    }
+    
     // MARK: - Respond to Notifications
     
     @objc func refreshUI() {
@@ -53,7 +59,6 @@ class ProfileViewController: UIViewController {
         imagePicker.delegate = self
         
         profileImageView.image = currentUser.photo ?? #imageLiteral(resourceName: "default_profile_picture")
-//        profileImageView.addCornerRadius((view.frame.height * 0.25) / 2)
         nameLabel.text = currentUser.name
         emailLabel.text = "Email: \(currentUser.email)"
         

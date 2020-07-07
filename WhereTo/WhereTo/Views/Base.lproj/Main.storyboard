@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="ipad12_9" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -13,14 +13,14 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="LoginSignUpViewController" customModule="WhereTo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginBackground" translatesAutoresizingMaskIntoConstraints="NO" id="29l-Qr-OAe">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-P0-0ur">
-                                <rect key="frame" x="262" y="269" width="500" height="108"/>
+                                <rect key="frame" x="41.5" y="176" width="331" height="54"/>
                                 <attributedString key="attributedText">
                                     <fragment content="Where To?">
                                         <attributes>
@@ -44,20 +44,20 @@
                                 </variation>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ljc-7S-aef">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" name="loginScreen"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcm-mm-seE">
-                                <rect key="frame" x="262" y="457" width="500" height="350"/>
+                                <rect key="frame" x="41.5" y="310" width="331" height="286"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="PoY-01-yID">
-                                        <rect key="frame" x="0.0" y="0.0" width="500" height="340"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="331" height="276"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="smM-Mu-RJU">
-                                                <rect key="frame" x="0.0" y="0.0" width="500" height="58.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="331" height="45.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a6d-Mo-mfe">
-                                                        <rect key="frame" x="0.0" y="0.0" width="250" height="58.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="165.5" height="45.5"/>
                                                         <color key="backgroundColor" name="navBar"/>
                                                         <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="17"/>
                                                         <state key="normal" title="Sign Up">
@@ -68,7 +68,7 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rxX-WX-BNX">
-                                                        <rect key="frame" x="250" y="0.0" width="250" height="58.5"/>
+                                                        <rect key="frame" x="165.5" y="0.0" width="165.5" height="45.5"/>
                                                         <color key="backgroundColor" name="navBarFaded"/>
                                                         <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="17"/>
                                                         <state key="normal" title="Log In">
@@ -81,22 +81,22 @@
                                                 </subviews>
                                             </stackView>
                                             <textField opaque="NO" tag="10" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter email here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Xj-2zg" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="12.5" y="70.5" width="475" height="58.5"/>
+                                                <rect key="frame" x="8" y="57.5" width="315" height="45.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
                                             </textField>
                                             <textField opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter username here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vUr-rx-3WX" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="12.5" y="141" width="475" height="58"/>
+                                                <rect key="frame" x="8" y="115" width="315" height="46"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                             </textField>
                                             <textField opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter password here..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r46-jI-bPM" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="12.5" y="211" width="475" height="58.5"/>
+                                                <rect key="frame" x="8" y="173" width="315" height="45.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
                                             </textField>
                                             <textField opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm password..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zni-Kw-RXd" customClass="CustomTextField" customModule="WhereTo" customModuleProvider="target">
-                                                <rect key="frame" x="12.5" y="281.5" width="475" height="58.5"/>
+                                                <rect key="frame" x="8" y="230.5" width="315" height="45.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
                                             </textField>
@@ -121,7 +121,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAt-O7-sUA" customClass="GoButton" customModule="WhereTo" customModuleProvider="target">
-                                <rect key="frame" x="701" y="815" width="61" height="31"/>
+                                <rect key="frame" x="311.5" y="604" width="61" height="31"/>
                                 <fontDescription key="fontDescription" name="ArialMT" family="Arial" pointSize="17"/>
                                 <state key="normal" title="Sign Up"/>
                                 <connections>
@@ -150,7 +150,7 @@
                             <constraint firstItem="kAt-O7-sUA" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" symbolic="YES" id="rMa-ng-W41"/>
                             <constraint firstItem="jcm-mm-seE" firstAttribute="trailing" secondItem="kAt-O7-sUA" secondAttribute="trailing" id="rwx-2U-zTY"/>
                             <constraint firstAttribute="bottom" secondItem="Ljc-7S-aef" secondAttribute="bottom" id="sIq-lC-WQH"/>
-                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.8" constant="85.599999999999966" id="wSR-7B-DYM"/>
+                            <constraint firstItem="jcm-mm-seE" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" priority="999" id="wSR-7B-DYM"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jcm-mm-seE" secondAttribute="bottom" constant="377" id="yjX-0Z-53l"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
