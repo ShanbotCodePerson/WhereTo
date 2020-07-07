@@ -39,9 +39,13 @@ class ProfileViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: .updateProfileView, object: nil)
     }
     
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        super.didRotate(from: fromInterfaceOrientation)
+        profileImageView.addCornerRadius(profileImageView.frame.height / 2)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print("got here to \(#function) and height is \(profileImageView.frame.height) but should be \(view.frame.height * 0.25)")
         profileImageView.addCornerRadius(profileImageView.frame.height / 2)
     }
     

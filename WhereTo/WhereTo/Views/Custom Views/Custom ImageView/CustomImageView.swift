@@ -12,7 +12,6 @@ class ProfileImageView: UIImageView {
     override func awakeFromNib() {
         super.awakeFromNib()
         addCornerRadius(self.frame.height / 2)
-        print("got here to \(#function) and height is \(self.frame.height)")
         addBorder()
     }
 }
