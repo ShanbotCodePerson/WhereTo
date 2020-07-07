@@ -39,6 +39,16 @@ class ProfileViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: .updateProfileView, object: nil)
     }
     
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        super.didRotate(from: fromInterfaceOrientation)
+        profileImageView.addCornerRadius(profileImageView.frame.height / 2)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        profileImageView.addCornerRadius(profileImageView.frame.height / 2)
+    }
+    
     // MARK: - Respond to Notifications
     
     @objc func refreshUI() {
@@ -84,7 +94,7 @@ class ProfileViewController: UIViewController {
         }
         
         // Create an alert controller with options for how to get a photo
-        let alertController = UIAlertController(title: "Choose a Photo", message: nil, preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "Choose a Photo", message: nil, preferredStyle: .alert)
         
         // Add a button option for the photo library
         let photoLibraryAction = UIAlertAction(title: "Choose a photo from the library", style: .default) { [weak self] (_) in

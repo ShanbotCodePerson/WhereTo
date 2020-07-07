@@ -58,7 +58,7 @@ class LoginSignUpViewController: UIViewController {
             // Turn off the keyboard height constraint
             keyboardHeightLayoutConstraint.isActive = false
         } else {
-            if let endFrame = endFrame, endFrame.size.height > (view.frame.size.height / 2) {
+            if let endFrame = endFrame, endFrame.size.height > ((view.frame.size.height / 2) - (containerView.frame.size.height / 2)) {
                 // Calculate the correct height to shift the text fields up by and turn it on
                 keyboardHeightLayoutConstraint.constant = endFrame.size.height
                 keyboardHeightLayoutConstraint.isActive = true
