@@ -1,5 +1,5 @@
 # LetsEatTogether
-LetsEatTogether! An interactive social eating app where you can connect with your friends and vote on places where you'd all like to go eat together, or allow the system to choose a random restaurant for you.
+LetsEatTogether! An interactive social eating app where users can connect with their friends and vote on places where they'd all like to go eat together, or allow the system to choose a random restaurant for them.
 
 ## App Store
 
