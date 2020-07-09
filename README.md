@@ -1,6 +1,12 @@
 # LetsEatTogether
 LetsEatTogether! An interactive social eating app where you can connect with your friends and vote on places where you'd all like to go eat together, or allow the system to choose a random restaurant for you.
 
+## App Store
+
+Find us on the AppStore! https://apps.apple.com/us/app/letseattogether/id1521574397
+
+## Features
+
 - Add dietary restrictions such as gluten-free or vegan to your profile, and choose whether you want to filter your search based on the restrictions
 - Results are automatically filtered based on restaurants that are currently open
 - Save restaurants to your favorites list or blacklist restaurants to prevent them from being recommended again
